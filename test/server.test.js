@@ -1,14 +1,12 @@
-const { it } = require('date-fns/locale')
-const request = require('supertest')
 const app = require('../app')
+var supertest = require("supertest")(app);
 
-describe("Testing root path", () => {
-    test("it should respond with the get method", done => {
-        request(app)
-            .get('/')
-            .then(response => {
-                expect(response.statusCode(200))
-            })
-        done()
+describe("API TEST root route", function(){
+  it("GET '/' should return 200", function(done) {
+    supertest
+      .get("/")
+      .expect(200)
+      .end(done)
+
     })
 })
