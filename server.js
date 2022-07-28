@@ -1,8 +1,12 @@
 require('dotenv').config()
 const PORT = process.env.PORT || 3500
-
+const mongoose = require('mongoose')
 const app = require('./app')
 
-app.listen(PORT, () => {
+
+
+mongoose.connection.once("open", () => {
+    app.listen(PORT, () => {
     console.log(`The server is currently running on PORT: ${PORT}`)
+    })
 })
