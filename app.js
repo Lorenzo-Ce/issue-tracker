@@ -1,5 +1,5 @@
 require('dotenv').config()
-const mongoose = require(mongoose)
+const mongoose = require('mongoose')
 const express = require('express')
 const app = express()
 const cors = require('cors')
@@ -20,6 +20,8 @@ app.use(cookieParser())
 app.get('/', (req, res) => {
     res.sendStatus(200)
 })
+
+app.use('/register', require('./route/register'))
 
 app.all('*', (req, res) => {
     req.accepts('application/json') ? 

@@ -19,6 +19,7 @@ const UserSchema = new Schema({
         min: 8,
         max: 128
     },
+    isAuthenticated: Boolean, 
     projects : [Schema.Types.ObjectId],
   });
 
