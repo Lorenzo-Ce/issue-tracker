@@ -29,7 +29,7 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 const logger = (req, res, next) => {
-    logEvent.info(`\t${req.header.origins}\t${req.method}\t${req.url}`)
+    // logEvent.info(`\t${req.header.origins}\t${req.method}\t${req.url}`)
     next()
 }
 
