@@ -7,7 +7,7 @@ const ProjectSchema = new Schema({
         max: 30,
         required: true
     },
-    Status: {
+    status: {
         type: String,
         enum: ['Open','Paused','Closed'],
         required: true
