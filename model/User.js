@@ -3,11 +3,6 @@ const { Schema, default: mongoose } = require('mongoose')
 const UserSchema = new Schema({
     firstName:  String, 
     lastName: String,
-    username: {
-        type: String,
-        min: 4,
-        max: 20
-    },
     email: {
         type: String,
         unique: true,
@@ -19,7 +14,19 @@ const UserSchema = new Schema({
         min: 8,
         max: 128
     },
-    isAuthenticated: Boolean, 
+    username: {
+        type: String,
+        min: 4,
+        max: 20
+    },
+    refreshToken: {
+        type: String,
+        default: ''
+    },
+    emailAuthenticated: {
+        type: Boolean,
+        default: false
+    }, 
     projects : [Schema.Types.ObjectId],
   });
 

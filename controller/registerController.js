@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt')
 const registerNewUser = async (req, res, err) => {
     const {email, username, password} = req.body
     if(!email || !username || !password){
-        return res.status(400).send({"Error" : `Missing one or more of the required field: Email, password, username`})
+        return res.status(400).send({"error" : `Missing one or more of the required field: Email, password, username`})
     }
     const doubleUser = await User.findOne({
         $or: [
@@ -14,7 +14,7 @@ const registerNewUser = async (req, res, err) => {
     }).exec()
     if(doubleUser){
         return res.status(409)
-                .send({'Error' : `${doubleUser.email === email ? 'Email already present in DB' : 'Username already taken'}`})
+                .send({'error' : `${doubleUser.email === email ? 'Email already present in DB' : 'Username already taken'}`})
     }
      try{
             const hashedPsw = await bcrypt.hash(password, 11)
@@ -31,7 +31,7 @@ const registerNewUser = async (req, res, err) => {
                     })
         }
         catch(err){
-            res.status(500).send({'Error' : `${err.message}`})
+            res.status(500).send({'error' : `${err.message}`})
         }
 }
 

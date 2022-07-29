@@ -8,7 +8,7 @@ describe('API test root', () => {
     })
 })
 
-describe('API /register', () => {
+describe.skip('API /register', () => {
   test('POST /register should return 201', async () => {
     const response = await request.post('/register')
       .set('Accept', 'application/json')
@@ -35,5 +35,38 @@ describe('API /register', () => {
       expect(response.statusCode).toBe(409)
       expect(response.body).toHaveProperty('Error', 'Email already present in DB')
     })
+  })
+})
+
+describe('API /login', () =>{
+  test('POST /login should return 200', async () => {
+    const response = await request.post('/login')
+    .set('Accept', 'application/json')
+    .send({
+      email : 'test@example.com',
+      password : 'test1234'
+    })
+    expect(response.statusCode).toBe(200)
+    expect(response.body.message).toBe('Successfull Login')
+  })
+  test('POST /login should return 400', async () => {
+    const response = await request.post('/login')
+    .set('Accept', 'application/json')
+    .send({
+      email : 'tst@example.com',
+      password : 'test1234'
+    })
+    expect(response.statusCode).toBe(400)
+    expect(response.body.error).toBe('You have entered an invalid email or password')
+  })
+  test('POST /login should return 400', async () => {
+    const response = await request.post('/login')
+    .set('Accept', 'application/json')
+    .send({
+      email : 'test@example.com',
+      password : 'wrongtestpsw'
+    })
+    expect(response.statusCode).toBe(403)
+    expect(response.body.error).toBe('You have entered an invalid email or password')
   })
 })

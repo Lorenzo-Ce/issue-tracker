@@ -20,8 +20,8 @@ app.use(cookieParser())
 app.get('/', (req, res) => {
     res.sendStatus(200)
 })
-
-app.use('/register', require('./route/register'))
+app.use('/register', require('./routes/register'))
+app.use('/login', require('./routes/login'))
 
 app.all('*', (req, res) => {
     req.accepts('application/json') ? 
