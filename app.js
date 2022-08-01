@@ -17,14 +17,13 @@ app.use(express.json())
 app.use(express.urlencoded({extended: false}))
 app.use(cookieParser())
 
-app.get('/', (req, res) => {
-    res.sendStatus(200)
-})
+
 app.use('/register', require('./routes/register'))
 app.use('/login', require('./routes/login'))
+app.use('/logout', require('./routes/logout'))
 app.use('/refresh', require('./routes/refresh'))
 
-app.use(verifyAccessToken)
+// app.use(verifyAccessToken)
 
 app.all('*', (req, res) => {
     req.accepts('application/json') ? 

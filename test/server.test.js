@@ -6,6 +6,20 @@ var FakeTimers = require("@sinonjs/fake-timers");
 var clock = FakeTimers.createClock();
 //REGISTER ROUTE
 
+const email = 'test@example.com'
+  const refreshToken = jwt.sign({
+    email
+    },
+    process.env.SECRET_REFRESH_TOKEN,
+    {expiresIn: '30m'}
+  )
+  const wrongRefreshToken = jwt.sign({
+    email: 'tst@example.com'
+    },
+    process.env.SECRET_REFRESH_TOKEN,
+    {expiresIn: '30m'}
+  )
+
 describe('API /register', () => {
   beforeAll(() => cleanDatabaseRecord('test'))
 
@@ -72,20 +86,8 @@ describe('API /login', () =>{
 //REFRESH ROUTE
 
 describe('API /refresh route', () =>{
-  const email = 'test@example.com'
-  const refreshToken = jwt.sign({
-    email
-    },
-    process.env.SECRET_REFRESH_TOKEN,
-    {expiresIn: '30m'}
-  )
-  const wrongRefreshToken = jwt.sign({
-    email: 'tst@example.com'
-    },
-    process.env.SECRET_REFRESH_TOKEN,
-    {expiresIn: '30m'}
-  )
-  beforeAll(() => setRefreshToken(email, refreshToken));
+  
+  beforeAll(() => setRefreshToken(email, refreshToken))
 
   test('POST valid token should return 200', async () => {
     const response = await request.post('/refresh').set('Cookie', `token=${refreshToken}`)
@@ -100,3 +102,17 @@ describe('API /refresh route', () =>{
     expect(response.statusCode).toBe(403)
   })  
 })
+
+//LOGOUT ROUTE
+
+describe('API /logout route', () => {
+
+  beforeAll(() => setRefreshToken(email, refreshToken))
+
+  test('GET should return 200', async () => {
+    const response = await request.post('/logout').set('Cookie', `token=${refreshToken}`)
+    expect(response.statusCode).toBe(200)
+    expect(response.cookies).toBe(undefined)
+  })
+})
+
