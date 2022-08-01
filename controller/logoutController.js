@@ -1,14 +1,21 @@
 const User = require('../model/User')
 
 const logOutUser = async (req, res, err) => {
-    const refreshToken = req.cookies.token
+    const refreshToken = req?.cookies?.token
     if(!refreshToken){
-        return res.status(400).send({'error':'There is a problem. Try to login again'})
+        return res.sendStatus(205) // refresh no content
     }
     const foundUser = await User.findOne({refreshToken}).exec()
-    foundUser.refreshToken = ''
-    await foundUser.save()
-    res.status(200).send({'message': 'successfull logout'})
+    if(!foundUser){
+        res.clearCookie('token', { httpOnly: true })
+        return res.status(204)
+    }
+    else{ 
+        foundUser.refreshToken = ''
+        await foundUser.save()
+        res.clearCookie('token', { httpOnly: true })
+        res.status(204).send({'message': 'successfull logout'})
+    }
 }
 
 module.exports = { logOutUser }

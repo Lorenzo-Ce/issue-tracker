@@ -1,24 +1,11 @@
 const app = require('../app');
+const {refreshToken, wrongRefreshToken } = require('./utils/fakeData');
 const request = require('supertest')(app);
-const jwt = require('jsonwebtoken')
 const { setRefreshToken, cleanDatabaseRecord } = require('./utils/setDB')
-var FakeTimers = require("@sinonjs/fake-timers");
-var clock = FakeTimers.createClock();
+
 //REGISTER ROUTE
 
-const email = 'test@example.com'
-  const refreshToken = jwt.sign({
-    email
-    },
-    process.env.SECRET_REFRESH_TOKEN,
-    {expiresIn: '30m'}
-  )
-  const wrongRefreshToken = jwt.sign({
-    email: 'tst@example.com'
-    },
-    process.env.SECRET_REFRESH_TOKEN,
-    {expiresIn: '30m'}
-  )
+
 
 describe('API /register', () => {
   beforeAll(() => cleanDatabaseRecord('test'))
@@ -35,8 +22,8 @@ describe('API /register', () => {
       expect(response.body.username).toBe('test')
     })
 
-  describe('API /register duplicate mail', () => {
-    test('POST duplicate email should return 409', async () =>{
+  describe('POST duplicate email', () => {
+    test('Should return 409', async () =>{
       const response = await request.post('/register')
       .set('Accept', 'application/json')
       .send(({
@@ -85,9 +72,9 @@ describe('API /login', () =>{
 
 //REFRESH ROUTE
 
-describe('API /refresh route', () =>{
+describe('API /refresh', () =>{
   
-  beforeAll(() => setRefreshToken(email, refreshToken))
+  beforeAll(() => setRefreshToken('test@example.com', refreshToken))
 
   test('POST valid token should return 200', async () => {
     const response = await request.post('/refresh').set('Cookie', `token=${refreshToken}`)
@@ -105,14 +92,18 @@ describe('API /refresh route', () =>{
 
 //LOGOUT ROUTE
 
-describe('API /logout route', () => {
+describe('API /logout', () => {
 
-  beforeAll(() => setRefreshToken(email, refreshToken))
+  beforeAll(() => setRefreshToken('test@example.com', refreshToken))
 
-  test('GET should return 200', async () => {
+  test('POST should return 204', async () => {
     const response = await request.post('/logout').set('Cookie', `token=${refreshToken}`)
-    expect(response.statusCode).toBe(200)
+    expect(response.statusCode).toBe(204)
     expect(response.cookies).toBe(undefined)
+  })
+  test('POST no refresh Token should return 205', async () => {
+    const response = await request.post('/logout').set('Cookie', ``)
+    expect(response.statusCode).toBe(205)
   })
 })
 
