@@ -70,3 +70,12 @@ describe('API /login', () =>{
     expect(response.body.error).toBe('You have entered an invalid email or password')
   })
 })
+
+describe('API /refresh route', () =>{
+  test('POST /login should return 400', async () => {
+    const response = await request.post('/login')
+    .auth(process.env.TOKEN_TRY , { type: 'bearer' });
+    expect(response.statusCode).toBe(200)
+    expect(response.body.error).toBe('You have entered an invalid email or password')
+  })  
+})

@@ -27,13 +27,13 @@ const loginUser = async (req, res, err) => {
             'email' : matchedUser.email,
             },
             process.env.SECRET_REFRESH_TOKEN,
-            {expiresIn: '1d'}
+            {expiresIn: '100d'}
         )
         matchedUser.refreshToken = refreshToken
         await matchedUser.save()
-        res.cookie({
-            'token' : refreshToken}, 
-            { httpOnly: true }
+        res.cookie(
+            'token', refreshToken, 
+            { httpOnly: true, maxAge: 24 * 3600000 }
         )
         res.status(200).send({
             'message' : 'Successfull Login', 
