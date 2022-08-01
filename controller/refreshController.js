@@ -4,11 +4,11 @@ const User = require('../model/User')
 const updateRefreshToken = async (req, res, err) => {
     const refreshToken = req.cookies?.token
     if(!refreshToken){
-        return res.status(403).send({"error":"There is a problem with your authentication. Try to login again"})
+        return res.status(400).send({'error':'There is a problem. Try to login again'})
     }
     const matchedUser = await User.findOne({refreshToken}).exec()
     if(!matchedUser){
-        return res.status(403).send({"error":"There is a problem with your authentication. Try to login again"})
+        return res.status(403).send({'error':'There is a problem. Try to login again'})
     }
     jwt.verify(
         refreshToken,
@@ -21,7 +21,7 @@ const updateRefreshToken = async (req, res, err) => {
                 process.env.SECRET_REFRESH_TOKEN,
                 {expiresIn: '20m'}
             )
-        res.send({"accessToken" : newAccessToken})
+        res.status(200).send({'accessToken' : newAccessToken})
         }
     )
     

@@ -27,10 +27,11 @@ const loginUser = async (req, res, err) => {
             'email' : matchedUser.email,
             },
             process.env.SECRET_REFRESH_TOKEN,
-            {expiresIn: '100d'}
+            {expiresIn: '1d'}
         )
         matchedUser.refreshToken = refreshToken
         await matchedUser.save()
+        //**** secure flag for https To Add in prod. ****//
         res.cookie(
             'token', refreshToken, 
             { httpOnly: true, maxAge: 24 * 3600000 }
