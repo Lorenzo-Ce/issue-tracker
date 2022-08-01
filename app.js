@@ -22,7 +22,7 @@ app.get('/', (req, res) => {
 })
 app.use('/register', require('./routes/register'))
 app.use('/login', require('./routes/login'))
-
+app.use('/refresh'), require('./routes/refresh')
 app.all('*', (req, res) => {
     req.accepts('application/json') ? 
     res.status(404).send({'Error' : '404 Not Found'}) :
