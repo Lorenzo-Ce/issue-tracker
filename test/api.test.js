@@ -1,7 +1,9 @@
 const app = require('../app');
 const {refreshToken, wrongRefreshToken } = require('./utils/fakeData');
 const request = require('supertest')(app);
-const { setRefreshToken, deleteUser, deleteProject, createUser } = require('./utils/setDB')
+const { setRefreshToken, 
+      createUser, createProject, 
+      deleteUser, deleteProject} = require('./utils/setDB')
 
 //API PROJECTS ROUTE
 
@@ -12,9 +14,9 @@ afterAll(() => {
 })
 
 
-describe('API /projects', () => {
+describe('API POST /projects', () => {
   
-  test('POST should return 201', async () => {
+  test('should return 201', async () => {
     const response = await request.post('/projects')
       .set('Accept', 'application/json')
       .send(({
@@ -26,7 +28,7 @@ describe('API /projects', () => {
       }))
       expect(response.statusCode).toBe(201)
     })
-    test('POST missing field should return 400', async () => {
+    test('missing field should return 400', async () => {
       const response = await request.post('/projects')
         .set('Accept', 'application/json')
         .send(({
@@ -36,7 +38,7 @@ describe('API /projects', () => {
         expect(response.statusCode).toBe(400)
         expect(response.body.error).toBe('missing one or more required field')
       }) 
-    test('POST no user found should return 400', async () => {
+    test('no user found should return 400', async () => {
       const response = await request.post('/projects')
         .set('Accept', 'application/json')
         .send(({
@@ -48,5 +50,20 @@ describe('API /projects', () => {
         }))
         expect(response.statusCode).toBe(400)
       }) 
+})
 
+describe('API GET /projects', () => {
+  beforeAll(() => createProject('testAccount','testProject2', 'Open',  [{role : 'Manager', usernames : ['testAccount']}]))
+  afterAll(() => deleteProject('testProject2'))
+  
+  test('should return 200', async () => {
+    const response = await request.get('/projects')
+      .set('Accept', 'application/json')
+      .send(({
+          username: 'testAccount'
+      }))
+      expect(response.statusCode).toBe(200)
+      expect(response.body).toBeDefined()
+    })
+   
 })

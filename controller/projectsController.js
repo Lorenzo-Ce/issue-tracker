@@ -24,12 +24,23 @@ const addProject = async (req, res, err) => {
         }  
     }catch(error){
         console.log(error)
-    }
-    
+    } 
     res.status(201).send({'message': `Project ${name} created`})
 }
 
-const getAllProjects = async (req, res, err) => {}
+const getAllProjects = async (req, res, err) => {
+    const { username } = req.body
+    const matchedUser = await User.findOne({ username }).exec()
+    
+    const result = await Project.aggregate([{
+        $match: {
+            _id : {$in: matchedUser.projects } 
+        }
+    }])
+    console.log(result)
+    const sendResult = JSON.stringify(result)
+    res.status(200).send(sendResult)
+}
 
 
 const deleteProject = async (req, res, err) => {}

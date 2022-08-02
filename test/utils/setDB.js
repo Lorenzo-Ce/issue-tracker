@@ -16,6 +16,27 @@ const deleteUser = async (username) => {
     }
 }
 
+const createProject = async (username, projectName, projectStatus, projectMembers) => {
+    try{
+        const newProject = await Project.create({
+            name : projectName, 
+            status: projectStatus, 
+            members: projectMembers
+        })
+        const result = await User.findOneAndUpdate(
+                                {username}, 
+                                {$addToSet: {projects : newProject._id}}, 
+                                { rawResult: true} 
+                            ).exec()
+        if(!result.lastErrorObject.updatedExisting){
+            await Project.deleteOne({_id: newProject._id})
+            throw new Error
+        }  
+    }catch(error){
+        console.log(error)
+    } 
+}
+
 const deleteProject = async (name) => {
     try{
         await Project.deleteOne({name})
@@ -35,4 +56,10 @@ const setRefreshToken = async (email, refreshToken) => {
     }
 }
 
-module.exports = { createUser, deleteUser, deleteProject, setRefreshToken }
+module.exports = { 
+    createUser, 
+    deleteUser,
+    createProject, 
+    deleteProject, 
+    setRefreshToken 
+}
