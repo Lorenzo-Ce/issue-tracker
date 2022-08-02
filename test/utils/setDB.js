@@ -1,5 +1,5 @@
 const User = require("../../model/User")
-
+const Project = require('../../model/Project')
 const createUser = async (username, email, password) => {
     try{
         await User.create({username, email, password})
@@ -16,6 +16,15 @@ const deleteUser = async (username) => {
     }
 }
 
+const deleteProject = async (name) => {
+    try{
+        await Project.deleteOne({name})
+    } catch (err){
+        console.error(err)
+    }
+}
+
+
 const setRefreshToken = async (email, refreshToken) => {
     try{
         const user = await User.findOne({email})
@@ -26,4 +35,4 @@ const setRefreshToken = async (email, refreshToken) => {
     }
 }
 
-module.exports = { createUser, deleteUser, setRefreshToken }
+module.exports = { createUser, deleteUser, deleteProject, setRefreshToken }
