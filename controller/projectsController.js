@@ -57,7 +57,6 @@ const getProject = async (req, res, err) => {
     const _id = req.params?.id
     if(!_id) return res.status(400).send({'error': 'missing id from URL'})
     const foundProject = await Project.findOne({_id}).exec()
-    console.log(foundProject)
     if(!foundProject) return res.sendStatus(404)
     const project = JSON.stringify(foundProject)
     res.status(200).send(project)
