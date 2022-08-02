@@ -5,11 +5,13 @@ const { setRefreshToken,
       createUser, createProject, 
       deleteUser, deleteProject} = require('./utils/setDB')
 
+ 
+
 //API PROJECTS ROUTE
 
-beforeAll(async () => {
+beforeAll(() => {
   createProject('testAccount','testProject2', 'Open',  [{role : 'Manager', usernames : ['testAccount']}])
-  await createUser('testAccount', 'test@test.com', 'test12345')
+  createUser('testAccount', 'test@test.com', 'test12345')
   return createUser('testAccount2', 'test2@test.com', 'test12345')
 })
 afterAll(() => {
@@ -28,8 +30,7 @@ describe('API POST /projects', () => {
           username: 'testAccount',
           name: 'testProject',
           status: 'Open',
-          members: [ {role : 'Manager', usernames : ['testAccount']}],
-          issues : []
+          members: [ {role : 'Manager', usernames : ['testAccount']}]
       }))
       expect(response.statusCode).toBe(201)
     })
@@ -85,9 +86,14 @@ describe('API GET /projects', () => {
 })
 
 describe('API GET /projects/:id', () => {
-  test("should return 200" , async () => {
-    const response = await request.get('/projects/62e9211b39d5fd5965846452')
+  test.skip("should return 200" , async () => {
+    const response = await request.get(`/projects/`)
     expect(response.statusCode).toBe(200)
+    expect(response.body).toBeDefined()
+  })
+  test("Project not found should return 404" , async () => {
+    const response = await request.get('/projects/62e9211b39d5fd8065846452')
+    expect(response.statusCode).toBe(404)
     expect(response.body).toBeDefined()
   })
 })

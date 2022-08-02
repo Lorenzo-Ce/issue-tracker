@@ -31,7 +31,7 @@ const createProject = async (username, projectName, projectStatus, projectMember
                             ).exec()
         if(!result.lastErrorObject.updatedExisting){
             await Project.deleteOne({_id: newProject._id})
-            throw new Error
+            throw Error
         }  
         return result._id
     }catch(error){
