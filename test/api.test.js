@@ -7,15 +7,18 @@ const { setRefreshToken,
 
 //API PROJECTS ROUTE
 
-beforeAll(() => createUser('testAccount', 'test1@test.com', 'test12345'))
+beforeAll(async () => {
+  await createUser('testAccount', 'test@test.com', 'test12345')
+  return createUser('testAccount2', 'test2@test.com', 'test12345')
+})
 afterAll(() => {
   deleteProject('testProject')
+  deleteUser('testAccount2')
   return  deleteUser('testAccount')
 })
 
 
-describe('API POST /projects', () => {
-  
+describe('API POST /projects', () => { 
   test('should return 201', async () => {
     const response = await request.post('/projects')
       .set('Accept', 'application/json')
@@ -65,5 +68,19 @@ describe('API GET /projects', () => {
       expect(response.statusCode).toBe(200)
       expect(response.body).toBeDefined()
     })
-   
+    test('Missing username should return 400', async () => {
+      const response = await request.get('/projects')
+        .set('Accept', 'application/json')
+        expect(response.statusCode).toBe(400)
+        expect(response.body.error).toBe('Missing username required field')
+      })
+    test('No projects should return 204 and empty array', async () => {
+      const response = await request.get('/projects')
+        .set('Accept', 'application/json')
+        .send(({
+          username: 'testAccount2'
+        }))
+        expect(response.statusCode).toBe(204)
+        expect(response.body).toBeDefined()
+      })
 })

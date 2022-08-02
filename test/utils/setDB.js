@@ -1,5 +1,6 @@
 const User = require("../../model/User")
 const Project = require('../../model/Project')
+
 const createUser = async (username, email, password) => {
     try{
         await User.create({username, email, password})

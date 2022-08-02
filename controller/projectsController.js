@@ -22,24 +22,33 @@ const addProject = async (req, res, err) => {
             await Project.deleteOne({_id: newProject._id})
             return res.sendStatus(400)
         }  
+        res.status(201).send({'message': `Project ${name} created`})
     }catch(error){
         console.log(error)
     } 
-    res.status(201).send({'message': `Project ${name} created`})
 }
 
 const getAllProjects = async (req, res, err) => {
     const { username } = req.body
-    const matchedUser = await User.findOne({ username }).exec()
-    
-    const result = await Project.aggregate([{
-        $match: {
-            _id : {$in: matchedUser.projects } 
+    if(!username) return res.status(400).send({'error':'Missing username required field'})
+    try{
+        const matchedUser = await User.findOne({ username }).exec()
+        if(!matchedUser) return res.sendStatus(400)
+        const result = await Project.aggregate([{
+            $match: {
+                _id : {$in: matchedUser.projects } 
+            }
+        }])
+        if(result.length === 0){
+            return res.status(204).send({})
         }
-    }])
-    console.log(result)
-    const sendResult = JSON.stringify(result)
-    res.status(200).send(sendResult)
+        else{
+            const sendResult = JSON.stringify(result)
+            res.status(200).send(sendResult)
+        }
+    }catch(error){
+        console.log(error)
+    }
 }
 
 
