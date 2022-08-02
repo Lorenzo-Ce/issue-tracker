@@ -1,6 +1,14 @@
 const User = require("../../model/User")
 
-const cleanDatabaseRecord = async (username) => {
+const createUser = async (username, email, password) => {
+    try{
+        await User.create({username, email, password})
+    } catch (err){
+        console.error(err)
+    }
+}
+
+const deleteUser = async (username) => {
     try{
         await User.deleteOne({username})
     } catch (err){
@@ -18,4 +26,4 @@ const setRefreshToken = async (email, refreshToken) => {
     }
 }
 
-module.exports = { setRefreshToken, cleanDatabaseRecord }
+module.exports = { createUser, deleteUser, setRefreshToken }

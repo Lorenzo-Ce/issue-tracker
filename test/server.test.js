@@ -1,15 +1,13 @@
 const app = require('../app');
 const {refreshToken, wrongRefreshToken } = require('./utils/fakeData');
 const request = require('supertest')(app);
-const { setRefreshToken, cleanDatabaseRecord } = require('./utils/setDB')
+const { setRefreshToken, deleteUser } = require('./utils/setDB')
 
 //REGISTER ROUTE
 
-
+afterAll(() => deleteUser('test'))
 
 describe('API /register', () => {
-  beforeAll(() => cleanDatabaseRecord('test'))
-
   test('POST ok data should return 201', async () => {
     const response = await request.post('/register')
       .set('Accept', 'application/json')

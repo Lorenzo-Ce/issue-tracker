@@ -5,7 +5,6 @@ const app = express()
 const cors = require('cors')
 const cookieParser = require('cookie-parser')
 const { logger } = require('./middleware/logHandler')
-const { verifyAccessToken } = require('./middleware/verifyAccessToken')
 const { errorHandler } = require('./middleware/errorHandler')
 
 mongoose.connect(process.env.DB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
@@ -23,7 +22,7 @@ app.use('/login', require('./routes/login'))
 app.use('/logout', require('./routes/logout'))
 app.use('/refresh', require('./routes/refresh'))
 
-// app.use(verifyAccessToken)
+app.use('/projects', require('./routes/api/projects'))
 
 app.all('*', (req, res) => {
     req.accepts('application/json') ? 

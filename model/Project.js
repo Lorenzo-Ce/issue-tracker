@@ -1,5 +1,4 @@
 const { Schema, default: mongoose } = require('mongoose')
-
 const ProjectSchema = new Schema({
     name: {
         type: String,
@@ -18,8 +17,8 @@ const ProjectSchema = new Schema({
         role: {
             type: String,
             enum: ['Manager','Developer','Designer','Tester'],
-            users: [Schema.Types.ObjectId]
         },
+        usernames: {type: [String]}
     }],
     issues: [{
         name: {
