@@ -11,7 +11,7 @@ afterAll(() => deleteUser('testAccount'))
 describe('API /projects', () => {
   
   test('POST project should return 201', async () => {
-    const response = await request.post('/project')
+    const response = await request.post('/projects')
       .set('Accept', 'application/json')
       .send(({
           name: 'testProject',

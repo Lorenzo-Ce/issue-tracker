@@ -3,8 +3,7 @@ const { getAllProjects, addProject, deleteProject } = require('../../controller/
 const { verifyAccessToken } = require('../../middleware/verifyAccessToken')
 const router = express.Router()
 
-router.route('/')
-    //.use(verifyAccessToken)
+router.route('/') //.use(verifyAccessToken)
     .get(getAllProjects)
     .post(addProject)
     .delete(deleteProject)
