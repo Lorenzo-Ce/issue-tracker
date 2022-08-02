@@ -33,6 +33,7 @@ const createProject = async (username, projectName, projectStatus, projectMember
             await Project.deleteOne({_id: newProject._id})
             throw new Error
         }  
+        return result._id
     }catch(error){
         console.log(error)
     } 

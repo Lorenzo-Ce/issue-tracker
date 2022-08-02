@@ -8,11 +8,13 @@ const { setRefreshToken,
 //API PROJECTS ROUTE
 
 beforeAll(async () => {
+  createProject('testAccount','testProject2', 'Open',  [{role : 'Manager', usernames : ['testAccount']}])
   await createUser('testAccount', 'test@test.com', 'test12345')
   return createUser('testAccount2', 'test2@test.com', 'test12345')
 })
 afterAll(() => {
   deleteProject('testProject')
+  deleteProject('testProject2')
   deleteUser('testAccount2')
   return  deleteUser('testAccount')
 })
@@ -56,9 +58,6 @@ describe('API POST /projects', () => {
 })
 
 describe('API GET /projects', () => {
-  beforeAll(() => createProject('testAccount','testProject2', 'Open',  [{role : 'Manager', usernames : ['testAccount']}]))
-  afterAll(() => deleteProject('testProject2'))
-  
   test('should return 200', async () => {
     const response = await request.get('/projects')
       .set('Accept', 'application/json')
@@ -83,4 +82,12 @@ describe('API GET /projects', () => {
         expect(response.statusCode).toBe(204)
         expect(response.body).toBeDefined()
       })
+})
+
+describe('API GET /projects/:id', () => {
+  test("should return 200" , async () => {
+    const response = await request.get('/projects/62e9211b39d5fd5965846452')
+    expect(response.statusCode).toBe(200)
+    expect(response.body).toBeDefined()
+  })
 })

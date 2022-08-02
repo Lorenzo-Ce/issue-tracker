@@ -51,7 +51,21 @@ const getAllProjects = async (req, res, err) => {
     }
 }
 
+// gets and deletes single projects
+
+const getProject = async (req, res, err) => {
+    const id = req.params?.id
+    if(!id) return res.status(400).send({'error': 'missing id from URL'})
+    const foundProject = await Project.findOne({__id: id}).exec()
+    if(!foundProject) return res.sendStatus(404)
+    const project = JSON.stringify(foundProject)
+    res.status(200).send(project)
+    
+}
+
+const updateProject = async (req, res, err) => {}
 
 const deleteProject = async (req, res, err) => {}
 
-module.exports = {getAllProjects, addProject, deleteProject}
+
+module.exports = {getAllProjects, addProject, getProject, updateProject, deleteProject}
