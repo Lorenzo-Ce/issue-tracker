@@ -61,9 +61,19 @@ const getProject = async (req, res, err) => {
     
 }
 
-const updateProject = async (req, res, err) => {}
+const updateProject = async (req, res, err) => {
+}
 
-const deleteProject = async (req, res, err) => {}
+const deleteProject = async (req, res, err) => {
+    const _id = req.params?.id
+    if(!_id) return res.status(400).send({'error': 'missing id from URL'})
+    const result = await Project.deleteOne({_id})
+    if(result.deletedCount === 0){
+        return res.sendStatus(204)
+    } else{
+        return res.sendStatus(200)
+    }
+}
 
 
-module.exports = {getAllProjects, addProject, getProject, updateProject, deleteProject}
+    module.exports = {getAllProjects, addProject, getProject, updateProject, deleteProject}

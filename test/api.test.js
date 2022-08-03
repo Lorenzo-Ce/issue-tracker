@@ -8,17 +8,17 @@ const { setRefreshToken,
  
 
 //API PROJECTS ROUTE
-
-beforeAll(() => {
-  createProject('testAccount','testProject2', 'Open',  [{role : 'Manager', usernames : ['testAccount']}])
-  createUser('testAccount', 'test@test.com', 'test12345')
-  return createUser('testAccount2', 'test2@test.com', 'test12345')
+let id 
+beforeAll(async () => {
+  await createUser('testAccount', 'test@test.com', 'test12345')
+  await createUser('testAccount2', 'test2@test.com', 'test12345')
+  id = await createProject('testAccount','testProject2', 'Open',  [{role : 'Manager', usernames : ['testAccount']}])
 })
 afterAll(() => {
   deleteProject('testProject')
-  deleteProject('testProject2')
+ // deleteProject('testProject2')
   deleteUser('testAccount2')
-  return  deleteUser('testAccount')
+  deleteUser('testAccount')
 })
 
 
@@ -30,9 +30,10 @@ describe('API POST /projects', () => {
           username: 'testAccount',
           name: 'testProject',
           status: 'Open',
-          members: [ {role : 'Manager', usernames : ['testAccount']}]
+          members: [{role : 'Manager', usernames : ['testAccount']}]
       }))
       expect(response.statusCode).toBe(201)
+      expect(response.body).toBeDefined()
     })
     test('missing field should return 400', async () => {
       const response = await request.post('/projects')
@@ -86,8 +87,8 @@ describe('API GET /projects', () => {
 })
 
 describe('API GET /projects/:id', () => {
-  test.skip("should return 200" , async () => {
-    const response = await request.get(`/projects/`)
+  test("should return 200" , async () => {
+    const response = await request.get(`/projects/${id}`)
     expect(response.statusCode).toBe(200)
     expect(response.body).toBeDefined()
   })
@@ -96,8 +97,14 @@ describe('API GET /projects/:id', () => {
     expect(response.statusCode).toBe(404)
     expect(response.body).toBeDefined()
   })
-})
-
-describe('API POST /projects/:id', () => {
-  test('should return 200', () => {})
+  describe('API DELETE /projects/:id', () => {
+    test('should return 200', async () => {
+      const response = await request.delete(`/projects/${id}`)
+      expect(response.statusCode).toBe(200)
+    })
+    test('should return 204', async () => {
+      const response = await request.delete(`/projects/62e9211b39d5fd8065846452`)
+      expect(response.statusCode).toBe(204)
+    })
+  })
 })

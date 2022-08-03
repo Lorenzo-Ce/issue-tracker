@@ -7,7 +7,6 @@ const { verifyAccessToken } = require('../../middleware/verifyAccessToken')
 router.route('/') //.use(verifyAccessToken)
     .get(getAllProjects)
     .post(addProject)
-    .delete(deleteProject)
 
 router.route('/:id')
     .get(getProject)
