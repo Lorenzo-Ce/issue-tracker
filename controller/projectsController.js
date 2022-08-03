@@ -6,11 +6,9 @@ const addProject = async (req, res, err) => {
     const status = req.body?.status
     const members = req.body?.members
     const username = req.body?.username
-
     if(!name || !status || !members || !username){
        return res.status(400).send({'error' : 'missing one or more required field'})
     }
-
     try{
         const newProject = await Project.create({name, status, members})
         const result = await User.findOneAndUpdate(
@@ -22,7 +20,7 @@ const addProject = async (req, res, err) => {
             await Project.deleteOne({_id: newProject._id})
             return res.sendStatus(400)
         }  
-        res.status(201).send({'message': `Project ${name} created`})
+        res.status(201).send(JSON.stringify(newProject))
     }catch(error){
         console.log(error)
     } 

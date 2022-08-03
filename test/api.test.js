@@ -97,3 +97,7 @@ describe('API GET /projects/:id', () => {
     expect(response.body).toBeDefined()
   })
 })
+
+describe('API POST /projects/:id', () => {
+  test('should return 200', () => {})
+})
