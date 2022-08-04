@@ -24,15 +24,14 @@ const createProject = async (username, projectName, projectStatus, projectMember
                 status: projectStatus, 
                 members: projectMembers
             })
-        const result = await User.findOneAndUpdate(
-                                {username}, 
-                                {$addToSet: {projects : newProject._id}}, 
-                                { rawResult: true} 
-                            ).exec()
-        if(!result.lastErrorObject.updatedExisting){
+        const foundUser = await User.findOne({username}).exec()
+        if(!foundUser){
             await Project.deleteOne({_id: newProject._id})
             throw new Error('Project deleted, not added to user')
         }  
+        foundUser.projects.set(newProject._id, 'Manager') 
+        await foundUser.save()
+
         return newProject._id
     }catch(error){
         console.log(error)

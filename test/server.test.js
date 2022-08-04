@@ -5,6 +5,7 @@ const { setRefreshToken, deleteUser } = require('./utils/setDB')
 
 //REGISTER ROUTE
 
+
 afterAll(() => deleteUser('test'))
 
 describe('API /register', () => {

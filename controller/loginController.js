@@ -4,12 +4,11 @@ const User = require('../model/User')
 
 const loginUser = async (req, res, err) => {
     const {email, password} = req.body
-    if(!email && !password){
-        return res.status(400)
-            .send({
-                'email' : `${email ? 'Ok' : 'Email Required'}`,
-                'password': `${password ? 'Ok' : 'Password Required'}`
-            })
+    if(!email || !password){
+        return res.status(400).send({
+            'email' : `${email ? 'Ok' : 'Email Required'}`,
+            'password': `${password ? 'Ok' : 'Password Required'}`
+        })
     }
     try{
         const matchedUser = await User.findOne({email : email}).exec()

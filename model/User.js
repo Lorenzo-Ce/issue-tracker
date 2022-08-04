@@ -27,7 +27,11 @@ const UserSchema = new Schema({
         type: Boolean,
         default: false
     }, 
-    projects : [Schema.Types.ObjectId],
+    projects: {
+        type: Map, 
+        of: String,
+        default: {}
+    }
   });
 
   const User = mongoose.model('User', UserSchema)

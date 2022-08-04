@@ -1,5 +1,6 @@
 const Project = require("../model/Project")
 const User = require("../model/User")
+const mongoose = require('mongoose')
 
 const addProject = async (req, res, err) => {
     const name = req.body?.name
@@ -11,15 +12,13 @@ const addProject = async (req, res, err) => {
     }
     try{
         const newProject = await Project.create({name, status, members})
-        const result = await User.findOneAndUpdate(
-                                {username}, 
-                                {$addToSet: {projects : newProject._id}}, 
-                                { rawResult: true} 
-                            ).exec()
-        if(!result.lastErrorObject.updatedExisting){
+        const foundUser = await User.findOne({username}).exec()
+        if(!foundUser){
             await Project.deleteOne({_id: newProject._id})
             return res.sendStatus(400)
         }  
+        foundUser.projects.set(newProject._id, 'Manager') 
+        await foundUser.save()
         res.status(201).send(JSON.stringify(newProject))
     }catch(error){
         console.log(error)
@@ -32,9 +31,11 @@ const getAllProjects = async (req, res, err) => {
     try{
         const matchedUser = await User.findOne({ username }).exec()
         if(!matchedUser) return res.sendStatus(400)
+        const ids= Array.from(matchedUser.projects.keys())
+        const objId = ids.map(id => mongoose.Types.ObjectId(id))
         const result = await Project.aggregate([{
             $match: {
-                _id : {$in: matchedUser.projects } 
+                _id : {$in: objId} 
             }
         }])
         if(result.length === 0){
@@ -54,7 +55,7 @@ const getAllProjects = async (req, res, err) => {
 const getProject = async (req, res, err) => {
     const _id = req.params?.id
     if(!_id) return res.status(400).send({'error': 'missing id from URL'})
-    const foundProject = await Project.findOne({_id}).exec()
+    const foundProject = await Project.findById({_id}).exec()
     if(!foundProject) return res.sendStatus(404)
     const project = JSON.stringify(foundProject)
     return res.status(200).send(project)
