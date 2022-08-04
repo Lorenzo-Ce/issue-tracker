@@ -4,13 +4,13 @@ const jwt = require('jsonwebtoken')
 
 
   const refreshToken = jwt.sign({
-    email: 'test@example.com'
+    username: 'test'
     },
     process.env.SECRET_REFRESH_TOKEN,
     {expiresIn: '30m'}
   )
   const wrongRefreshToken = jwt.sign({
-    email: 'tst@example.com'
+    username: 'tst'
     },
     process.env.SECRET_REFRESH_TOKEN,
     {expiresIn: '30m'}

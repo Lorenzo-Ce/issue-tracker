@@ -9,7 +9,7 @@ const verifyAccessToken = (req, res, next) => {
         process.env.SECRET_ACCESS_TOKEN,
         function (err, decoded){
             if(err) return res.sendStatus(403)
-            req.email = decoded.email
+            req.username = decoded.username
             next()
         }
     )

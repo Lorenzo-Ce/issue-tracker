@@ -48,9 +48,9 @@ const deleteProject = async (name) => {
 }
 
 
-const setRefreshToken = async (email, refreshToken) => {
+const setRefreshToken = async (username, refreshToken) => {
     try{
-        const user = await User.findOne({email})
+        const user = await User.findOne({username})
         user.refreshToken = refreshToken
         await user.save()
     } catch (err){

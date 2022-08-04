@@ -72,7 +72,7 @@ describe('API /login', () =>{
 
 describe('API /refresh', () =>{
   
-  beforeAll(() => setRefreshToken('test@example.com', refreshToken))
+  beforeAll(() => setRefreshToken('test', refreshToken))
 
   test('POST valid token should return 200', async () => {
     const response = await request.post('/refresh').set('Cookie', `token=${refreshToken}`)
@@ -92,7 +92,7 @@ describe('API /refresh', () =>{
 
 describe('API /logout', () => {
 
-  beforeAll(() => setRefreshToken('test@example.com', refreshToken))
+  beforeAll(() => setRefreshToken('test', refreshToken))
 
   test('POST should return 204', async () => {
     const response = await request.post('/logout').set('Cookie', `token=${refreshToken}`)

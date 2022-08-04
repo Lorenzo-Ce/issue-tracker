@@ -16,7 +16,6 @@ beforeAll(async () => {
 })
 afterAll(() => {
   deleteProject('testProject')
- // deleteProject('testProject2')
   deleteUser('testAccount2')
   deleteUser('testAccount')
 })

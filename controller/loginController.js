@@ -4,7 +4,7 @@ const User = require('../model/User')
 
 const loginUser = async (req, res, err) => {
     const {email, password} = req.body
-    if(!email || !password){
+    if(!email && !password){
         return res.status(400)
             .send({
                 'email' : `${email ? 'Ok' : 'Email Required'}`,
@@ -18,13 +18,13 @@ const loginUser = async (req, res, err) => {
         const result = await bcrypt.compare(password, matchedUser.password)
         if(!result) return  res.status(403).send({'error' : 'You have entered an invalid email or password'})
         const accessToken = jwt.sign({
-            'email' : matchedUser.email,
+            'username' : matchedUser.username,
             },
             process.env.SECRET_ACCESS_TOKEN,
             {expiresIn: '20m'}
         )
         const refreshToken = jwt.sign({
-            'email' : matchedUser.email,
+            'username' : matchedUser.username,
             },
             process.env.SECRET_REFRESH_TOKEN,
             {expiresIn: '1d'}
