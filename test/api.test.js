@@ -12,8 +12,9 @@ let id
 beforeAll(async () => {
   await createUser('testAccount', 'test@test.com', 'test12345')
   await createUser('testAccount2', 'test2@test.com', 'test12345')
-  id = await createProject('testAccount','testProject2', 'Open',  [{role : 'Manager', usernames : ['testAccount']}])
+  id = await createProject('testAccount','testProject2', 'Open', {'Manager': ['testAccount']})
 })
+
 afterAll(() => {
   deleteProject('testProject')
   deleteProject('testProject2')
@@ -30,7 +31,7 @@ describe('API POST /projects', () => {
           username: 'testAccount',
           name: 'testProject',
           status: 'Open',
-          members: [{role : 'Manager', usernames : ['testAccount']}]
+          roles:{'Manager': ['testAccount'], 'Tester' : ['Paul', 'Tony' ]}
       }))
       expect(response.statusCode).toBe(201)
       expect(response.body).toBeDefined()
@@ -52,7 +53,7 @@ describe('API POST /projects', () => {
             username: 'wrongTestAccount',
             name: 'testProject',
             status: 'Open',
-            members: [ {role : 'Manager', usernames : ['wrongTestAccount']}],
+            roles: {'Manager': ['testAccount']},
             issues : []
         }))
         expect(response.statusCode).toBe(400)
@@ -107,4 +108,12 @@ describe('API GET /projects/:id', () => {
       expect(response.statusCode).toBe(204)
     })
   })
+})
+
+describe.skip('API PUT project/:id', () => {
+  test('should return 200', async  () =>{
+    const response = await request.put(`/projects/${id}`)
+    expect(response.statusCode).toBe(200)
+  })
+
 })

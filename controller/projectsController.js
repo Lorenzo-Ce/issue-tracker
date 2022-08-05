@@ -5,13 +5,14 @@ const mongoose = require('mongoose')
 const addProject = async (req, res, err) => {
     const name = req.body?.name
     const status = req.body?.status
-    const members = req.body?.members
+    const roles = req.body?.roles
     const username = req.body?.username
-    if(!name || !status || !members || !username){
+    if(!name || !status || !roles || !username){
        return res.status(400).send({'error' : 'missing one or more required field'})
     }
     try{
-        const newProject = await Project.create({name, status, members})
+        const members = Object.values(roles).flat()
+        const newProject = await Project.create({name, status, roles, members})
         const foundUser = await User.findOne({username}).exec()
         if(!foundUser){
             await Project.deleteOne({_id: newProject._id})
@@ -54,7 +55,7 @@ const getAllProjects = async (req, res, err) => {
 
 const getProject = async (req, res, err) => {
     const _id = req.params?.id
-    if(!_id) return res.status(400).send({'error': 'missing id from URL'})
+    if(!_id) return res.status(400).send({'error': 'missing id'})
     const foundProject = await Project.findById({_id}).exec()
     if(!foundProject) return res.sendStatus(404)
     const project = JSON.stringify(foundProject)
@@ -63,19 +64,24 @@ const getProject = async (req, res, err) => {
 
 const updateProject = async (req, res, err) => {
     const _id = req.params?.id
-    if(!_id) return res.status(400).send({'error': 'missing id from URL'})
+    if(!_id) return res.status(400).send({'error': 'missing id'})
 }
 
 const deleteProject = async (req, res, err) => {
     const _id = req.params?.id
-    if(!_id) return res.status(400).send({'error': 'missing id from URL'})
-    const result = await Project.deleteOne({_id})
-    if(result.deletedCount === 0){
-        return res.sendStatus(204)
-    } else{
-        return res.sendStatus(200)
-    }
-}
+    if(!_id) return res.status(400).send({'error': 'missing id'})
+    const foundProject = await Project.findById({_id})
+    if(!foundProject) return res.sendStatus(204)
+    const projectMembers = await User.find({username: {$in: foundProject.members}})
+    projectMembers.forEach(async (member) => {
+        member.projects.delete(_id)
+        await member.save()
+    })
 
+    // await foundProjec.delete()
+    const result = await Project.deleteOne({_id})
+    if(!result.acknowledged){res.sendStatus(500)} // Internal Server Issue
+    return res.sendStatus(200)
+}
 
     module.exports = {getAllProjects, addProject, getProject, updateProject, deleteProject}

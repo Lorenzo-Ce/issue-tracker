@@ -17,12 +17,14 @@ const deleteUser = async (username) => {
     }
 }
 
-const createProject = async (username, projectName, projectStatus, projectMembers) => {
+const createProject = async (username, projectName, projectStatus, projectRoles) => {
+        const members = Object.values(projectRoles).flat()
         try{
             const newProject = await Project.create({
                 name : projectName, 
                 status: projectStatus, 
-                members: projectMembers
+                roles: projectRoles,
+                members
             })
         const foundUser = await User.findOne({username}).exec()
         if(!foundUser){

@@ -13,13 +13,12 @@ const ProjectSchema = new Schema({
     },
     startDate: String,
     endDate: String,
-    members: [{
-        role: {
-            type: String,
-            enum: ['Manager','Developer','Designer','Tester'],
-        },
-        usernames: {type: [String]}
-    }],
+    members: [String],
+    roles: {
+        type: Map,
+        of: Array,
+        default: {}
+    },
     issues: [{
         name: {
             type: String,
