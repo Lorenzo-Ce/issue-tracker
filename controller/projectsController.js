@@ -80,7 +80,8 @@ const deleteProject = async (req, res, err) => {
 
     // await foundProjec.delete()
     const result = await Project.deleteOne({_id})
-    if(!result.acknowledged){res.sendStatus(500)} // Internal Server Issue
+    if(!result.acknowledged){return res.sendStatus(500)} // Internal Server Issue
+    
     return res.sendStatus(200)
 }
 
