@@ -9,15 +9,18 @@ const { setRefreshToken,
 
 //API PROJECTS ROUTE
 let id 
+let id2
 beforeAll(async () => {
   await createUser('testAccount', 'test@test.com', 'test12345')
   await createUser('testAccount2', 'test2@test.com', 'test12345')
   id = await createProject('testAccount','testProject2', 'Open', {'Manager': ['testAccount']})
+  id2 = await createProject('testAccount','testProject3', 'Open', {'Manager': ['testAccount']})
 })
 
 afterAll(() => {
   deleteProject('testProject')
   deleteProject('testProject2')
+  deleteProject('testProject3')
   deleteUser('testAccount2')
   deleteUser('testAccount')
 })
@@ -60,7 +63,7 @@ describe('API POST /projects', () => {
       }) 
 })
 
-describe('API GET /projects', () => {
+describe('API GET all /projects', () => {
   test('should return 200', async () => {
     const response = await request.get('/projects')
       .set('Accept', 'application/json')
@@ -110,10 +113,27 @@ describe('API GET /projects/:id', () => {
   })
 })
 
-describe.skip('API PUT project/:id', () => {
+describe('API PUT project/:id', () => {
   test('should return 200', async  () =>{
-    const response = await request.put(`/projects/${id}`)
+    const response = await request.put(`/projects/${id2}`)
+      .send({
+        name: 'NewProjectName',
+        status: 'Paused',
+        startDate: '08/08/2022',
+        endDate: '08/11/2022',
+      })
     expect(response.statusCode).toBe(200)
+    expect(response.body).toHaveProperty('name', 'NewProjectName')
   })
-
+  test('missing field should return 400', async  () =>{
+    const response = await request.put(`/projects/${id2}`)
+      .send({
+        name: 'NewProjectName2',
+        startDate: '08/08/2022',
+        endDate: '08/11/2022',
+      })
+    expect(response.statusCode).toBe(400)
+    expect(response.body).toEqual(
+        expect.objectContaining({'endDate': 'ok', 'name': 'ok', 'startDate': 'ok', 'status': 'missing'}))
+  })
 })

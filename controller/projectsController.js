@@ -65,23 +65,44 @@ const getProject = async (req, res, err) => {
 const updateProject = async (req, res, err) => {
     const _id = req.params?.id
     if(!_id) return res.status(400).send({'error': 'missing id'})
+    const name = req.body.name
+    const status = req.body.status
+    const startDate = req.body.startDate
+    const endDate = req.body.endDate
+    if(!name || !status || ! startDate || ! endDate){
+        return res.status(400).send({
+            'name' : `${name ? 'ok' : 'missing'}`,
+            'status' : `${status ? 'ok' : 'missing'}`,
+            'startDate' : `${startDate ? 'ok' : 'missing'}`,
+            'endDate' : `${endDate ? 'ok' : 'missing'}`
+        })
+    }
+    const foundProject = await Project.findById({_id}).exec()
+    if(!foundProject) return res.sendStatus(404)
+    foundProject.name = name
+    foundProject.status = status
+    foundProject.startDate = startDate
+    foundProject.endDate = endDate
+    await foundProject.save()
+    res.status(200).send(foundProject)
 }
 
 const deleteProject = async (req, res, err) => {
     const _id = req.params?.id
     if(!_id) return res.status(400).send({'error': 'missing id'})
-    const foundProject = await Project.findById({_id})
-    if(!foundProject) return res.sendStatus(204)
-    const projectMembers = await User.find({username: {$in: foundProject.members}})
-    projectMembers.forEach(async (member) => {
-        member.projects.delete(_id)
-        await member.save()
-    })
-
-    // await foundProjec.delete()
-    const result = await Project.deleteOne({_id})
-    if(!result.acknowledged){return res.sendStatus(500)} // Internal Server Issue
-    
+    try{
+        const foundProject = await Project.findById({_id})
+        if(!foundProject) return res.sendStatus(204)
+        const projectMembers = await User.find({username: {$in: foundProject.members}})
+        await Promise.all(projectMembers.map(async member => {
+            console.log('starting process')
+            member.projects.delete(_id)
+            return await member.save()
+        })
+        )
+        const result = await Project.deleteOne({_id})
+        if(!result.acknowledged){return res.sendStatus(500)} // Internal Server Issue 
+    }catch(error){console.log(error)}
     return res.sendStatus(200)
 }
 
