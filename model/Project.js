@@ -11,8 +11,8 @@ const ProjectSchema = new Schema({
         enum: ['Open','Paused','Closed'],
         required: true
     },
-    startDate: String,
-    endDate: String,
+    startDate: Date,
+    endDate: Date,
     members: [String],
     roles: {
         type: Map,
@@ -25,6 +25,8 @@ const ProjectSchema = new Schema({
             min: 3,
             max: 30
         },
+        openingDate: Date,
+        closingDate: Date,
         label: {
             type: String, 
             enum:['Todos','Bug','Feature','Improvement']
@@ -42,7 +44,7 @@ const ProjectSchema = new Schema({
             user: String,
             role: String,
             text: String,
-            date: String
+            date: Date
         }],
         images:[{
             data: Buffer,
