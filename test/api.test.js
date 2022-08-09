@@ -20,7 +20,7 @@ beforeAll(async () => {
 afterAll(() => {
   deleteProject('testProject')
   deleteProject('testProject2')
-  deleteProject('testProject3')
+  deleteProject('NewProjectName')
   deleteUser('testAccount2')
   deleteUser('testAccount')
 })
@@ -128,7 +128,7 @@ describe('API PUT project/:id', () => {
   test('missing field should return 400', async  () =>{
     const response = await request.put(`/projects/${id2}`)
       .send({
-        name: 'NewProjectName2',
+        name: 'NewProjectName',
         startDate: '08/08/2022',
         endDate: '08/11/2022',
       })

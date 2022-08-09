@@ -1,8 +1,5 @@
 const jwt = require('jsonwebtoken')
 
-
-
-
   const refreshToken = jwt.sign({
     username: 'test'
     },

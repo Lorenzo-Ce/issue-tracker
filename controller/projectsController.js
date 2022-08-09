@@ -1,5 +1,5 @@
-const Project = require("../model/Project")
-const User = require("../model/User")
+const Project = require('../model/Project')
+const User = require('../model/User')
 const mongoose = require('mongoose')
 
 const addProject = async (req, res, err) => {
@@ -95,7 +95,6 @@ const deleteProject = async (req, res, err) => {
         if(!foundProject) return res.sendStatus(204)
         const projectMembers = await User.find({username: {$in: foundProject.members}})
         await Promise.all(projectMembers.map(async member => {
-            console.log('starting process')
             member.projects.delete(_id)
             return await member.save()
         })

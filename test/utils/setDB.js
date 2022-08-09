@@ -18,23 +18,22 @@ const deleteUser = async (username) => {
 }
 
 const createProject = async (username, projectName, projectStatus, projectRoles) => {
-        const members = Object.values(projectRoles).flat()
-        try{
-            const newProject = await Project.create({
-                name : projectName, 
-                status: projectStatus, 
-                roles: projectRoles,
-                members
-            })
-        const foundUser = await User.findOne({username}).exec()
-        if(!foundUser){
-            await Project.deleteOne({_id: newProject._id})
-            throw new Error('Project deleted, not added to user')
-        }  
-        foundUser.projects.set(newProject._id, 'Manager') 
-        await foundUser.save()
-
-        return newProject._id
+    const members = Object.values(projectRoles).flat()
+    try{
+        const newProject = await Project.create({
+            name : projectName, 
+            status: projectStatus, 
+            roles: projectRoles,
+            members
+        })
+    const foundUser = await User.findOne({username}).exec()
+    if(!foundUser){
+        await Project.deleteOne({_id: newProject._id})
+        throw new Error('Project deleted, not added to user')
+    }  
+    foundUser.projects.set(newProject._id, 'Manager') 
+    await foundUser.save()
+    return newProject._id
     }catch(error){
         console.log(error)
     } 
@@ -45,6 +44,15 @@ const deleteProject = async (name) => {
         await Project.deleteOne({name})
     } catch (err){
         console.error(err)
+    }
+}
+const addProjectIssue = async (projectName, issueData) => {
+    try{
+        const foundProject = Project.findOneAndUpdate({name: projectName}, {$push: {issues : issueData}} ).exec()
+        if(!foundProject) throw new Error('Project Not Found')
+        foundProject.issues        
+    }catch(err){
+        console.log(err)
     }
 }
 
@@ -64,5 +72,6 @@ module.exports = {
     deleteUser,
     createProject, 
     deleteProject, 
+    addProjectIssue,
     setRefreshToken 
 }

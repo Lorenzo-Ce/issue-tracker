@@ -1,8 +1,8 @@
 const express = require('express')
 const router = express.Router()
 const { getAllProjects, addProject, deleteProject, getProject, updateProject } = require('../../controller/projectsController')
+const { getIssues, addIssue, removeIssue, updateIssue } = require('../../controller/projectsIssueController')
 const { verifyAccessToken } = require('../../middleware/verifyAccessToken')
-
 
 router.route('/') //.use(verifyAccessToken)
     .get(getAllProjects)
@@ -13,4 +13,10 @@ router.route('/:id')
     .put(updateProject)
     .delete(deleteProject)
     
+router.route('/:id/issues')
+    .get(getIssues)
+    .post(addIssue)
+    .delete(removeIssue)
+    .put(updateIssue)
+
 module.exports = router
