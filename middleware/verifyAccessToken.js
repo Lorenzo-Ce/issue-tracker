@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken')
 
 const verifyAccessToken = (req, res, next) => {
     const { authorization } = req.headers
-    if(!authorization && !authorization.startsWith('Bearer ')) return res.sendStatus(401)
+    if(!authorization || !authorization.startsWith('Bearer ')) return res.sendStatus(401)
     const accessToken = authorization.split(' ')[1]
     jwt.verify(
         accessToken,
