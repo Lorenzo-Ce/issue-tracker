@@ -48,6 +48,21 @@ describe('API GET /:projectId/Issues', () => {
         expect(response.statusCode).toBe(400)
         expect(response.body).toEqual(expect.objectContaining({'error' : 'project not found'}))
     })
+    describe('API DELETE /:projectId/Issues', () => {
+        test('it should return 201', async () => {
+            const response = await request.delete(`/projects/${id}/issues`)
+            .send({
+                '_id':'TES-0'
+            })
+            expect(response.statusCode).toBe(200)
+        })
+        test('missing req. field should return 400', async () => {
+            const response = await request.post(`/projects/${id}/issues`)
+            .send({})
+            expect(response.statusCode).toBe(400)
+            expect(response.body).toEqual(expect.objectContaining({'error' : 'one or more required fields are missing'}))
+        })
+    })
 })    
 
 describe('API POST /:projectId/Issues', () => {
@@ -73,3 +88,4 @@ describe('API POST /:projectId/Issues', () => {
         expect(response.body).toEqual(expect.objectContaining({'error' : 'one or more required fields are missing'}))
     })
 })
+

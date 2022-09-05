@@ -8,6 +8,7 @@ const getIssues = async (req, res, err) => {
     const foundProject = await Project.findById({_id})
     if(!foundProject) return res.status(400).send({'error': 'project not found'})
     const issues = foundProject.issues
+    console.log(issues)
     res.status(200).send(issues)
 }
 
@@ -17,7 +18,7 @@ const addIssue = async (req, res, err) => {
     const label = req.body.label
     const priority = req.body.priority
     if(!name || !label || !priority){
-        res.status(400).send({
+        return res.status(400).send({
             'error' : 'one or more required fields are missing'
         })
     }
@@ -34,7 +35,15 @@ const addIssue = async (req, res, err) => {
     } catch(error){console.error(error)}
 }
 const removeIssue = async (req, res, err) => {
-
+    const _id = req.params?.id
+    const deleteIssueId = req.body?.id
+    if(!_id || deleteIssueId) return res.status(400).send({'error': 'missing id'})
+    const foundProject = await Project.findById({_id})
+    if(!foundProject) return res.status(400).send({'error': 'project not found'})
+    const issues = [...foundProject.issues]
+    foundProject.issues = issues.filter(issue => issue._id != deleteIssueId)
+    await foundProject.save()
+    return res.sendStatus(200)
 }
 const updateIssue = async (req, res, err) => {}
 
