@@ -8,7 +8,6 @@ const getIssues = async (req, res, err) => {
     const foundProject = await Project.findById({_id})
     if(!foundProject) return res.status(400).send({'error': 'project not found'})
     const issues = foundProject.issues
-    console.log(issues)
     res.status(200).send(issues)
 }
 
@@ -31,13 +30,13 @@ const addIssue = async (req, res, err) => {
         foundProject.issues = [...foundProject.issues, {_id: issueId, ...req.body}]
         foundProject.issueIncrement = issueNumber + 1
         await foundProject.save()
-        res.sendStatus(201)
+        return res.sendStatus(201)
     } catch(error){console.error(error)}
 }
 const removeIssue = async (req, res, err) => {
     const _id = req.params?.id
-    const deleteIssueId = req.body?.id
-    if(!_id || deleteIssueId) return res.status(400).send({'error': 'missing id'})
+    const deleteIssueId = req.body?._id
+    if(!_id || !deleteIssueId) return res.status(400).send({'error': 'missing id'})
     const foundProject = await Project.findById({_id})
     if(!foundProject) return res.status(400).send({'error': 'project not found'})
     const issues = [...foundProject.issues]
@@ -45,6 +44,15 @@ const removeIssue = async (req, res, err) => {
     await foundProject.save()
     return res.sendStatus(200)
 }
-const updateIssue = async (req, res, err) => {}
+const updateIssue = async (req, res, err) => {
+    const _id = req.params?.id
+    const updateIssueId = req.body?._id
+    if(!_id || !updateIssueId) return res.status(400).send({'error' : 'one or more required fields are missing'})
+    const foundProject = await Project.findById({_id}).exec()
+    if(!foundProject) return res.status(400).send({'error': 'project not found'})
+    foundProject.issues = foundProject.issues.map(issue => issue._id != updateIssueId ? issue : {...issue, ...req.body})
+    await foundProject.save()
+    return res.sendStatus(200)
+}
 
 module.exports = {getIssues, addIssue, removeIssue, updateIssue}
