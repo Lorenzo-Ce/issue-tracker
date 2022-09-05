@@ -11,7 +11,8 @@ beforeAll(async () => {
     id = await createProject('testIssueAccount','testIssueProject', 'Open', {'Manager': ['testIssueAccount']})
     addProjectIssue(
         'testIssueProject', 
-        {'name': 'Issue',
+        {_id: 'TES-0',
+        'name': 'Issue',
         'openingDate': '08/08/2021',
         'label': 'Todos', 
         'priority': 'Normal',
@@ -19,7 +20,7 @@ beforeAll(async () => {
     }
 )
 
-afterAll(() => {
+afterAll(async () => {
     deleteProject('testIssueProject')
     deleteProject('NewProjectName')
     deleteUser('testIssueAccount')
@@ -30,7 +31,7 @@ describe('API GET /:projectId/Issues', () => {
         const response = await request.get(`/projects/${id}/issues`)
         expect(response.statusCode).toBe(200)
         expect(response.body).toEqual(
-            expect.objectContaining([{
+            expect.arrayContaining([{
                 "_id": expect.any(String), 
                 "comments": expect.any(Array), 
                 "description": "Description about the issue", 

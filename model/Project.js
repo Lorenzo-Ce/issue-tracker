@@ -19,7 +19,9 @@ const ProjectSchema = new Schema({
         of: Array,
         default: {}
     },
+    issueIncrement: {type: Number, default : 0},
     issues: [{
+        _id: {type: String},
         name: {
             type: String,
             min: 3,

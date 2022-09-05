@@ -23,15 +23,15 @@ const addIssue = async (req, res, err) => {
     }
     if(!_id) return res.sendStatus(400)
     try{
-        const result = await Project.findOneAndUpdate({_id}, {$push : {issues : req.body}}, {rawResult: true})
-        if(result.lastErrorObject.updatedExisting){
-            const newIssue = result.value
-            res.status(201).send({newIssue})
-        }
-        else{
-            res.status(400).send({'error': 'issue not added'})
-        }
-    } catch(error){console.log(error)}
+        const foundProject = await Project.findById({_id}).exec()
+        if(!foundProject) return res.status(400).send({'error': 'issue not added'})
+        const issueNumber = foundProject.issueIncrement
+        const issueId = `${foundProject.name.slice(0,3).toUpperCase()}-${issueNumber}` 
+        foundProject.issues = [...foundProject.issues, {_id: issueId, ...req.body}]
+        foundProject.issueIncrement = issueNumber + 1
+        await foundProject.save()
+        res.sendStatus(201)
+    } catch(error){console.error(error)}
 }
 const removeIssue = async (req, res, err) => {
 
