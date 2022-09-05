@@ -69,7 +69,7 @@ const updateProject = async (req, res, err) => {
     const status = req.body.status
     const startDate = req.body.startDate
     const endDate = req.body.endDate
-    if(!name || !status || ! startDate || ! endDate){
+    if(!name || !status || !startDate || !endDate){
         return res.status(400).send({
             'name' : `${name ? 'ok' : 'missing'}`,
             'status' : `${status ? 'ok' : 'missing'}`,

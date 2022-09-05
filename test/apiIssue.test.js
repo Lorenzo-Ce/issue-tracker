@@ -59,6 +59,16 @@ describe('API POST /:projectId/Issues', () => {
             'priority': 'Normal',
             'description': 'Lorem Ipsum, dolor sit, amet, consectetur, adipisci velit.'
         })
-        expect(respose.statusCode).toBe(201)
+        expect(response.statusCode).toBe(201)
+    })
+    test('missing req. field should return 400', async () => {
+        const response = await request.post(`/projects/${id}/issues`)
+        .send({
+            'name': 'testIssue3',
+            'priority': 'Normal',
+            'description': 'Lorem Ipsum, dolor sit, amet, consectetur, adipisci velit.'
+        })
+        expect(response.statusCode).toBe(400)
+        expect(response.body).toEqual(expect.objectContaining({'error' : 'one or more required fields are missing'}))
     })
 })
