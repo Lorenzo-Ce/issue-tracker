@@ -25,7 +25,7 @@ afterAll(() => {
     deleteUser('testIssueAccount')
 })
       
-describe('API POST /:projectId/Issues', () => {
+describe('API GET /:projectId/Issues', () => {
     test('it should return 200', async () =>{
         const response = await request.get(`/projects/${id}/issues`)
         expect(response.statusCode).toBe(200)
@@ -47,4 +47,18 @@ describe('API POST /:projectId/Issues', () => {
         expect(response.statusCode).toBe(400)
         expect(response.body).toEqual(expect.objectContaining({'error' : 'project not found'}))
     })
-})      
+})    
+
+describe('API POST /:projectId/Issues', () => {
+    test('it should return 201', async () => {
+        const response = await request.post(`/projects/${id}/issues`)
+        .send({
+            'name': 'testIssue2',
+            'openingDate': new Date(),
+            'label': 'Bug',
+            'priority': 'Normal',
+            'description': 'Lorem Ipsum, dolor sit, amet, consectetur, adipisci velit.'
+        })
+        expect(respose.statusCode).toBe(201)
+    })
+})
