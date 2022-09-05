@@ -28,7 +28,7 @@ const UserSchema = new Schema({
     projects: {
         type: Map, 
         of: String,
-        default: {}
+        default: () => ({})
     }
   });
 

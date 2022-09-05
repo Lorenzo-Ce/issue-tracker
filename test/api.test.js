@@ -20,6 +20,7 @@ beforeAll(async () => {
 afterAll(() => {
   deleteProject('testProject')
   deleteProject('testProject2')
+  deleteProject('testProject3')
   deleteProject('NewProjectName')
   deleteUser('testAccount2')
   deleteUser('testAccount')
@@ -105,16 +106,16 @@ describe('API GET /projects/:id', () => {
       const response = await request.delete(`/projects/${id}`).set('Authorization', `Bearer ${accessToken}`)
       expect(response.statusCode).toBe(200)
     })
-    test('should return 204', async () => {
+    test('should return 404', async () => {
       const response = await request.delete(`/projects/62e9211b39d5fd8065846452`).set('Authorization', `Bearer ${accessToken}`)
-      expect(response.statusCode).toBe(204)
+      expect(response.statusCode).toBe(404)
     })
   })
 })
 
 describe('API PUT project/:id', () => {
   test('should return 200', async  () =>{
-    const response = await request.put(`/projects/${id2}`).set('Authorization', `Bearer ${accessToken2}`)
+    const response = await request.put(`/projects/${id2}`).set('Authorization', `Bearer ${accessToken}`)
       .send({
         name: 'NewProjectName',
         status: 'Paused',
@@ -125,7 +126,7 @@ describe('API PUT project/:id', () => {
     expect(response.body).toHaveProperty('name', 'NewProjectName')
   })
   test('missing field should return 400', async  () =>{
-    const response = await request.put(`/projects/${id2}`).set('Authorization', `Bearer ${accessToken2}`)
+    const response = await request.put(`/projects/${id2}`).set('Authorization', `Bearer ${accessToken}`)
       .send({
         name: 'NewProjectName',
         startDate: '08/08/2022',

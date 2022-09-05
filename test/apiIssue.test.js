@@ -30,10 +30,9 @@ describe('API GET /:projectId/Issues', () => {
             expect.arrayContaining([{"_id": "TES-1", "comments": [], "images": [], "label": "Todos", "name": "Issue", "openingDate": "2021-08-07T22:00:00.000Z", "priority": "Low"}, {"_id": "TES-0", "comments": [], "images": [], "label": "Todos", "name": "Issue", "openingDate": "2021-08-07T22:00:00.000Z", "priority": "Normal"}
         ]))
     })
-    test('missing Project it should return 400', async () => {
+    test('missing Project it should return 404', async () => {
         const response = await request.get(`/projects/${randomId}/issues`).set('Authorization', `Bearer ${accessToken}`)
-        expect(response.statusCode).toBe(400)
-        expect(response.body).toEqual(expect.objectContaining({'error' : 'project not found'}))
+        expect(response.statusCode).toBe(404)
     })
     describe('API DELETE /:projectId/Issues', () => {
         test('it should return 200', async () => {
@@ -79,7 +78,7 @@ describe('API POST /:projectId/Issues', () => {
 describe('API PUT /:projectId/Issues', () => {
     test('it should return 200', async () => {
         const response = await request.put(`/projects/${id}/issues`).set('Authorization', `Bearer ${accessToken}`)
-        .send({_id: 'TES-1', 'name': 'ChangeName', 'openingDate': '10/08/2021', 'label': 'Todos'})
+        .send({_id: 'TES-1', 'name': 'newIssueName', 'openingDate': '10/08/2021', 'label': 'Todos'})
         expect(response.statusCode).toBe(200)
     })
     test('missing req. field should return 400', async () => {
