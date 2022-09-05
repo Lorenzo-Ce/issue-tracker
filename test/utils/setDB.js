@@ -1,3 +1,4 @@
+const jwt = require('jsonwebtoken')
 const User = require("../../model/User")
 const Project = require('../../model/Project')
 
@@ -35,7 +36,7 @@ const createProject = async (username, projectName, projectStatus, projectRoles)
     await foundUser.save()
     return newProject._id
     }catch(error){
-        console.log(error)
+        console.error(error)
     } 
 }
 
@@ -46,16 +47,16 @@ const deleteProject = async (name) => {
         console.error(err)
     }
 }
+
 const addProjectIssue = async (projectName, issueData) => {
     try{
         const foundProject = Project.findOneAndUpdate({name: projectName}, {$push: {issues : issueData}} ).exec()
         if(!foundProject) throw new Error('Project Not Found')
         foundProject.issues        
     }catch(err){
-        console.log(err)
+        console.error(err)
     }
 }
-
 
 const setRefreshToken = async (username, refreshToken) => {
     try{
@@ -67,11 +68,25 @@ const setRefreshToken = async (username, refreshToken) => {
     }
 }
 
+const setAccessToken = async (username) => {
+    try{
+        const accessToken = jwt.sign(
+            {username}, 
+            process.env.SECRET_ACCESS_TOKEN,
+            {expiresIn: '10m'}
+        )
+        return accessToken
+    }catch(err){
+        console.error(err)
+    }
+}
+
 module.exports = { 
     createUser, 
     deleteUser,
     createProject, 
     deleteProject, 
     addProjectIssue,
-    setRefreshToken 
+    setRefreshToken,
+    setAccessToken
 }

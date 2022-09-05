@@ -4,7 +4,9 @@ const { getAllProjects, addProject, deleteProject, getProject, updateProject } =
 const { getIssues, addIssue, removeIssue, updateIssue } = require('../../controller/projectsIssueController')
 const { verifyAccessToken } = require('../../middleware/verifyAccessToken')
 
-router.route('/') //.use(verifyAccessToken)
+router.use(verifyAccessToken)
+
+router.route('/') 
     .get(getAllProjects)
     .post(addProject)
 
