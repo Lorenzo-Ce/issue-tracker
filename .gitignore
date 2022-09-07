@@ -1,4 +1,6 @@
+# Dependencies
 node_modules
+/client/node_modules
+
+# Misc
 .env
-reqLog.txt
-errLog.txt
