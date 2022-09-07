@@ -7,11 +7,13 @@ const cookieParser = require('cookie-parser')
 const mongoSanitize = require('express-mongo-sanitize');
 const { logger } = require('./middleware/logHandler')
 const { errorHandler } = require('./middleware/errorHandler')
+const parseErrorHandler = require('./middleware/parseErrorHandler')
 require('dotenv').config({path: path.resolve(__dirname,'..', '.env')})
 
 mongoose.connect(process.env.DB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
         .catch((error) => console.error(error))
 
+app.disable('x-powered-by');
 app.use(logger)
 app.use(cors())
 app.use(express.json())
@@ -31,7 +33,7 @@ app.all('*', (req, res) => {
     res.status(404).send({'Error' : '404 Not Found'}) :
     res.status(404).send('Error: 404 Not Found')
 })
-
+app.use(parseErrorHandler)
 app.use(errorHandler)
 
 module.exports = app
