@@ -8,6 +8,7 @@ const mongoSanitize = require('express-mongo-sanitize');
 const { logger } = require('./middleware/logHandler')
 const { errorHandler } = require('./middleware/errorHandler')
 require('dotenv').config({path: path.resolve(__dirname,'..', '.env')})
+
 mongoose.connect(process.env.DB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
         .catch((error) => console.error(error))
 
