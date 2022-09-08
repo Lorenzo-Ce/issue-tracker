@@ -1,4 +1,6 @@
 import { useState } from "react"
+import postData from "../utils/postData"
+
 
 const useForm = (props) => {
     
@@ -19,7 +21,6 @@ const useForm = (props) => {
             }
         ))
     }
-
     const handleValidation = ({value, name}) =>{   
         let isInvalid
         switch(name) {
@@ -32,12 +33,8 @@ const useForm = (props) => {
         setFormValidation(prevForm => ({...prevForm, [name]: isInvalid}))
         return isInvalid
     }
-    const handleSubmit = (event) => {
-        event.preventDefault()
 
-        console.log('submitted form')
-    }
-    return [formValidation, handleSubmit, 
+    return [formValidation, 
             isFormValid, handleValidation, 
             handleFormChange, registerForm ]
 }

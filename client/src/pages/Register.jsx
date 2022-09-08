@@ -2,22 +2,33 @@ import {Heading, Box, FormControl, FormLabel, FormErrorMessage, Input, Button, V
 import { useEffect } from "react"
 import { useState } from "react"
 import { useForm } from '../hooks/useForm'
+import postData from '../utils/postData'
 
 export default function Register (){
     
-    const [formValidation, handleSubmit, 
-        isFormValid, handleValidation, 
-        handleFormChange, registerForm, 
-        ] = useForm()
+    const [formValidation,isFormValid, handleValidation, 
+        handleFormChange, registerForm] = useForm()
 
     useEffect(() => {
         if(registerForm.confirmPassword != ''){
             handleValidation({name: 'confirmPassword', value: registerForm.confirmPassword})
         }
     }, [registerForm.password])
-    console.log(registerForm)
-    console.log(formValidation)
-    console.log(isFormValid)
+
+    const handleSubmit = async (event) => {
+        event.preventDefault()
+        const post = postData
+        try{
+        const response = await post('register', registerForm)
+        } catch (err){
+            if(!err?.response.status === 409){
+                console.log(err.response)
+            }else{
+                console.log('Registration Failed')
+            }
+        }
+    }
+
     return(
         <Box as='form' onSubmit={handleSubmit} width={['100%', '400px']} onChange={(e) => handleValidation(e.target)}>
             <VStack spacing={'10px'}>
