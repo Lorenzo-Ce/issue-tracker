@@ -30,10 +30,10 @@ const loginUser = async (req, res, err) => {
         )
         matchedUser.refreshToken = refreshToken
         await matchedUser.save()
-        //**** secure flag for https To Add in prod. ****//
+        //**** secure flag for https, sameSite: none To Add in prod. ****//
         res.cookie(
             'token', refreshToken, 
-            { httpOnly: true, maxAge: 24 * 3600000 }
+            { httpOnly: true, sameSite: 'None', maxAge: 24 * 3600000 }
         )
         res.status(200).send({
             'message' : 'Successfull Login', 

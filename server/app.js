@@ -8,6 +8,8 @@ const mongoSanitize = require('express-mongo-sanitize');
 const { logger } = require('./middleware/logHandler')
 const { errorHandler } = require('./middleware/errorHandler')
 const parseErrorHandler = require('./middleware/parseErrorHandler')
+const corsOptions = require('./config/corsOption')
+const setControlCredentials = require('./middleware/setAccesControlCredential')
 require('dotenv').config({path: path.resolve(__dirname,'..', '.env')})
 
 mongoose.connect(process.env.DB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
@@ -15,9 +17,12 @@ mongoose.connect(process.env.DB_URI, { useNewUrlParser: true, useUnifiedTopology
 
 app.disable('x-powered-by');
 app.use(logger)
-app.use(cors())
-app.use(express.json())
+app.use(setControlCredentials)
+app.use(cors(corsOptions))
+
 app.use(express.urlencoded({extended: false}))
+app.use(express.json())
+
 app.use(cookieParser())
 app.use(mongoSanitize())
 
