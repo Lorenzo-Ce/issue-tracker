@@ -2,12 +2,12 @@ import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import './App.css'
 import { Box, FormControl, FormLabel } from "@chakra-ui/react"
-import Sign from './pages/Sign'
+import Register from './pages/Register'
 
 function App() {
   return (
     <Box as="section">
-      <Sign />
+      <Register />
     </Box>
   )
 }
