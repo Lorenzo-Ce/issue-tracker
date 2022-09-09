@@ -10,7 +10,7 @@ const useForm = (props) => {
 
     const REGX_USERNAME = new RegExp("^[A-Za-z0-9_]{4,20}$")
     // (?=.*?[A-Z]) = One uppercase letter (?=.*?[a-z]) = One uppercase letter (?=.*?[0-9]) = One number (?=.*?[#?!@$%^&*-]) = One Symbol {8,} lenght min 8
-    const REGX_PSW = new RegExp('^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@%^&*-]).{8,}$')
+    const REGX_PSW = new RegExp('^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@%$^&*-]).{8,}$')
     const REGX_EMAIL = new RegExp('^[a-zA-Z0-9_!#$%&’*+/=?`{|}~^-]+(?:\\.[a-zA-Z0-9_!#$%&’*+/=?`{|}~^-]+)*@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$')
    
     const handleFormChange = event => {

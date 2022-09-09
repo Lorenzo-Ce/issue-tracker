@@ -17,9 +17,9 @@ export default function Register (){
 
     const handleSubmit = async (event) => {
         event.preventDefault()
-        const post = postData
         try{
-        const response = await post('register', registerForm)
+            const post = postData
+            const response = await post('register', registerForm)
         } catch (err){
             if(!err?.response.status === 409){
                 console.log(err.response)
@@ -58,7 +58,7 @@ export default function Register (){
                         value={registerForm.password}
                         onChange={handleFormChange}
                     />
-                    <FormErrorMessage>Your password must be at least 8 characters long, contain at least one number one uppercase, one lowercase letters and one special characters (#?!@%^&*-).</FormErrorMessage>
+                    <FormErrorMessage>Your password must be at least 8 characters long, contain at least one number one uppercase, one lowercase letters and one special characters (#?!@$%^&*-).</FormErrorMessage>
                 </FormControl>
                 <FormControl isRequired id='confirmPassword' isInvalid={formValidation.confirmPassword}>
                     <FormLabel>Confirm Password</FormLabel>
