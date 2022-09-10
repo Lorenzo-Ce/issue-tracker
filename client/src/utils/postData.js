@@ -1,3 +1,5 @@
+import ApiCallError from "./apiCallError"
+
 const postData = (domain) => {
     return async function (path, payload){
         try{
@@ -12,14 +14,18 @@ const postData = (domain) => {
             }
 
             const response = await fetch(`${domain}${path}`, settings)
-
+            const responseBody = await response.json()
             if(!response.ok){
-                throw Error(response.status)
+                
+                throw new ApiCallError(response, responseBody)
             }
-            const data = await response.json()
-            return data
-        }catch(error){
-            console.error('Error', error)
+            return {response, responseBody}
+        }catch(error){     
+            if(error instanceof ApiCallError){
+                throw error
+            }
+            else throw new Error(error)
+            
         }
     }
 }

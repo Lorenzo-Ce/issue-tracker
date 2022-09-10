@@ -1,17 +1,13 @@
 import { useState } from "react"
 import postData from "../utils/postData"
-
+import {REGX_USERNAME, REGX_EMAIL, REGX_PSW} from '../utils/regex'
 
 const useForm = (props) => {
     
     const [registerForm, setForm] = useState({email: '', username: '', password: '', confirmPassword: ''}) 
     const [formValidation, setFormValidation] = useState({email: false, username: false, password: false, confirmPassword: false})
-    const isFormValid = Object.values(formValidation).every(field => field === false)
-
-    const REGX_USERNAME = new RegExp("^[A-Za-z0-9_]{4,20}$")
-    // (?=.*?[A-Z]) = One uppercase letter (?=.*?[a-z]) = One uppercase letter (?=.*?[0-9]) = One number (?=.*?[#?!@$%^&*-]) = One Symbol {8,} lenght min 8
-    const REGX_PSW = new RegExp('^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@%$^&*-]).{8,}$')
-    const REGX_EMAIL = new RegExp('^[a-zA-Z0-9_!#$%&’*+/=?`{|}~^-]+(?:\\.[a-zA-Z0-9_!#$%&’*+/=?`{|}~^-]+)*@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$')
+    const [errorMessage, setErrorMessage] = useState('')
+    const isFormValid = Object.values(formValidation).every(field => field === false) && Object.values(registerForm).every(field => field !== '')
    
     const handleFormChange = event => {
         const {value, name} = event.target
@@ -36,7 +32,7 @@ const useForm = (props) => {
 
     return [formValidation, 
             isFormValid, handleValidation, 
-            handleFormChange, registerForm ]
+            handleFormChange, registerForm, errorMessage, setErrorMessage ]
 }
 
 export {useForm}
