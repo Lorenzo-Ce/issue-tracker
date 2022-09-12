@@ -10,23 +10,17 @@ export default function Register (){
     const [formValidation,isFormValid, handleValidation, 
         handleFormChange, registerForm, errorMessage, setErrorMessage] = useForm()
         const [isLoading, setIsLoading] = useState(false)
-    
-        useEffect(() => {
-        if(registerForm.confirmPassword !== ''){
-            handleValidation({name: 'confirmPassword', value: registerForm.confirmPassword})
-        }
-    }, [registerForm.password])
 
     const handleSubmit = async (event) => {
         event.preventDefault()
         setErrorMessage('')
         setIsLoading(true)
-
         try{
             const post = postData
-            const {response, responseBody} = await post('register', registerForm)
+            const {response, responseBody} = await post('login', registerForm)
             setIsLoading(false)
             console.log(response)
+            console.log('Redirect to Home')
         } catch (err){
             setIsLoading(false)
             if(!err?.status){
@@ -37,7 +31,6 @@ export default function Register (){
                 console.log(errorMessage)
             }
         }
-        
     }
 
     return(
@@ -47,20 +40,8 @@ export default function Register (){
             onChange={(e) => handleValidation(e.target)}
         >
             <VStack spacing={'10px'}>
-                <Heading>Registration</Heading>
+                <Heading>Login</Heading>
                 {errorMessage !== '' && <Error message={errorMessage} /> }
-                <FormControl isRequired 
-                    id='username' 
-                    isInvalid={formValidation.username}
-                >
-                    <FormLabel>Username</FormLabel>
-                    <Input type='text' 
-                        name='username'
-                        value={registerForm.username}
-                        onChange={handleFormChange}
-                    />
-                    <FormErrorMessage>Your username must be alphanumeric, longer than 4 and shorter than 20 characters.</FormErrorMessage>
-                </FormControl>
                 <FormControl isRequired 
                     id='email' 
                     isInvalid={formValidation.email}
@@ -85,32 +66,16 @@ export default function Register (){
                     />
                     <FormErrorMessage>Your password must be at least 8 characters long, contain at least one number, one uppercase, one lowercase character and one special character (#?!@$%^&*-).</FormErrorMessage>
                 </FormControl>
-                <FormControl isRequired 
-                    id='confirmPassword' 
-                    isInvalid={formValidation.confirmPassword}
-                >
-                    <FormLabel>Confirm Password</FormLabel>
-                    <Input type='password'
-                        name='confirmPassword'
-                        value={registerForm.confirmPassword}
-                        onChange={handleFormChange}
-                    />
-                    <FormErrorMessage>Please make sure the password match.</FormErrorMessage>
-                </FormControl>
                 <Button type='submit' mb='5px' 
                     colorScheme='blue'
                     isLoading={isLoading} 
                     isDisabled={!isFormValid}
                 >
-                    Register
+                    Login
                 </Button>
-        </VStack>
-        <VStack>
-                <Text as='sub' mt='0.5em' mb='1em'>
-                    Already have an account? <a href='#'>Login Now</a>
-                </Text>
                 <Text as='sub'>Login as <a href='#'>GUEST ACCOUNT</a></Text>
-        </VStack>        
+        </VStack>
+        
         </Box>
     )
 }
