@@ -68,6 +68,7 @@ export default function Register (){
                 </FormControl>
                 <Button type='submit' mb='5px' 
                     colorScheme='blue'
+                    loadingText='Logging in'
                     isLoading={isLoading} 
                     isDisabled={!isFormValid}
                 >
