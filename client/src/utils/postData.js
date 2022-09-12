@@ -16,7 +16,6 @@ const postData = (domain) => {
             const response = await fetch(`${domain}${path}`, settings)
             const responseBody = await response.json()
             if(!response.ok){
-                
                 throw new ApiCallError(response, responseBody)
             }
             return {response, responseBody}

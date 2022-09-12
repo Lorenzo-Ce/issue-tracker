@@ -1,6 +1,6 @@
 import {Heading, Box, FormControl, FormLabel, FormErrorMessage, Input, Button, VStack, Text } from '@chakra-ui/react'
-import { useEffect } from 'react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { useForm } from '../hooks/useForm'
 import { Error } from './Error'
 import postData from '../utils/postData'
@@ -8,14 +8,14 @@ import postData from '../utils/postData'
 export default function Register (){
     
     const [formValidation,isFormValid, handleValidation, 
-        handleFormChange, registerForm, errorMessage, setErrorMessage] = useForm()
+        handleFormChange, Form, errorMessage, setErrorMessage] = useForm(['email', 'username', 'password', 'confirmPassword'])
         const [isLoading, setIsLoading] = useState(false)
     
         useEffect(() => {
-        if(registerForm.confirmPassword !== ''){
-            handleValidation({name: 'confirmPassword', value: registerForm.confirmPassword})
+        if(Form.confirmPassword !== ''){
+            handleValidation({name: 'confirmPassword', value: Form.confirmPassword})
         }
-    }, [registerForm.password])
+    }, [Form.password])
 
     const handleSubmit = async (event) => {
         event.preventDefault()
@@ -24,11 +24,9 @@ export default function Register (){
 
         try{
             const post = postData
-            const {response, responseBody} = await post('register', registerForm)
-            setIsLoading(false)
+            const {response, responseBody} = await post('register', Form)
             console.log(response)
         } catch (err){
-            setIsLoading(false)
             if(!err?.status){
                 setErrorMessage('Network Error. Registration failed, try again later.')
             }
@@ -36,6 +34,8 @@ export default function Register (){
                 setErrorMessage(`Error ${err.status}: ${err.body.error}`)
                 console.log(errorMessage)
             }
+        } finally {
+            setIsLoading(false)
         }
         
     }
@@ -56,7 +56,7 @@ export default function Register (){
                     <FormLabel>Username</FormLabel>
                     <Input type='text' 
                         name='username'
-                        value={registerForm.username}
+                        value={Form.username}
                         onChange={handleFormChange}
                     />
                     <FormErrorMessage>Your username must be alphanumeric, longer than 4 and shorter than 20 characters.</FormErrorMessage>
@@ -68,7 +68,7 @@ export default function Register (){
                     <FormLabel>Email</FormLabel>
                     <Input type='email'  
                         name='email'
-                        value={registerForm.email}
+                        value={Form.email}
                         onChange={handleFormChange}
                     />             
                      <FormErrorMessage>Please make sure your email is a valid one.</FormErrorMessage>
@@ -80,7 +80,7 @@ export default function Register (){
                     <FormLabel htmlFor='password'>Password</FormLabel>
                     <Input type='password'
                         name='password'
-                        value={registerForm.password}
+                        value={Form.password}
                         onChange={handleFormChange}
                     />
                     <FormErrorMessage>Your password must be at least 8 characters long, contain at least one number, one uppercase, one lowercase character and one special character (#?!@$%^&*-).</FormErrorMessage>
@@ -92,7 +92,7 @@ export default function Register (){
                     <FormLabel>Confirm Password</FormLabel>
                     <Input type='password'
                         name='confirmPassword'
-                        value={registerForm.confirmPassword}
+                        value={Form.confirmPassword}
                         onChange={handleFormChange}
                     />
                     <FormErrorMessage>Please make sure the password match.</FormErrorMessage>
@@ -105,11 +105,13 @@ export default function Register (){
                     Register
                 </Button>
         </VStack>
-        <VStack>
-                <Text as='sub' mt='0.5em' mb='1em'>
-                    Already have an account? <a href='#'>Login Now</a>
+        <VStack  mt='1em' mb='1em'gap='1em' >
+                <Text as='sub'>
+                    Already have an account? <Link to='/login'>Login Now</Link>
                 </Text>
-                <Text as='sub'>Login as <a href='#'>GUEST ACCOUNT</a></Text>
+                <Text as='sub'>
+                    Login as <Link to='/login'>GUEST ACCOUNT</Link>
+                </Text>
         </VStack>        
         </Box>
     )

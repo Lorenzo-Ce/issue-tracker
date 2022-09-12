@@ -1,6 +1,6 @@
 import {Heading, Box, FormControl, FormLabel, FormErrorMessage, Input, Button, VStack, Text } from '@chakra-ui/react'
-import { useEffect } from 'react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import { useForm } from '../hooks/useForm'
 import { Error } from './Error'
 import postData from '../utils/postData'
@@ -8,21 +8,21 @@ import postData from '../utils/postData'
 export default function Register (){
     
     const [formValidation,isFormValid, handleValidation, 
-        handleFormChange, registerForm, errorMessage, setErrorMessage] = useForm()
-        const [isLoading, setIsLoading] = useState(false)
-
+        handleFormChange, Form, errorMessage, setErrorMessage] = useForm(['email', 'password'])
+    const [isLoading, setIsLoading] = useState(false)
+    
     const handleSubmit = async (event) => {
         event.preventDefault()
         setErrorMessage('')
         setIsLoading(true)
         try{
             const post = postData
-            const {response, responseBody} = await post('login', registerForm)
-            setIsLoading(false)
+            const {response, responseBody} = await post('login', Form)
             console.log(response)
+            console.log(responseBody)
             console.log('Redirect to Home')
         } catch (err){
-            setIsLoading(false)
+            console.log(err)
             if(!err?.status){
                 setErrorMessage('Network Error. Registration failed, try again later.')
             }
@@ -30,6 +30,8 @@ export default function Register (){
                 setErrorMessage(`Error ${err.status}: ${err.body.error}`)
                 console.log(errorMessage)
             }
+        } finally {
+            setIsLoading(false)
         }
     }
 
@@ -49,7 +51,7 @@ export default function Register (){
                     <FormLabel>Email</FormLabel>
                     <Input type='email'  
                         name='email'
-                        value={registerForm.email}
+                        value={Form.email}
                         onChange={handleFormChange}
                     />             
                      <FormErrorMessage>Please make sure your email is a valid one.</FormErrorMessage>
@@ -61,7 +63,7 @@ export default function Register (){
                     <FormLabel htmlFor='password'>Password</FormLabel>
                     <Input type='password'
                         name='password'
-                        value={registerForm.password}
+                        value={Form.password}
                         onChange={handleFormChange}
                     />
                     <FormErrorMessage>Your password must be at least 8 characters long, contain at least one number, one uppercase, one lowercase character and one special character (#?!@$%^&*-).</FormErrorMessage>
@@ -74,9 +76,16 @@ export default function Register (){
                 >
                     Login
                 </Button>
-                <Text as='sub'>Login as <a href='#'>GUEST ACCOUNT</a></Text>
         </VStack>
-        
+        <VStack mt='1em' mb='1em'gap='1em' >
+            <Text as='sub'>
+                Login as <Link to='/login'>GUEST ACCOUNT</Link>
+            </Text>
+            <Text as='sub'>
+                Need an account? <Link to='/signup'>Register Now</Link>
+            </Text>
+        </VStack>        
+ 
         </Box>
     )
 }

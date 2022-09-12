@@ -1,18 +1,19 @@
 import { useState } from "react"
+import initializeForm from "../utils/initializeForm"
 import postData from "../utils/postData"
 import {REGX_USERNAME, REGX_EMAIL, REGX_PSW} from '../utils/regex'
 
-const useForm = (props) => {
-    
-    const [registerForm, setForm] = useState({email: '', username: '', password: '', confirmPassword: ''}) 
-    const [formValidation, setFormValidation] = useState({email: false, username: false, password: false, confirmPassword: false})
+const useForm = (formFields) => {
+
+    const [Form, setForm] = useState(() => initializeForm(formFields, '')) 
+    const [formValidation, setFormValidation] = useState(() => initializeForm(formFields, false))
     const [errorMessage, setErrorMessage] = useState('')
-    const isFormValid = Object.values(formValidation).every(field => field === false) && Object.values(registerForm).every(field => field !== '')
+    const isFormValid = Object.values(formValidation).every(field => field === false) && Object.values(Form).every(field => field !== '')
    
     const handleFormChange = event => {
         const {value, name} = event.target
-        setForm((prevRegisterForm) => (
-            {...prevRegisterForm,
+        setForm((prevForm) => (
+            {...prevForm,
                 [name]: value
             }
         ))
@@ -23,7 +24,7 @@ const useForm = (props) => {
          case 'username': isInvalid = !REGX_USERNAME.test(value); break;
          case 'email': isInvalid = !REGX_EMAIL.test(value); break;
          case 'password': isInvalid = !REGX_PSW.test(value); break;
-         case 'confirmPassword': isInvalid = value !== registerForm.password; break;
+         case 'confirmPassword': isInvalid = value !== Form.password; break;
          default: isInvalid = false;
         }
         setFormValidation(prevForm => ({...prevForm, [name]: isInvalid}))
@@ -32,7 +33,7 @@ const useForm = (props) => {
 
     return [formValidation, 
             isFormValid, handleValidation, 
-            handleFormChange, registerForm, errorMessage, setErrorMessage ]
+            handleFormChange, Form, errorMessage, setErrorMessage ]
 }
 
 export {useForm}
