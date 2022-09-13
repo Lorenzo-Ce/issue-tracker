@@ -3,10 +3,10 @@ import { useState, createContext} from "react";
 const AuthorizationContext = createContext()
 
 const AuthorizationContextProvider = (props) => {
-    const [Authorization, setAuthorization] = useState({username:'', accessToken: ""})
+    const [authorization, setAuthorization] = useState({username:'', accessToken: ""})
     
     return (
-        <AuthorizationContext.Provider value={{Authorization, setAuthorization}}>
+        <AuthorizationContext.Provider value={{authorization, setAuthorization}}>
             {props.children}
         </AuthorizationContext.Provider>
     )
