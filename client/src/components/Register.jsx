@@ -1,6 +1,6 @@
 import {Heading, Box, FormControl, FormLabel, FormErrorMessage, Input, Button, VStack, Text } from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useForm } from '../hooks/useForm'
 import { Error } from './Error'
 import postData from '../utils/postData'
@@ -9,9 +9,9 @@ export default function Register (){
     
     const [formValidation,isFormValid, handleValidation, 
         handleFormChange, Form, errorMessage, setErrorMessage] = useForm(['email', 'username', 'password', 'confirmPassword'])
-        const [isLoading, setIsLoading] = useState(false)
-    
-        useEffect(() => {
+    const [isLoading, setIsLoading] = useState(false)
+    let navigate = useNavigate()
+    useEffect(() => {
         if(Form.confirmPassword !== ''){
             handleValidation({name: 'confirmPassword', value: Form.confirmPassword})
         }
@@ -21,11 +21,12 @@ export default function Register (){
         event.preventDefault()
         setErrorMessage('')
         setIsLoading(true)
-
+        
         try{
             const post = postData
             const {response, responseBody} = await post('register', Form)
             console.log(response)
+            navigate('/login', {replace: true})
         } catch (err){
             if(!err?.status){
                 setErrorMessage('Network Error. Registration failed, try again later.')

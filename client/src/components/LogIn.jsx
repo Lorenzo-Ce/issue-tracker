@@ -1,16 +1,21 @@
 import {Heading, Box, FormControl, FormLabel, FormErrorMessage, Input, Button, VStack, Text } from '@chakra-ui/react'
 import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useForm } from '../hooks/useForm'
+import { useAuthorization } from '../hooks/useAuthorization'
 import { Error } from './Error'
 import postData from '../utils/postData'
 
-export default function Register (){
+
+export default function Login (){
     
     const [formValidation,isFormValid, handleValidation, 
         handleFormChange, Form, errorMessage, setErrorMessage] = useForm(['email', 'password'])
     const [isLoading, setIsLoading] = useState(false)
-    
+    const {Authorization, setAuthorization} = useAuthorization()
+    let navigate = useNavigate()
+
+
     const handleSubmit = async (event) => {
         event.preventDefault()
         setErrorMessage('')
@@ -20,7 +25,9 @@ export default function Register (){
             const {response, responseBody} = await post('login', Form)
             console.log(response)
             console.log(responseBody)
-            console.log('Redirect to Home')
+            setAuthorization(prevAuth => ({...prevAuth, username: Form.username, accessToken: responseBody?.accessToken}))
+            navigate('/dashboard', {replace: true})
+            
         } catch (err){
             console.log(err)
             if(!err?.status){

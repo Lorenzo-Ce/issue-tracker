@@ -1,4 +1,4 @@
-import AuthorizationContext from "../context/AuthorizationContext"
+import {AuthorizationContext} from "../context/AuthorizationContext"
 import { useContext } from "react"
 
 export const useAuthorization = () => {
