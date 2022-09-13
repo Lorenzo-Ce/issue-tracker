@@ -12,20 +12,19 @@ export default function Login (){
     const [formValidation,isFormValid, handleValidation, 
         handleFormChange, Form, errorMessage, setErrorMessage] = useForm(['email', 'password'])
     const [isLoading, setIsLoading] = useState(false)
-    const {Authorization, setAuthorization} = useAuthorization()
-    let navigate = useNavigate()
-
+    const {authorization, setAuthorization} = useAuthorization()
+    const navigate = useNavigate()
 
     const handleSubmit = async (event) => {
         event.preventDefault()
         setErrorMessage('')
         setIsLoading(true)
+
         try{
             const post = postData
-            const {response, responseBody} = await post('login', Form)
-            console.log(response)
+            const {response, responseBody} = await post('login', Form)   
             console.log(responseBody)
-            setAuthorization(prevAuth => ({...prevAuth, username: Form.username, accessToken: responseBody?.accessToken}))
+            setAuthorization(prevAuth => ({...prevAuth, accessToken: responseBody?.accessToken}))
             navigate('/dashboard', {replace: true})
             
         } catch (err){

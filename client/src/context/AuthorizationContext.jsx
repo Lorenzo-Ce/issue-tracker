@@ -3,7 +3,7 @@ import { useState, createContext} from "react";
 const AuthorizationContext = createContext()
 
 const AuthorizationContextProvider = (props) => {
-    const [authorization, setAuthorization] = useState({username:'', accessToken: ""})
+    const [authorization, setAuthorization] = useState({accessToken: ""})
     
     return (
         <AuthorizationContext.Provider value={{authorization, setAuthorization}}>

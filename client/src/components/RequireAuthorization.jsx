@@ -1,9 +1,9 @@
 import { Outlet, Navigate, useLocation } from "react-router-dom"
 
 
-export const RequireAuthorization = ({authorization}) =>{
+export const RequireAuthorization = ({accessToken}) =>{
     const location = useLocation()
     return (
-        authorization?.accessToken ? <Outlet/> : <Navigate to='/login' state={{from: location}} replace/>
+        accessToken ? <Outlet/> : <Navigate to='/login' state={{from: location}} replace/>
     )
 }
