@@ -9,14 +9,14 @@ const { logger } = require('./middleware/logHandler')
 const { errorHandler } = require('./middleware/errorHandler')
 const parseErrorHandler = require('./middleware/parseErrorHandler')
 const corsOptions = require('./config/corsOption')
-const setControlCredentials = require('./middleware/setAccesControlCredential')
+const setControlCredentials = require('./middleware/setControlCredential')
 require('dotenv').config({path: path.resolve(__dirname,'..', '.env')})
 
 mongoose.connect(process.env.DB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
         .catch((error) => console.error(error))
 
 app.disable('x-powered-by');
-app.use(logger)
+//app.use(logger)
 app.use(setControlCredentials)
 app.use(cors(corsOptions))
 
