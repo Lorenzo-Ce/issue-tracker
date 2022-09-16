@@ -1,6 +1,5 @@
 import { useState } from "react"
 import initializeForm from "../utils/initializeForm"
-import postData from "../utils/postData"
 import {REGX_USERNAME, REGX_EMAIL, REGX_PSW} from '../utils/regex'
 
 const useForm = (formFields) => {

@@ -3,7 +3,8 @@ import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useForm } from '../hooks/useForm'
 import { Error } from './Error'
-import postData from '../utils/postData'
+import axios from '../utils/axios'
+import { setPostHeader } from '../utils/requestMethods'
 
 export default function Register (){
     
@@ -23,17 +24,16 @@ export default function Register (){
         setIsLoading(true)
         
         try{
-            const post = postData
-            const {response, responseBody} = await post('register', Form)
-            console.log(response)
+            const response = await axios.post('/register', JSON.stringify(Form), setPostHeader())
             navigate('/login', {replace: true})
         } catch (err){
-            if(!err?.status){
+            if(err?.request || err?.request){
                 setErrorMessage('Network Error. Registration failed, try again later.')
             }
             else{
-                setErrorMessage(`Error ${err.status}: ${err.body.error}`)
+                const errorMessage = await err.json()
                 console.log(errorMessage)
+                setErrorMessage(`Error ${err?.response?.status}: ${errorMessage}`)
             }
         } finally {
             setIsLoading(false)

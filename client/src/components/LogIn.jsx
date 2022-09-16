@@ -4,8 +4,8 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useForm } from '../hooks/useForm'
 import { useAuthorization } from '../hooks/useAuthorization'
 import { Error } from './Error'
-import postData from '../utils/postData'
-
+import axios from '../utils/axios'
+import { setPostHeader } from '../utils/requestMethods'
 
 export default function Login (){
     
@@ -21,20 +21,20 @@ export default function Login (){
         setIsLoading(true)
 
         try{
-            const post = postData
-            const {response, responseBody} = await post('login', Form)   
-            console.log(responseBody)
-            setAuthorization(prevAuth => ({...prevAuth, accessToken: responseBody?.accessToken}))
+
+            const response = await axios.post('/login', JSON.stringify(Form))   
+            console.log(response)
+            setAuthorization(prevAuth => ({...prevAuth, accessToken: response?.data?.accessToken}))
             navigate('/dashboard', {replace: true})
             
         } catch (err){
-            console.log(err)
-            if(!err?.status){
+            if(err?.request){
                 setErrorMessage('Network Error. Registration failed, try again later.')
             }
             else{
-                setErrorMessage(`Error ${err.status}: ${err.body.error}`)
+                const errorMessage = await err.json()
                 console.log(errorMessage)
+                setErrorMessage(`Error ${err?.response?.status}: ${errorMessage}`)
             }
         } finally {
             setIsLoading(false)

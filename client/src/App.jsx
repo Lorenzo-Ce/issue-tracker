@@ -6,10 +6,10 @@ import {RequireAuthorization} from './components/RequireAuthorization'
 import Register from './components/Register'
 import Login from './components/Login'
 import Dashboard from './pages/Dashboard'
+import PersistLogin from './components/PersistLogin'
 
 function App() {
   const { authorization } = useAuthorization()
-
   return (
     <Box>
       <Routes>
@@ -18,10 +18,11 @@ function App() {
               <Route path='/signup' element={<Register />}/>
               <Route path='/login' element={<Login />} />
               {/*Protected Routes*/}
-              <Route element={<RequireAuthorization {...authorization}/>}>
-                  <Route path='/dashboard' element={<Dashboard/>}/>
+              <Route element={<PersistLogin />}>
+                <Route element={<RequireAuthorization {...authorization}/>}>
+                    <Route path='/dashboard' element={<Dashboard/>}/>
+                </Route>
               </Route>
-
       </Routes>
     </Box>
 
