@@ -8,7 +8,9 @@ const verifyAccessToken = (req, res, next) => {
         accessToken,
         process.env.SECRET_ACCESS_TOKEN,
         function (err, decoded){
-            if(err) return res.sendStatus(403)
+            if(err){ 
+                console.log(err)
+                return res.sendStatus(403)}
             req.username = decoded.username
             next()
         }

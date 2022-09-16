@@ -6,15 +6,6 @@ function useRefreshToken() {
     const { authorization, setAuthorization } = useAuthorization()
     const refreshAccessToken = async () => { 
 
-      
-      const logReq = axios.interceptors.request.use(function (config) {
-        console.log(config)
-        return config;
-      }, function (error) {
-        return Promise.reject(error);
-      });
-
-
       try{
         const response = await axios.get('refresh', 
           { 
@@ -26,10 +17,7 @@ function useRefreshToken() {
         setAuthorization(prevAuth => ({...prevAuth, accessToken}))
         return accessToken
       }catch(err){
-        console.log(err)
-      }
-      finally{
-        axios.interceptors.request.eject(logReq)
+        console.error(err)
       }
     }
   

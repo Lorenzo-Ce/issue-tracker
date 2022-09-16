@@ -16,7 +16,7 @@ const updateRefreshToken = async (req, res, err) => {
         function (err, decoded) {
             if(err) return res.sendStatus(403)
             const newAccessToken = jwt.sign({
-                'email' : decoded.email
+                'username' : decoded.username
                 },
                 process.env.SECRET_REFRESH_TOKEN,
                 {expiresIn: '20m'}

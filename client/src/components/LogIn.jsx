@@ -23,7 +23,6 @@ export default function Login (){
         try{
 
             const response = await axios.post('/login', JSON.stringify(Form))   
-            console.log(response)
             setAuthorization(prevAuth => ({...prevAuth, accessToken: response?.data?.accessToken}))
             navigate('/dashboard', {replace: true})
             
