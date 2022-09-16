@@ -1,5 +1,4 @@
 import axios from '../utils/axios'
-import { setGetHeader } from '../utils/requestMethods'
 import { useAuthorization } from './useAuthorization'
 
 function useRefreshToken() {
