@@ -6,7 +6,6 @@ const logOutUser = async (req, res, err) => {
         return res.sendStatus(205) // refresh no content
     }
     const foundUser = await User.findOne({refreshToken}).exec()
-    console.log(foundUser)
     if(!foundUser){
         res.clearCookie('token', { httpOnly: true })
         return res.sendStatus(204)
@@ -14,7 +13,12 @@ const logOutUser = async (req, res, err) => {
     else{ 
         foundUser.refreshToken = ''
         await foundUser.save()
-        res.clearCookie('token', { httpOnly: true })
+        res.clearCookie('token', { 
+            httpOnly: true, 
+            sameSite: 'None', 
+            secure: true,
+            maxAge: 24 * 60 * 60 * 1000, 
+        })
         return res.status(204).send({'message': 'successfull logout'})
     }
 }
