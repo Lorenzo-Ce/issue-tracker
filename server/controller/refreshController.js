@@ -3,6 +3,7 @@ const User = require('../model/User')
 
 const updateRefreshToken = async (req, res, err) => {
     const refreshToken = req.cookies?.token
+    console.log(refreshToken)
     if(!refreshToken){
         return res.status(400).send({'error':'There is a problem. Try to login again'})
     }

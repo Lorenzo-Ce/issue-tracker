@@ -4,7 +4,6 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useForm } from '../hooks/useForm'
 import { Error } from './Error'
 import axios from '../utils/axios'
-import { setPostHeader } from '../utils/requestMethods'
 
 export default function Register (){
     
@@ -24,7 +23,7 @@ export default function Register (){
         setIsLoading(true)
         
         try{
-            const response = await axios.post('/register', JSON.stringify(Form), setPostHeader())
+            const response = await axios.post('/register', JSON.stringify(Form))
             navigate('/login', {replace: true})
         } catch (err){
             if(err?.request || err?.request){
@@ -44,7 +43,8 @@ export default function Register (){
     return(
         <Box as='form' 
             onSubmit={handleSubmit} 
-            color={'blue.800'} width={['100%', '400px']} padding={'1em'} borderRadius={'10px'} boxShadow={'rgba(0, 0, 0, 0.1) 0px 4px 12px'}
+            color={'blue.800'} w={['95%', '400px']} padding='1em' borderRadius='10px' boxShadow={'rgba(0, 0, 0, 0.1) 0px 4px 12px'}
+            bgColor='#FFF' placeSelf='center'
             onChange={(e) => handleValidation(e.target)}
         >
             <VStack spacing={'10px'}>

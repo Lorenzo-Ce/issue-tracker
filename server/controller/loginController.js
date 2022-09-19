@@ -20,7 +20,7 @@ const loginUser = async (req, res, err) => {
             'username' : matchedUser.username,
             },
             process.env.SECRET_ACCESS_TOKEN,
-            {expiresIn: '20m'}
+            {expiresIn: '60m'}
         )
         const refreshToken = jwt.sign({
             'username' : matchedUser.username,
@@ -36,10 +36,9 @@ const loginUser = async (req, res, err) => {
             { httpOnly: true, 
                 sameSite: 'None', 
                 secure: true,
-                maxAge: 24 * 3600000, 
+                maxAge: 24 * 60 * 60 * 1000, 
             }
         )
-        console.log(res)
         res.status(200).send({
             'message' : 'Successfull Login', 
             'accessToken' : accessToken,

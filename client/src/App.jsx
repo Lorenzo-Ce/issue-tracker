@@ -1,4 +1,4 @@
-import { Box } from '@chakra-ui/react'
+import { Box, grid } from '@chakra-ui/react'
 import { Routes, Route, Navigate } from 'react-router-dom'
 import './App.css'
 import { useAuthorization } from './hooks/useAuthorization'
@@ -11,7 +11,7 @@ import PersistLogin from './components/PersistLogin'
 function App() {
   const { authorization } = useAuthorization()
   return (
-    <Box>
+    <Box as='section' height='100vh' display={'grid'} >
       <Routes>
           <Route path='/' element={<Navigate to='/signup' replace/>}/>
               {/*Free Routes*/}
