@@ -1,8 +1,7 @@
-import { Route, Routes, Navigate} from 'react-router-dom'
-import { useState } from 'react'
-import { Box, Text, Image } from '@chakra-ui/react'
+import { useState, useEffect } from 'react'
+import { Box, Image, Heading } from '@chakra-ui/react'
 import { Sidebar } from '../components/Sidebar'
-import { useEffect } from 'react'
+import { Desk } from '../components/Desk'
 
 export function Dashboard() {
     const [isSidebarVisible, setIsSidebarVisible] = useState(() => {
@@ -29,12 +28,13 @@ export function Dashboard() {
                 <Sidebar handleSidebar={handleSidebar} 
                     isSidebarVisible={isSidebarVisible} 
                 /> : 
-                <Image m='1em 1em' w='24px' h='24px' cursor='pointer' src='/menuIcon.svg'
-                    onClick={handleSidebar} 
+                <Image m='1em 1em' boxSize='24px' cursor='pointer' src='/menuIcon.svg'
+                    alt='burger menu' onClick={handleSidebar} 
                 /> }
             {/*"DESK" COMPONENT*/}
-            <Box width={'70%'}>
-                <Text fontSize='3xl'>DESK COMPONENT</Text>
+            <Box width={'70%'} p='1em 1em'>
+                <Heading fontSize='3xl'>DESK COMPONENT</Heading>
+                <Desk />
             </Box>
         </Box>
     )

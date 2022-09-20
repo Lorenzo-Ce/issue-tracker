@@ -44,7 +44,9 @@ export const Sidebar = ({handleSidebar, isSidebarVisible}) => {
         }
     }
     return(
-    <Flex flexDirection='column' as='aside' textAlign={'left'} padding={'0.8em 0.4em'} w="220px" bg='white' color='blue.800' boxShadow={'rgba(0, 0, 0, 0.1) 0px 4px 12px'}>    
+    <Flex flexDirection='column' as='aside' textAlign={'left'} padding={'0.8em 0.4em'} w="220px" h='100vh' bg='white' color='blue.800' boxShadow={'rgba(0, 0, 0, 0.1) 0px 4px 12px'}
+        position={isIconVisible ? 'relative' : 'absolute'} zIndex='10'
+    >    
         {!isIconVisible && 
             <Box as='section' mb='0.5em'  display='flex' justifyContent='flex-end'>
                 <CloseIcon boxSize='18px' mr='0.5em' color='red.500' cursor='pointer' focusable 
