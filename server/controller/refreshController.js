@@ -18,10 +18,10 @@ const updateRefreshToken = async (req, res, err) => {
             const newAccessToken = jwt.sign({
                 'username' : decoded.username
                 },
-                process.env.SECRET_REFRESH_TOKEN,
+                process.env.SECRET_ACCESS_TOKEN,
                 {expiresIn: '20m'}
             )
-        res.status(200).send({'accessToken' : newAccessToken})
+        res.status(200).send({'accessToken' : newAccessToken, 'username': decoded.username})
         }
     )
     

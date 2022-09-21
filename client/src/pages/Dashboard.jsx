@@ -32,7 +32,7 @@ export function Dashboard() {
                     alt='burger menu' onClick={handleSidebar} 
                 /> }
             {/*"DESK" COMPONENT*/}
-            <Box width={'70%'} p='1em 1em'>
+            <Box width={['100%']} p='1em 1em'>
                 <Heading fontSize='3xl'>DESK COMPONENT</Heading>
                 <Desk />
             </Box>

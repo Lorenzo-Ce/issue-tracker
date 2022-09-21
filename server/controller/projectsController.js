@@ -27,7 +27,8 @@ const addProject = async (req, res, err) => {
 }
 
 const getAllProjects = async (req, res, err) => {
-    const { username } = req.body
+    const username = req?.username
+    console.log(username)
     if(!username) return res.status(400).send({'error':'Missing username required field'})
     try{
         const matchedUser = await User.findOne({ username }).exec()

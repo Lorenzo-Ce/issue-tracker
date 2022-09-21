@@ -6,6 +6,10 @@ const ProjectSchema = new Schema({
         max: 30,
         required: true
     },
+    description: {
+        type: String,
+        max: 500
+    },
     status: {
         type: String,
         enum: ['Open','Paused','Closed'],
@@ -31,7 +35,7 @@ const ProjectSchema = new Schema({
         closingDate: Date,
         label: {
             type: String, 
-            enum:['Todos','Bug','Feature','Improvement']
+            enum:['Todos','Bugs','Features','Design']
         },
         priority: {
             type: String, 

@@ -2,6 +2,7 @@ import { Text, Grid, GridItem} from '@chakra-ui/react'
 import { TeamTable } from './TeamTable'
 import { IssueTable } from './IssueTable'
 import { ProjectInfo } from './ProjectInfo'
+import { IssueGraphic } from '../components/IssueGraphic'
 
 export const Desk = () => {
 
@@ -17,7 +18,7 @@ export const Desk = () => {
                 <IssueTable />
             </GridItem>
             <GridItem as='section' borderRadius='10px' p='1em' boxShadow='rgba(0, 0, 0, 0.1) 0px 4px 12px'>
-            <Text fontSize='xl'>ISSUES GRAPHIC</Text>
+                <IssueGraphic />
             </GridItem>
         </Grid>
     )

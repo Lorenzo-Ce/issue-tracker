@@ -4,10 +4,7 @@ export const ProjectInfo = () => {
 
     return(
     <>
-        <Heading fontSize='xl' fontWeight='bold'>PROJECT INFO</Heading>
-        <span>
-            <Text fontWeight='bold'>Name:</Text> Project Name
-        </span>
+        <Heading fontSize='xl' fontWeight='bold' mb='0.5em'>PROJECT NAME</Heading>
         <span>
             <Text fontWeight='bold'>Description:</Text>
                 <p>

@@ -10,7 +10,8 @@ const verifyAccessToken = (req, res, next) => {
         function (err, decoded){
             if(err){ 
                 console.log(err)
-                return res.sendStatus(403)}
+                return res.sendStatus(403)
+            }
             req.username = decoded.username
             next()
         }

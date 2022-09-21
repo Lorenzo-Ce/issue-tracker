@@ -42,6 +42,7 @@ const loginUser = async (req, res, err) => {
         res.status(200).send({
             'message' : 'Successfull Login', 
             'accessToken' : accessToken,
+            'username':  matchedUser.username
         })
     }catch(err){
         console.log(err)
