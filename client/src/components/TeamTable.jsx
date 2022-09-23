@@ -1,10 +1,31 @@
-import { Heading, Table, Thead, Tbody, Tr, Th, Td, TableContainer, Button, Box } from "@chakra-ui/react"
+import { Heading, Table, Thead, Tbody, Tr, Th, Td, TableContainer, Button, Flex, Spacer } from "@chakra-ui/react"
 
-export const TeamTable = () => {
-
+export const TeamTable = ({members}) => {
+    const teamMembers = Object.entries(members)
+    const teamList = teamMembers.map(([role, members]) => 
+        members.forEach(member => 
+        <Tr>
+            <Th>{member}</Th>
+            <Th>{role}</Th>
+        </Tr>
+        )
+    )
     return(
     <>
-    <Heading fontSize='xl' fontWeight='bold'>TEAM</Heading>
+    <Flex>
+        <Heading fontSize='xl' fontWeight='bold'>TEAM</Heading>
+        <Spacer/>
+        <Button     
+            size='sm' 
+            colorScheme='blue'
+            loadingText='Adding Member'
+            isLoading={false} 
+            onClick={() => console.log('add member') }
+        >
+            Add Member
+        </Button>
+    </Flex>
+
     <TableContainer>
         <Table variant='striped' colorScheme='blue'>
             <Thead>
@@ -29,26 +50,6 @@ export const TeamTable = () => {
         </Tbody>
         </Table>
     </TableContainer>
-    <Box display='flex' mt='1em' justifyContent='space-between'>
-        <Button     
-            mb='5px' 
-            colorScheme='blue'
-            loadingText='Adding Member'
-            isLoading={false} 
-            onClick={() => console.log('add member') }
-        >
-            Add Member
-        </Button>
-        <Button     
-            mb='5px' 
-            colorScheme='red'
-            loadingText='Logging out'
-            isLoading={false} 
-            onClick={() => console.log('remove member') }
-        >
-            Remove Member
-        </Button> 
-    </Box>
     </>
     )
 }

@@ -22,7 +22,12 @@ export default function Login (){
         try{
 
             const response = await axios.post('/login', JSON.stringify(Form))   
-            setAuthorization(prevAuth => ({...prevAuth, accessToken: response?.data?.accessToken}))
+            setAuthorization(prevAuth => (
+                {...prevAuth, 
+                    accessToken: response?.data?.accessToken,
+                    username: response?.data?.username
+                }))
+            
             navigate('/dashboard', {replace: true})
             
         } catch (err){
@@ -31,7 +36,6 @@ export default function Login (){
             }
             else{
                 const errorMessage = await err.json()
-                console.log(errorMessage)
                 setErrorMessage(`Error ${err?.response?.status}: ${errorMessage}`)
             }
         } finally {

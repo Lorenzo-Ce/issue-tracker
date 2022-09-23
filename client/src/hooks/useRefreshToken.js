@@ -13,7 +13,8 @@ function useRefreshToken() {
           }
         )
         const accessToken = response?.data?.accessToken
-        setAuthorization(prevAuth => ({...prevAuth, accessToken}))
+        const username = response?.data?.username
+        setAuthorization(prevAuth => ({...prevAuth, accessToken, username}))
         return accessToken
       }catch(err){
         console.error(err)

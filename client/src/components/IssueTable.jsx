@@ -1,21 +1,22 @@
-import { Heading, Table, Thead, Tbody, Button, Tr, Th, Td, TableContainer, Box } from "@chakra-ui/react"
+import { Heading, Table, Thead, Tbody, Button, Tr, Th, Td, TableContainer, Flex, Spacer } from "@chakra-ui/react"
 
 export const IssueTable = () => {
 
     return(
     <>
-        <Box display='flex' justifyContent='space-between' alignItems='center'>
+        <Flex mb='0.5em'>
             <Heading fontSize='xl' fontWeight='bold'>ISSUES</Heading>
+            <Spacer />
             <Button     
-                loadingText='Adding Member'
-                isLoading={false} 
-                onClick={() => console.log('add Issue') }
-            >
-                +
-            </Button>
-        </Box>
+            size='sm' 
+            colorScheme='blue'
+            onClick={() => console.log('open add issue') }
+        >
+            Add Issue
+        </Button>
+        </Flex>
         <TableContainer>
-            <Table variant='simple'>
+            <Table variant='simple' size='sm'>
                 <Thead>
                 <Tr>
                     <Th>Issue</Th>

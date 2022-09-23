@@ -8,17 +8,16 @@ const useAxiosProtect = () => {
     const { authorization } = useAuthorization()
 
     useEffect(() => {
-        const requestInterceptor = axiosPrivate.interceptors.request.use(
+        const requestInterceptor = axiosProtect.interceptors.request.use(
             (config) => {
-                console.log(config)
                 if (!config.headers['Authorization']){
-                    config.headers['Authorization'] = `Bearer ${auth?.accessToken}`
+                    config.headers['Authorization'] = `Bearer ${authorization?.accessToken}`
                 }
                 return config
             }, (error) => Promise.reject(error)
         )
 
-        const responseInterceptor = axiosPrivate.interceptors.response.use(
+        const responseInterceptor = axiosProtect.interceptors.response.use(
             response => response,
             async(error) => {
                 const prevRequest = error?.config
@@ -26,18 +25,18 @@ const useAxiosProtect = () => {
                     prevRequest.sent = true
                     const newAccessToken = await refreshAccessToken()
                     prevRequest.headers['Authorization'] = `Bearer ${newAccessToken}`
-                    return axiosPrivate(prevRequest)
+                    return axiosProtect(prevRequest)
                 }
                 return Promise.reject(error)
             }
         )
 
         return () => {
-            axiosPrivate.interceptors.request.eject(requestInterceptor)
-            axiosPrivate.interceptors.response.eject(responseInterceptor)
+            axiosProtect.interceptors.request.eject(requestInterceptor)
+            axiosProtect.interceptors.response.eject(responseInterceptor)
         }
 
-    }, [authorization, refresh])
+    }, [authorization, refreshAccessToken])
 
     return axiosProtect
 }

@@ -13,7 +13,7 @@ import { useNavigate } from 'react-router-dom'
 
 
 export const Sidebar = ({handleSidebar, isSidebarVisible}) => {
-    const {setAuthorization} = useAuthorization()
+    const {authorization, setAuthorization} = useAuthorization()
     const [isLoading, setIsLoading] = useState(false)
     const navigate = useNavigate()
     const [isIconVisible, setIsIconVisible] = useState(() => {
@@ -34,12 +34,12 @@ export const Sidebar = ({handleSidebar, isSidebarVisible}) => {
         try{
             setIsLoading(true)
             const response = await axios.post('/logout')
-            console.log('render')
             setAuthorization({})
             navigate('/login', {replace: true})
         } catch (e) {
             console.error(e)
         } finally{
+            localStorage.clear()
             setIsLoading(false)
         }
     }
@@ -55,7 +55,7 @@ export const Sidebar = ({handleSidebar, isSidebarVisible}) => {
         }
         <Box as='section' mb='1em' display='flex' >
             <Image src={userIcon} alt='userIcon' float='left' mr='0.4em'/>
-            <Text fontSize='lg'>Hello Username</Text>
+            <Text fontSize='lg'>Hello {authorization.username}</Text>
         </Box>
         <Accordion allowMultiple defaultIndex={[]}>
             <AccordionItem pl='0'>

@@ -1,9 +1,9 @@
-import { useState, createContext} from "react";
+import { useState, createContext} from 'react';
 
 const AuthorizationContext = createContext()
 
 const AuthorizationContextProvider = (props) => {
-    const [authorization, setAuthorization] = useState({accessToken: ""})
+    const [authorization, setAuthorization] = useState({accessToken: '', username: ''})
     
     return (
         <AuthorizationContext.Provider value={{authorization, setAuthorization}}>

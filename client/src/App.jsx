@@ -1,4 +1,4 @@
-import { Box, grid } from '@chakra-ui/react'
+import { Box } from '@chakra-ui/react'
 import { Routes, Route, Navigate } from 'react-router-dom'
 import './App.css'
 import { useAuthorization } from './hooks/useAuthorization'
@@ -7,6 +7,8 @@ import Register from './components/Register'
 import Login from './components/Login'
 import Dashboard from './pages/Dashboard'
 import PersistLogin from './components/PersistLogin'
+import { Desk } from './components/Desk'
+import { Project } from './components/Project'
 
 function App() {
   const { authorization } = useAuthorization()
@@ -20,7 +22,10 @@ function App() {
               {/*Protected Routes*/}
               <Route element={<PersistLogin />}>
                 <Route element={<RequireAuthorization {...authorization}/>}>
-                    <Route path='/dashboard' element={<Dashboard/>}/>
+                    <Route path='dashboard' element={<Dashboard/>}>
+                      <Route path='' element={<Desk/>}/>
+                      <Route path=':projectId' element={<Project />}/>                      
+                    </Route>
                 </Route>
               </Route>
       </Routes>

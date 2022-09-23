@@ -1,4 +1,4 @@
-import { Heading, Box, List, ListItem } from "@chakra-ui/react"
+import { Heading, Box, List, ListItem, Flex } from "@chakra-ui/react"
 import { PieChart} from 'react-minimal-pie-chart';
 
 
@@ -10,37 +10,44 @@ export const IssueGraphic = () => {
         { title: 'Todos', value: 20, color: '#C13C37' },
         { title: 'Design', value: 10, color: '#6A2135' },
     ]
+    const sumValues = 70
     return(
     <>
     <Heading mb='1em' fontSize='xl' fontWeight='bold'>ISSUES GRAPHIC</Heading>
-    <Box display='flex'>
-        <PieChart
-            style={{ height: '280px' }}
+    <Flex justifyContent='center' alignItems='center' gap='1em'>
+        <PieChart 
+            style={{ height: '160px', width: '180px' }}
             data={dataInfo}
             animate 
             animationDuration={1000}
-            lengthAngle={-180}
+            label={({ dataEntry }) => `${Math.round(dataEntry.value/70 * 100)} %`}
+            labelStyle={{
+                fontSize: '10px',
+                opacity: '0.75',
+                fill: '#FFF'
+            }}
+            labelPosition={60}
         />
 
         <List spacing={3}>
-            <ListItem display='flex' alignItems='center' font>
+            <ListItem display='flex' alignItems='center'>
                 <Box boxSize='10px' borderRadius='100%' backgroundColor='gold' mr='5px'/>
                 Bugs
             </ListItem>
-            <ListItem display='flex' alignItems='center' font>
+            <ListItem display='flex' alignItems='center'>
             <Box boxSize='10px' borderRadius='100%' backgroundColor='gold' mr='5px'/>
                 Todos
             </ListItem>
-            <ListItem display='flex' alignItems='center' font>
+            <ListItem display='flex' alignItems='center'>
                 <Box boxSize='10px' borderRadius='100%' backgroundColor='gold' mr='5px'/>
                 Features
             </ListItem>
-            <ListItem display='flex' alignItems='center' font>
+            <ListItem display='flex' alignItems='center'>
                 <Box boxSize='10px' borderRadius='100%' backgroundColor='gold' mr='5px'/>
                 Design
             </ListItem>
         </List>
-    </Box>
+    </Flex>
     </>
     )
 }
