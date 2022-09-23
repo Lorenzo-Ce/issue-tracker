@@ -12,7 +12,8 @@ const addProject = async (req, res, err) => {
     }
     try{
         const members = Object.values(roles).flat()
-        const newProject = await Project.create({name, status, roles, members})
+        const project = {...req.body, members}
+        const newProject = await Project.create(project)
         const foundUser = await User.findOne({username}).exec()
         if(!foundUser){
             await Project.deleteOne({_id: newProject._id})
@@ -28,7 +29,6 @@ const addProject = async (req, res, err) => {
 
 const getAllProjects = async (req, res, err) => {
     const username = req?.username
-    console.log(username)
     if(!username) return res.status(400).send({'error':'Missing username required field'})
     try{
         const matchedUser = await User.findOne({ username }).exec()
