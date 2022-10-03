@@ -31,7 +31,9 @@ const addIssue = async (req, res, err) => {
         foundProject.issueIncrement = issueNumber + 1
         await foundProject.save()
         return res.sendStatus(201)
-    } catch(error){console.error(error)}
+    } catch(error){
+        console.error(error)
+    }
 }
 const removeIssue = async (req, res, err) => {
     const _id = req.params?.id

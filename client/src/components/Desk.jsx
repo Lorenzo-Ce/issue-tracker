@@ -2,20 +2,20 @@ import { Box, Heading, Spacer, Table, Thead, Tbody, Button, Tr, Th, Td, TableCon
 import { Link, useOutletContext } from 'react-router-dom'
 
 export const Desk = () => {
-    const [isLoading, projects, issues] = useOutletContext()
+    const [projects, isLoading] = useOutletContext()
     const ProjectList = projects.map(project => {
-            const members = project.members.toString().replace(/[,]/g, ', ')
-            const id = project._id
-            return (
+        const members = project.members.toString().replace(/[,]/g, ', ')
+        const id = project._id
+        return (
             <Tr key={id}>
                 <Td color='blue.600'>
-                    <Link to={id}>{`${project.name}`}</Link> </Td>
-                <Td>{`${project.description}`} </Td>
-                <Td>{`${members}`}</Td>
+                    <Link to={id}>{project.name}</Link> </Td>
+                <Td>{project.description} </Td>
+                <Td>{members}</Td>
                 <Td><a href='#'>More Info</a></Td>
-            </Tr>)
-        }
-    )
+            </Tr>
+        )
+    })
     return(
         <>
         { isLoading ? 

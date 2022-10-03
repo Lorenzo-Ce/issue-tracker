@@ -33,11 +33,16 @@ const ProjectSchema = new Schema({
             min: 3,
             max: 30
         },
+        issueStatus: {
+            type: String, 
+            default: 'Open',
+            enum: ['Open', 'Closed']
+        },
         openingDate: Date,
         closingDate: Date,
         label: {
             type: String, 
-            enum:['Todos','Bugs','Features','Design']
+            enum:['Todo','Bug','Feature','Design']
         },
         priority: {
             type: String, 

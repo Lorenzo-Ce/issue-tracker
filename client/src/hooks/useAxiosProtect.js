@@ -6,7 +6,7 @@ import { useAuthorization } from "./useAuthorization"
 const useAxiosProtect = () => {
     const {refreshAccessToken} = useRefreshToken()
     const { authorization } = useAuthorization()
-
+    
     useEffect(() => {
         const requestInterceptor = axiosProtect.interceptors.request.use(
             (config) => {
@@ -20,6 +20,7 @@ const useAxiosProtect = () => {
         const responseInterceptor = axiosProtect.interceptors.response.use(
             response => response,
             async(error) => {
+                if(error.code === "ERR_CANCELED") return Promise.resolve({status: 499})
                 const prevRequest = error?.config
                 if (error?.response?.status === 403 && !prevRequest?.sent) {
                     prevRequest.sent = true
