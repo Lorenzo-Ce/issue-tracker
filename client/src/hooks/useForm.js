@@ -2,13 +2,13 @@ import { useState } from "react"
 import initializeForm from "../utils/initializeForm"
 import {REGX_USERNAME, REGX_EMAIL, REGX_PSW} from '../utils/regex'
 
-const useForm = (formFields) => {
+export const useForm = (formFields) => {
 
-    const [Form, setForm] = useState(() => initializeForm(formFields, '')) 
+    const [Form, setForm] = useState(() => formFields) 
     const [formValidation, setFormValidation] = useState(() => initializeForm(formFields, false))
-    const [errorMessage, setErrorMessage] = useState('')
+    const [formError, setFormError] = useState('')
     const isFormValid = Object.values(formValidation).every(field => field === false) && Object.values(Form).every(field => field !== '')
-   
+
     const handleFormChange = event => {
         const {value, name} = event.target
         setForm((prevForm) => (
@@ -32,7 +32,5 @@ const useForm = (formFields) => {
 
     return [formValidation, 
             isFormValid, handleValidation, 
-            handleFormChange, Form, errorMessage, setErrorMessage ]
+            handleFormChange, Form, formError, setFormError ]
 }
-
-export {useForm}

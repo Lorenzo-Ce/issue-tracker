@@ -1,10 +1,10 @@
-// @ fields: array of strings
+// @ fields: object {'field1' : value, 'field2' : value }
 // @ value: key value
 //@ return: { [field]: key, ...}
 
 const initializeForm = (fields, value) => {
-    
-    const initialForm = fields.reduce((form, currentField) =>(
+    const keys = Object.keys(fields)
+    const initialForm = keys.reduce((form, currentField) =>(
         {...form, [currentField]: value}
     ), {})
     

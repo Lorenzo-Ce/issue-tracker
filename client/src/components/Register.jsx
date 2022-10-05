@@ -8,7 +8,7 @@ import axios from '../utils/axios'
 export default function Register (){
     
     const [formValidation,isFormValid, handleValidation, 
-        handleFormChange, Form, errorMessage, setErrorMessage] = useForm(['email', 'username', 'password', 'confirmPassword'])
+        handleFormChange, Form, errorMessage, setErrorMessage] = useForm({email:'', username:'', password:'', confirmPassword:''})
     const [isLoading, setIsLoading] = useState(false)
     let navigate = useNavigate()
     useEffect(() => {

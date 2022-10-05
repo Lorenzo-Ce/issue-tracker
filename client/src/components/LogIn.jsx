@@ -9,18 +9,17 @@ import axios from '../utils/axios'
 export default function Login (){
     
     const [formValidation,isFormValid, handleValidation, 
-        handleFormChange, Form, errorMessage, setErrorMessage] = useForm(['email', 'password'])
+        handleFormChange, Form, formError, setFormError] = useForm({email:'', password:''})
     const [isLoading, setIsLoading] = useState(false)
     const {authorization, setAuthorization} = useAuthorization()
     const navigate = useNavigate()
 
     const handleSubmit = async (event) => {
         event.preventDefault()
-        setErrorMessage('')
+        setFormError('')
         setIsLoading(true)
 
         try{
-
             const response = await axios.post('/login', JSON.stringify(Form))   
             setAuthorization(prevAuth => (
                 {...prevAuth, 
@@ -32,11 +31,11 @@ export default function Login (){
             
         } catch (err){
             if(err?.request){
-                setErrorMessage('Network Error. Registration failed, try again later.')
+                setFormError('Network Error. Registration failed, try again later.')
             }
             else{
-                const errorMessage = await err.json()
-                setErrorMessage(`Error ${err?.response?.status}: ${errorMessage}`)
+                const formError = await err.json()
+                setFormError(`Error ${err?.response?.status}: ${formError}`)
             }
         } finally {
             setIsLoading(false)
@@ -52,7 +51,7 @@ export default function Login (){
         >
             <VStack spacing={'10px'}>
                 <Heading>Login</Heading>
-                {errorMessage !== '' && <Error message={errorMessage} /> }
+                {formError !== '' && <Error message={formError} /> }
                 <FormControl isRequired 
                     id='email' 
                     isInvalid={formValidation.email}

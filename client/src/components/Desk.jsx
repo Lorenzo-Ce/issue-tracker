@@ -1,8 +1,13 @@
-import { Box, Heading, Spacer, Table, Thead, Tbody, Button, Tr, Th, Td, TableContainer} from '@chakra-ui/react'
-import { Link, useOutletContext } from 'react-router-dom'
+import { Box, Heading, Spacer, Table, Thead, Tbody, Button, Tr, Th, Td, TableContainer, useDisclosure } from '@chakra-ui/react'
+import { Link } from 'react-router-dom'
+import useApiCall from '../hooks/useApiCall'
+import {Error} from './Error'
+import CreateProject from './Modals/CreateProject'
 
 export const Desk = () => {
-    const [projects, isLoading] = useOutletContext()
+    const {responseData: projects, apiError, isLoading} = useApiCall('/projects', 'get')
+    const { isOpen, onOpen, onClose } = useDisclosure()
+    
     const ProjectList = projects.map(project => {
         const members = project.members.toString().replace(/[,]/g, ', ')
         const id = project._id
@@ -16,24 +21,26 @@ export const Desk = () => {
             </Tr>
         )
     })
+
     return(
         <>
         { isLoading ? 
         <Box h='80%'>Loading</Box> : 
-            <Box as='section' m='0 1em' bg='#FFF' borderRadius='10px' p='1em' boxShadow='rgba(0, 0, 0, 0.1) 0px 4px 12px'>
+        <Box as='section' m='0 1em' bg='#FFF' borderRadius='10px' p='1em' boxShadow='rgba(0, 0, 0, 0.1) 0px 4px 12px'>
             <Box mb='0.5em' display='flex' flexDirection='row' alignItems='center'>
                 <Heading as='h3' color='blue.800' fontSize='1rem' textTransform='uppercase'>
                     Projects
                 </Heading>
-            <Spacer/>
-            <Button size='sm'
-                    colorScheme='blue'
-                    onClick={() => console.log('open new window and create project')}
-            >
-                    Add Project
+                <Spacer/>
+                <Button size='sm'
+                        colorScheme='blue'
+                        onClick={onOpen}
+                >
+                        Add Project
                 </Button>
             </Box>
-
+            {apiError !== '' ? 
+            <Error message={apiError} /> :
              <TableContainer>
                 <Table variant='simple' size='sm'>
                     <Thead>
@@ -48,9 +55,12 @@ export const Desk = () => {
                         {ProjectList}
                     </Tbody>
                 </Table>
-            </TableContainer> 
+            </TableContainer>} 
         </Box> 
         }
+        <Box>
+            <CreateProject isOpen={isOpen} onClose={onClose} />
+        </Box>
         </>
     )
 }

@@ -2,10 +2,8 @@ import { useState, useEffect, useRef } from 'react'
 import { Outlet } from 'react-router-dom'
 import { Box, Image, Heading } from '@chakra-ui/react'
 import { Sidebar } from '../components/Sidebar'
-import useGetData from '../hooks/useGetData'
 
 export function Dashboard() {
-    const {data: projects, isLoading} = useGetData('/projects')
     const [isSidebarVisible, setIsSidebarVisible] = useState(() => {
         return window.innerWidth > 800 ? true : false
     })
@@ -40,7 +38,7 @@ export function Dashboard() {
                 <Heading fontSize='2xl' color='blue.800' mb='1em'>
                     DESK COMPONENT
                 </Heading>
-                <Outlet context={[projects, isLoading]}/>
+                <Outlet />
             </Box>
         </Box>
     )
