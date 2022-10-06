@@ -1,7 +1,7 @@
 const app = require('../app');
-const {refreshToken, wrongRefreshToken } = require('./utils/fakeData');
 const request = require('supertest')(app);
 const { setRefreshToken, deleteUser } = require('./utils/setDB')
+const {refreshToken, wrongRefreshToken } = require('./utils/fakeData');
 
 //REGISTER ROUTE
 
@@ -76,15 +76,15 @@ describe('API /refresh', () =>{
   beforeAll(() => setRefreshToken('test', refreshToken))
 
   test('POST valid token should return 200', async () => {
-    const response = await request.post('/refresh').set('Cookie', `token=${refreshToken}`)
+    const response = await request.get('/refresh').set('Cookie', `token=${refreshToken}`)
     expect(response.statusCode).toBe(200)
   })  
-  test('POST missing Token should return 400', async () => {
-    const response = await request.post('/refresh').set('Cookie', ``)
+  test('get missing Token should return 400', async () => {
+    const response = await request.get('/refresh').set('Cookie', ``)
     expect(response.statusCode).toBe(400)
   })  
-  test('POST wrong email should return 403', async () => {
-    const response = await request.post('/refresh').set('Cookie', `token=${wrongRefreshToken}`)
+  test('get wrong email should return 403', async () => {
+    const response = await request.get('/refresh').set('Cookie', `token=${wrongRefreshToken}`)
     expect(response.statusCode).toBe(403)
   })  
 })

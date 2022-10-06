@@ -32,7 +32,7 @@ const createProject = async (username, projectName, projectStatus, projectRoles)
         await Project.deleteOne({_id: newProject._id})
         throw new Error('Project deleted, not added to user')
     }  
-    foundUser.projects.set(newProject._id, 'Manager') 
+    foundUser.projects.set(newProject._id, 'Lead') 
     await foundUser.save()
     return newProject._id
     }catch(error){

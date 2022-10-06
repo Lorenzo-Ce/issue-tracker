@@ -1,8 +1,6 @@
 const roles = {
-                Manager : 'Manager',
-                Developer: 'Developer',
-                Designer: 'Designer',
-                Tester: 'Tester'
+                Lead : 'Lead',
+                Member: 'Member',
             }
 
 module.exports = roles

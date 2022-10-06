@@ -13,6 +13,7 @@ const addProject = async (req, res, err) => {
     try{
         const members = Object.values(roles).flat()
         const project = {...req.body, members}
+        //TODO: Add Promise.all
         const newProject = await Project.create(project)
         const foundUser = await User.findOne({username}).exec()
         if(!foundUser){

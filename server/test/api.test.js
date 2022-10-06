@@ -13,8 +13,8 @@ beforeAll(async () => {
   await createUser('testAccount2', 'test2@test.com', 'test12345')
   accessToken = await setAccessToken('testAccount') 
   accessToken2 = await setAccessToken('testAccount2') 
-  id = await createProject('testAccount','testProject2', 'Open', {'Manager': ['testAccount']})
-  id2 = await createProject('testAccount','testProject3', 'Open', {'Manager': ['testAccount']})
+  id = await createProject('testAccount','testProject2', 'Open', {'Lead': ['testAccount']})
+  id2 = await createProject('testAccount','testProject3', 'Open', {'Lead': ['testAccount']})
 })
 
 afterAll(() => {
@@ -34,7 +34,7 @@ describe('API POST /projects', () => {
           username: 'testAccount',
           name: 'testProject',
           status: 'Open',
-          roles:{'Manager': ['testAccount'], 'Tester' : ['Paul', 'Tony' ]}
+          roles:{'Lead': ['testAccount'], 'Member' : ['Paul', 'Tony' ]}
       }))
       expect(response.statusCode).toBe(201)
       expect(response.body).toBeDefined()
@@ -56,7 +56,7 @@ describe('API POST /projects', () => {
             username: 'wrongTestAccount',
             name: 'testProject',
             status: 'Open',
-            roles: {'Manager': ['testAccount']},
+            roles: {'Lead': ['testAccount']},
             issues : []
         }))
         expect(response.statusCode).toBe(400)
@@ -73,20 +73,15 @@ describe('API GET all /projects', () => {
       expect(response.statusCode).toBe(200)
       expect(response.body).toBeDefined()
     })
-    test('Missing username should return 400', async () => {
-      const response = await request.get('/projects').set('Authorization', `Bearer ${accessToken}`)
-        .set('Accept', 'application/json')
-        expect(response.statusCode).toBe(400)
-        expect(response.body.error).toBe('Missing username required field')
-      })
     test('No projects should return 204 and empty array', async () => {
-      const response = await request.get('/projects').set('Authorization', `Bearer ${accessToken}`)
+      const response = await request.get('/projects').set('Authorization', `Bearer ${accessToken2}`)
         .set('Accept', 'application/json')
         .send(({
           username: 'testAccount2'
         }))
-        expect(response.statusCode).toBe(204)
         expect(response.body).toBeDefined()
+        expect(response.statusCode).toBe(204)
+
       })
 })
 
@@ -137,3 +132,16 @@ describe('API PUT project/:id', () => {
         expect.objectContaining({'endDate': 'ok', 'name': 'ok', 'startDate': 'ok', 'status': 'missing'}))
   })
 })
+
+// USER ROUTE
+
+describe('API /users', () =>{
+
+  test('it should return an array of username', async () =>{
+    const response = await request.get('/users').set('Authorization', `Bearer ${accessToken}`)
+    console.log(response.body)
+    expect(response.statusCode).toBe(200)
+
+  })
+
+} )

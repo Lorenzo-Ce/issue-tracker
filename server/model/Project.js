@@ -2,7 +2,7 @@ const { Schema, default: mongoose } = require('mongoose')
 const ProjectSchema = new Schema({
     name: {
         type: String,
-        min: 3,
+        min: 1,
         max: 30,
         required: true
     },
@@ -23,14 +23,16 @@ const ProjectSchema = new Schema({
     roles: {
         type: Map,
         of: Array,
-        default: {}
+        default: {
+            enum: ['Lead', 'Member']
+        }
     },
     issueIncrement: {type: Number, default : 0},
     issues: [{
         _id: {type: String},
         name: {
             type: String,
-            min: 3,
+            min: 1,
             max: 30
         },
         issueStatus: {
@@ -50,7 +52,7 @@ const ProjectSchema = new Schema({
         },
         description: {
             type: String,
-            min: 3,
+            min: 1,
             max: 500
         },
         comments: [{

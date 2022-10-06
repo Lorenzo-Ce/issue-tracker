@@ -30,7 +30,7 @@ app.use('/register', require('./routes/register'))
 app.use('/login', require('./routes/login'))
 app.use('/logout', require('./routes/logout'))
 app.use('/refresh', require('./routes/refresh'))
-
+app.use('/users', require('./routes/api/users'))
 app.use('/projects', require('./routes/api/projects'))
 
 app.all('*', (req, res) => {

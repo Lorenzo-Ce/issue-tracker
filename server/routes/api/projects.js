@@ -13,14 +13,14 @@ router.route('/')
     .post(addProject)
 
 router.route('/:id')
-    .get(verifyAuthorization(roles.Manager, roles.Developer, roles.Tester, roles.Designer), getProject)
-    .put(verifyAuthorization(roles.Manager, roles.Developer), updateProject)
-    .delete(verifyAuthorization(roles.Manager), deleteProject)
+    .get(verifyAuthorization(roles.Lead, roles.Member), getProject)
+    .put(verifyAuthorization(roles.Lead, roles.Member), updateProject)
+    .delete(verifyAuthorization(roles.Lead), deleteProject)
     
 router.route('/:id/issues')
-    .get(verifyAuthorization(roles.Manager, roles.Developer, roles.Tester, roles.Designer), getIssues)
-    .post(verifyAuthorization(roles.Manager, roles.Developer, roles.Tester, roles.Designer), addIssue)
-    .delete(verifyAuthorization(roles.Manager), removeIssue)
-    .put(verifyAuthorization(roles.Manager, roles.Developer, roles.Tester, roles.Designer), updateIssue)
+    .get(verifyAuthorization(roles.Lead, roles.Member, roles.Tester, roles.Designer), getIssues)
+    .post(verifyAuthorization(roles.Lead, roles.Member, roles.Tester, roles.Designer), addIssue)
+    .delete(verifyAuthorization(roles.Lead), removeIssue)
+    .put(verifyAuthorization(roles.Lead, roles.Member, roles.Tester, roles.Designer), updateIssue)
 
 module.exports = router
