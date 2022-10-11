@@ -5,16 +5,21 @@ import { ProjectInfo } from './ProjectInfo'
 import { TeamTable } from './TeamTable'
 import { IssueTable } from './IssueTable'
 import { IssueGraphic } from '../components/IssueGraphic'
+import useGetData from '../hooks/useGetData'
 
 export const Project = () => {
     const {projectId} = useParams()
     const [projects] = useOutletContext()
     const [currentProject, setCurrentProject] = useState({})
+    const {responseData: projectData} = useGetData(`/projects/${projectId}`)
+
     useEffect(() =>{
         const hasProject = projects?.length > 0
         if(hasProject){
             const foundProject = projects.find(project => project._id === projectId)
             setCurrentProject(foundProject)
+        } else{
+            setCurrentProject(projectData)
         }  
     },[projects])
     

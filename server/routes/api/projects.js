@@ -18,9 +18,9 @@ router.route('/:id')
     .delete(verifyAuthorization(roles.Lead), deleteProject)
     
 router.route('/:id/issues')
-    .get(verifyAuthorization(roles.Lead, roles.Member, roles.Tester, roles.Designer), getIssues)
-    .post(verifyAuthorization(roles.Lead, roles.Member, roles.Tester, roles.Designer), addIssue)
+    .get(verifyAuthorization(roles.Lead, roles.Member), getIssues)
+    .post(verifyAuthorization(roles.Lead, roles.Member), addIssue)
     .delete(verifyAuthorization(roles.Lead), removeIssue)
-    .put(verifyAuthorization(roles.Lead, roles.Member, roles.Tester, roles.Designer), updateIssue)
+    .put(verifyAuthorization(roles.Lead, roles.Member), updateIssue)
 
 module.exports = router

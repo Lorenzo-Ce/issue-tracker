@@ -11,6 +11,7 @@ export const Label = ({children}) => {
             case 'Important': color = 'orange.200'; break;
             case 'Normal': color = 'green.200'; break;
             case 'Low': color = 'blue.200'; break;
+            case 'Edit': color = 'blue.400'; break;
             default: color=''; break;
         }
         return color

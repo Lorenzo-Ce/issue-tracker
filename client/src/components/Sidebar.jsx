@@ -39,12 +39,11 @@ export const Sidebar = ({handleSidebar, isSidebarVisible}) => {
         } catch (e) {
             console.error(e)
         } finally{
-            localStorage.clear()
             setIsLoading(false)
         }
     }
     return(
-    <Flex flexDirection='column' as='aside' textAlign={'left'} padding={'0.8em 0.4em'} w="220px" h='100vh' bg='white' color='blue.800' boxShadow={'rgba(0, 0, 0, 0.1) 0px 4px 12px'}
+    <Flex flexDirection='column' as='aside' textAlign='left' padding='0.8em 0.4em' w="220px" h='100vh' bg='white' color='blue.800' boxShadow='rgba(0, 0, 0, 0.1) 0px 4px 12px'
         position={isIconVisible ? 'relative' : 'fixed'} zIndex='10'
     >    
         {!isIconVisible && 

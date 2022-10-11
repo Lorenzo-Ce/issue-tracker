@@ -3,20 +3,20 @@ import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useForm } from '../hooks/useForm'
 import { useAuthorization } from '../hooks/useAuthorization'
-import { Error } from './Error'
+import { Error } from './Alerts/Error'
 import axios from '../utils/axios'
 
 export default function Login (){
     
-    const [formValidation,isFormValid, handleValidation, 
-        handleFormChange, Form, formError, setFormError] = useForm({email:'', password:''})
+    const {formValidation,isFormValid, handleValidation, 
+        handleFormChange, Form, errorMessage, setErrorMessage} = useForm({email:'', password:''})
     const [isLoading, setIsLoading] = useState(false)
     const {authorization, setAuthorization} = useAuthorization()
     const navigate = useNavigate()
 
     const handleSubmit = async (event) => {
         event.preventDefault()
-        setFormError('')
+        setErrorMessage('')
         setIsLoading(true)
 
         try{
@@ -31,11 +31,11 @@ export default function Login (){
             
         } catch (err){
             if(err?.request){
-                setFormError('Network Error. Registration failed, try again later.')
+                setErrorMessage('Network Error. Registration failed, try again later.')
             }
             else{
-                const formError = await err.json()
-                setFormError(`Error ${err?.response?.status}: ${formError}`)
+                const errorMessage = await err.json()
+                setErrorMessage(`Error ${err?.response?.status}: ${errorMessage}`)
             }
         } finally {
             setIsLoading(false)
@@ -51,7 +51,7 @@ export default function Login (){
         >
             <VStack spacing={'10px'}>
                 <Heading>Login</Heading>
-                {formError !== '' && <Error message={formError} /> }
+                {errorMessage !== '' && <Error message={errorMessage} /> }
                 <FormControl isRequired 
                     id='email' 
                     isInvalid={formValidation.email}

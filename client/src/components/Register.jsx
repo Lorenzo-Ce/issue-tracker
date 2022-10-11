@@ -2,13 +2,13 @@ import {Heading, Box, FormControl, FormLabel, FormErrorMessage, Input, Button, V
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useForm } from '../hooks/useForm'
-import { Error } from './Error'
+import { Error } from './Alerts/Error'
 import axios from '../utils/axios'
 
 export default function Register (){
     
-    const [formValidation,isFormValid, handleValidation, 
-        handleFormChange, Form, errorMessage, setErrorMessage] = useForm({email:'', username:'', password:'', confirmPassword:''})
+    const {formValidation,isFormValid, handleValidation, 
+        handleFormChange, Form, errorMessage, setErrorMessage} = useForm({email:'', username:'', password:'', confirmPassword:''})
     const [isLoading, setIsLoading] = useState(false)
     let navigate = useNavigate()
     useEffect(() => {

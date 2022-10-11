@@ -11,4 +11,12 @@ const initializeForm = (fields, value) => {
     return initialForm
 }
 
-export default initializeForm
+const initialFormValues = {
+    'name': '', 
+    description: '', 
+    status: '',
+    members: [], 
+    startDate: '',
+    endDate: ''
+} 
+export {initializeForm, initialFormValues}

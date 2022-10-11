@@ -1,10 +1,10 @@
 import useAxiosProtect from './useAxiosProtect'
 import { useState, useEffect, useRef } from "react"
 
-const useApiCall = (url, method, data = {}) => {
+const useGetData = (url) => {
     
     const [responseData, setResponseData] = useState([])
-    const [apiError, setError] = useState('')
+    const [apiError, setApiError] = useState('')
     const [isLoading, setIsLoading] = useState(false)
     const axiosProtect = useAxiosProtect()
     const effectRun = useRef(false)
@@ -14,20 +14,17 @@ const useApiCall = (url, method, data = {}) => {
         const controller = new AbortController()
         const handleData = async () => {
             try{
-                setError('')
+                setApiError('')
                 setIsLoading(true)
-                const response = await axiosProtect({
-                    method,    
+                const response = await axiosProtect.get(    
                     url,
-                    data, 
-                    signal: controller.signal
-                })
+                    {signal: controller.signal}
+                )
                 const result = response.data
-                console.log(result)
                 setResponseData(result)
             }catch(err){ 
                 console.error(err)
-                setError(`Error ${err.response?.status}: ${err.response?.statusText} ${err.response?.data?.error}`) 
+                setApiError(`Error ${err.response?.status}: ${err.response?.statusText} ${err.response?.data?.error}`) 
             } finally {
                 isMounted && setIsLoading(false)
             }
@@ -44,7 +41,7 @@ const useApiCall = (url, method, data = {}) => {
     }, [])
 
 
-    return {responseData, apiError, isLoading}
+    return {responseData, setResponseData, apiError, setApiError, isLoading}
 }
 
-export default useApiCall
+export default useGetData

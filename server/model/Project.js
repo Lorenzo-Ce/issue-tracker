@@ -9,12 +9,12 @@ const ProjectSchema = new Schema({
     description: {
         type: String,
         max: 500,
-        default: ''
+        default: '',
+        required: true
     },
     status: {
         type: String,
         enum: ['Open','Paused','Closed'],
-        required: true,
         default: 'Open'
     },
     startDate: Date,

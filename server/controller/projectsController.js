@@ -4,16 +4,18 @@ const mongoose = require('mongoose')
 
 const addProject = async (req, res, err) => {
     const name = req.body?.name
-    const status = req.body?.status
-    const roles = req.body?.roles
-    const username = req.body?.username
-    if(!name || !status || !roles || !username){
+    const memberList = req.body?.members
+    const username = req.username
+    if(!name || !memberList || !username){
        return res.status(400).send({'error' : 'missing one or more required field'})
     }
     try{
-        const members = Object.values(roles).flat()
-        const project = {...req.body, members}
-        //TODO: Add Promise.all
+        const roles = {
+            'Lead': [username],
+            'Member': memberList}
+        const members = [username, ...memberList]
+        const project = {...req.body, roles, members}
+        //TODO: Add Promise.all, add Project to members
         const newProject = await Project.create(project)
         const foundUser = await User.findOne({username}).exec()
         if(!foundUser){

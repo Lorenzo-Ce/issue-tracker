@@ -1,13 +1,19 @@
 import { Box, Heading, Spacer, Table, Thead, Tbody, Button, Tr, Th, Td, TableContainer, useDisclosure } from '@chakra-ui/react'
-import { Link } from 'react-router-dom'
-import useApiCall from '../hooks/useApiCall'
-import {Error} from './Error'
-import CreateProject from './Modals/CreateProject'
+import { useEffect, useRef } from 'react'
+import { Link, useOutletContext } from 'react-router-dom'
+import CreateProjectModal from './Modals/CreateProjectModal'
+import { Label } from './Label'
+import {Error} from './Alerts/Error'
+import useAxiosProtect from '../hooks/useAxiosProtect'
+
 
 export const Desk = () => {
-    const {responseData: projects, apiError, isLoading} = useApiCall('/projects', 'get')
+    const [projects, setProjects, apiError, setApiError, isLoading]= useOutletContext()
     const { isOpen, onOpen, onClose } = useDisclosure()
-    
+    const { isOpen: isEditOpen, onOpen: onEditOpen, onClose: onEditClose } = useDisclosure()
+    const axiosProtect = useAxiosProtect()
+    const refPreviousIsOpen = useRef(isOpen)
+
     const ProjectList = projects.map(project => {
         const members = project.members.toString().replace(/[,]/g, ', ')
         const id = project._id
@@ -17,10 +23,35 @@ export const Desk = () => {
                     <Link to={id}>{project.name}</Link> </Td>
                 <Td>{project.description} </Td>
                 <Td>{members}</Td>
-                <Td><a href='#'>More Info</a></Td>
+                <Td color='white'>
+                    <Label>Edit</Label>
+                </Td>
             </Tr>
         )
     })
+    useEffect(() => {
+        console.log(isOpen)
+        const getProjects = async () => {
+            try{
+                setApiError(``)
+                const response = await axiosProtect.get('/projects')
+                setProjects(response.data)
+            }catch(err){
+                if(err?.response){
+                    const error = err.response 
+                    setApiError(`Error ${error?.status}: ${error?.statusText} ${error?.errorText}`)
+                } else if(err?.request){
+                    setApiError(`Network Error. Try to refresh or try again later.'`)
+                }     
+            }
+        }
+        if(refPreviousIsOpen.current && !isOpen){
+            getProjects()
+            console.log('update projects')                        
+        }
+        refPreviousIsOpen.current = isOpen
+
+    },[isOpen])
 
     return(
         <>
@@ -33,8 +64,8 @@ export const Desk = () => {
                 </Heading>
                 <Spacer/>
                 <Button size='sm'
-                        colorScheme='blue'
-                        onClick={onOpen}
+                    colorScheme='blue'
+                    onClick={onOpen}
                 >
                         Add Project
                 </Button>
@@ -58,9 +89,8 @@ export const Desk = () => {
             </TableContainer>} 
         </Box> 
         }
-        <Box>
-            <CreateProject isOpen={isOpen} onClose={onClose} />
-        </Box>
+            <CreateProjectModal isOpen={isOpen} onClose={onClose} />
+
         </>
     )
 }

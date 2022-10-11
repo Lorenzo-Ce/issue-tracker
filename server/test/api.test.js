@@ -34,7 +34,7 @@ describe('API POST /projects', () => {
           username: 'testAccount',
           name: 'testProject',
           status: 'Open',
-          roles:{'Lead': ['testAccount'], 'Member' : ['Paul', 'Tony' ]}
+          members: ['Paul', 'Tony' ]
       }))
       expect(response.statusCode).toBe(201)
       expect(response.body).toBeDefined()
