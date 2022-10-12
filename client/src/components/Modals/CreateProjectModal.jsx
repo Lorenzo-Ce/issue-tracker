@@ -14,9 +14,9 @@ export function CreateProjectModal({ isOpen, onClose, formValues = initialFormVa
     const {authorization} = useAuthorization()
     const {responseData: usersList } = useGetData('/users')
     const {handleSubmit, resetMessage, successMessage, submitError, isLoadingSubmit } = useSubmitData('/projects', 'post')
-    const {formValidation, isFormValid, handleValidation, handleFormChange, Form, setForm } = useForm(() => formValues)
+    const {formValidation, isFormValid, handleValidation, handleFormChange, Form, setForm } = useForm(formValues)
     
-    
+    console.log
     const members = usersList.flatMap( ({_id, username}) =>  username !== authorization.username ? 
         [
             <Checkbox key={_id} value={username} checked={Form.members.includes(username)}>
