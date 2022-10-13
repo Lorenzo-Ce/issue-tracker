@@ -1,6 +1,9 @@
 const Project = require('../model/Project')
 const User = require('../model/User')
 const mongoose = require('mongoose')
+const cleanUserProjectRole = require('./utils/cleanUserProjectRole')
+const addUserProjectRole = require('./utils/addUserProjectRole')
+
 
 const addProject = async (req, res, err) => {
     const name = req.body?.name
@@ -15,18 +18,25 @@ const addProject = async (req, res, err) => {
             'Member': memberList}
         const members = [username, ...memberList]
         const project = {...req.body, roles, members}
-        //TODO: Add Promise.all, add Project to members
-        const newProject = await Project.create(project)
-        const foundUser = await User.findOne({username}).exec()
-        if(!foundUser){
+        const [newProject, foundUser] = await Promise.all([
+            Project.create(project), 
+            User.findOne({username}).exec()
+        ])
+        if(!foundUser || !newProject){
             await Project.deleteOne({_id: newProject._id})
-            return res.sendStatus(400)
+            return res.status(400).send({'error' : 'Database error.'})
         }  
-        foundUser.projects.set(newProject._id, 'Manager') 
+        foundUser.projects.set(newProject._id, 'Lead') 
         await foundUser.save()
-        res.status(201).send(JSON.stringify(newProject))
+        const newMembers = await User.find({username: {$in: roles['Member']}})
+        await Promise.allSettled(
+            newMembers.map(member =>
+                addUserProjectRole(member, newProject._id, 'Member')
+        )) 
+        return res.status(201).send(JSON.stringify(newProject))
     }catch(error){
         console.log(error)
+        //TODO: handle errors with middleware
     } 
 }
 
@@ -73,21 +83,38 @@ const updateProject = async (req, res, err) => {
     const status = req.body.status
     const startDate = req.body.startDate
     const endDate = req.body.endDate
-    if(!name || !status || !startDate || !endDate){
+    const members = req.body.members
+    if(!name || !status || !startDate || !endDate || !members){
         return res.status(400).send({
             'name' : `${name ? 'ok' : 'missing'}`,
             'status' : `${status ? 'ok' : 'missing'}`,
             'startDate' : `${startDate ? 'ok' : 'missing'}`,
-            'endDate' : `${endDate ? 'ok' : 'missing'}`
+            'endDate' : `${endDate ? 'ok' : 'missing'}`,
+            'members' : `${members ? 'ok' : 'missing'}`
         })
     }
     const foundProject = await Project.findById({_id}).exec()
     if(!foundProject) return res.sendStatus(404)
+    const membersExcluded = foundProject.members.filter(member => !members.includes(member))
+    const membersAdded = members.filter(member => !foundProject.members.includes(member))
     foundProject.name = name
     foundProject.status = status
     foundProject.startDate = startDate
     foundProject.endDate = endDate
+    foundProject.members = members
+    //TODO add a function to DRY the code in update and delete
     await foundProject.save()
+    const [membersToRemove, membersToAdd] = await Promise.all([
+        User.find({username: {$in: membersExcluded}}),
+        User.find({username: {$in: membersAdded}})
+    ])
+    await Promise.all(membersToRemove.map(member =>
+        cleanUserProjectRole(member, _id)
+    ))
+    await Promise.all(membersToAdd.map(member =>
+        addUserProjectRole(member, _id, 'Member')
+    ))
+
     res.status(200).send(foundProject)
 }
 
@@ -98,11 +125,9 @@ const deleteProject = async (req, res, err) => {
         const foundProject = await Project.findById({_id})
         if(!foundProject) return res.sendStatus(204)
         const projectMembers = await User.find({username: {$in: foundProject.members}})
-        await Promise.all(projectMembers.map(async member => {
-            member.projects.delete(_id)
-            return await member.save()
-        })
-        )
+        await Promise.all(projectMembers.map(member => 
+            cleanUserProjectRole(member, _id)
+        ))
         const result = await Project.deleteOne({_id})
         if(!result.acknowledged){return res.sendStatus(500)} // Internal Server Issue 
     }catch(error){console.log(error)}

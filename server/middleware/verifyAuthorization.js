@@ -10,7 +10,7 @@ const verifyAuthorization = (...roles) => async function (req, res, next){
     if(!projectRole){ return res.sendStatus(404)}
     if(roles.includes(projectRole)){ 
         next()
-    } else{ return res.sendStatus(401)}
+    } else return res.status(401).send({'error':'You are not authorized to make this operation'})
 }
 
 module.exports = {verifyAuthorization}
