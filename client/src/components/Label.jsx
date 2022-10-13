@@ -1,6 +1,6 @@
 import { Box } from "@chakra-ui/react"
 
-export const Label = ({children}) => {
+export const Label = ({children, cursor = false}) => {
 
     const colorPicker = (key) => {
         let color
@@ -8,16 +8,17 @@ export const Label = ({children}) => {
             case 'Open': color = 'green.100'; break;
             case 'Closed': color = 'red.100'; break;
             case 'Critical': color = 'red.200'; break;
-            case 'Important': color = 'orange.200'; break;
+            case 'Important' :
+            case 'Paused': color = 'orange.200'; break;
             case 'Normal': color = 'green.200'; break;
             case 'Low': color = 'blue.200'; break;
-            case 'Edit': color = 'blue.400'; break;
             default: color=''; break;
         }
         return color
     }
     return(
         <Box 
+            cursor={cursor && 'pointer'}
             p='0.5em' 
             textAlign='center' 
             borderRadius='50vh'

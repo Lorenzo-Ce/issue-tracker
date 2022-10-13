@@ -25,7 +25,9 @@ const useSubmitData = (url, method) => {
                 url, 
                 data
             })
-            response.status === 201 && setSuccessMessage('Data upload to server!')
+            if(response.status >= 200 && response.status < 300){  
+                setSuccessMessage('Data upload to server!')
+            }    
         } catch (err){
             if(err?.request){
                 setSubmitError('Network Error. Submit failed, try again later.')

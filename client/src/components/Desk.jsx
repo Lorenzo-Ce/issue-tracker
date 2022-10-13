@@ -1,36 +1,51 @@
 import { Box, Heading, Spacer, Table, Thead, Tbody, Button, Tr, Th, Td, TableContainer, useDisclosure } from '@chakra-ui/react'
-import { useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { Link, useOutletContext } from 'react-router-dom'
-import CreateProjectModal from './Modals/CreateProjectModal'
-import { Label } from './Label'
-import {Error} from './Alerts/Error'
 import useAxiosProtect from '../hooks/useAxiosProtect'
-
+import { Error } from './Alerts/Error'
+import { Label } from './Label'
+const ProjectModal = React.lazy(() => import('./Modals/ProjectModal'))
 
 export const Desk = () => {
     const [projects, setProjects, apiError, setApiError, isLoading]= useOutletContext()
     const { isOpen, onOpen, onClose } = useDisclosure()
     const { isOpen: isEditOpen, onOpen: onEditOpen, onClose: onEditClose } = useDisclosure()
+    const [projectEdit, setProjectEdit] = useState({name:'', description:'', status:'', members:[], startDate:'', endDate:''})
     const axiosProtect = useAxiosProtect()
     const refPreviousIsOpen = useRef(isOpen)
+    const refPreviousIsEditOpen = useRef(isEditOpen)
 
-    const ProjectList = projects.map(project => {
+    const handleOpenModal = (id) => {
+        const {name, description, status, members, startDate, endDate} = projects.find(project => project._id === id)
+        const formatStartDate = startDate.split('T')[0]
+        const formatEndDate = endDate.split('T')[0]
+        setProjectEdit({id, name, description, status, members, startDate: formatStartDate, endDate: formatEndDate})
+    }
+
+    const ProjectList = projects.length > 0 && projects.map(project => {
         const members = project.members.toString().replace(/[,]/g, ', ')
         const id = project._id
         return (
             <Tr key={id}>
                 <Td color='blue.600'>
-                    <Link to={id}>{project.name}</Link> </Td>
-                <Td>{project.description} </Td>
+                    <Link to={id}>{project.name}</Link> 
+                </Td>
                 <Td>{members}</Td>
-                <Td color='white'>
-                    <Label>Edit</Label>
+                <Td><Label>{project.status}</Label></Td>
+                <Td color='white' display='flex' justifyContent='flex-end' pr='0'>
+                    <Button cursor colorScheme='blue'
+                        onClick={() => {
+                            handleOpenModal(id)
+                            onEditOpen()
+                        }}
+                    >
+                        Edit
+                    </Button>
                 </Td>
             </Tr>
         )
     })
     useEffect(() => {
-        console.log(isOpen)
         const getProjects = async () => {
             try{
                 setApiError(``)
@@ -40,18 +55,18 @@ export const Desk = () => {
                 if(err?.response){
                     const error = err.response 
                     setApiError(`Error ${error?.status}: ${error?.statusText} ${error?.errorText}`)
-                } else if(err?.request){
-                    setApiError(`Network Error. Try to refresh or try again later.'`)
-                }     
+                } else setApiError(`Network Error. Try to refresh or try again later.'`)  
             }
         }
         if(refPreviousIsOpen.current && !isOpen){
             getProjects()
-            console.log('update projects')                        
+        }
+        if(refPreviousIsEditOpen.current && !isEditOpen){
+            getProjects()
         }
         refPreviousIsOpen.current = isOpen
-
-    },[isOpen])
+        refPreviousIsEditOpen.current = isEditOpen
+    },[isOpen, isEditOpen])
 
     return(
         <>
@@ -67,7 +82,7 @@ export const Desk = () => {
                     colorScheme='blue'
                     onClick={onOpen}
                 >
-                        Add Project
+                    Add Project
                 </Button>
             </Box>
             {apiError !== '' ? 
@@ -77,8 +92,8 @@ export const Desk = () => {
                     <Thead>
                     <Tr backgroundColor='#ededed'>
                         <Th>Project</Th>
-                        <Th>Description</Th>
                         <Th>Team Members</Th>
+                        <Th textAlign='center'>Status</Th>
                         <Th width='min-content'></Th>
                     </Tr>
                     </Thead>
@@ -89,8 +104,19 @@ export const Desk = () => {
             </TableContainer>} 
         </Box> 
         }
-            <CreateProjectModal isOpen={isOpen} onClose={onClose} />
-
+            <ProjectModal 
+                isOpen={isOpen} 
+                onClose={onClose} 
+                method='post'
+            />
+            <ProjectModal 
+                isOpen={isEditOpen} 
+                onClose={onEditClose} 
+                formValues={projectEdit}
+                method='put' 
+                route={`projects/${projectEdit.id}`}
+                isEdit
+            />
         </>
     )
 }

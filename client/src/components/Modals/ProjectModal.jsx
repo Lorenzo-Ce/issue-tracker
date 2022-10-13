@@ -1,5 +1,6 @@
 import {FormControl, FormLabel, FormHelperText, FormErrorMessage, Radio, RadioGroup, Textarea, Input, CheckboxGroup, Checkbox, Button, VStack, Stack, Accordion,
     AccordionItem, AccordionButton, AccordionPanel, AccordionIcon } from '@chakra-ui/react'
+import { useEffect } from 'react'
 import { useAuthorization } from '../../hooks/useAuthorization'
 import useGetData from '../../hooks/useGetData'
 import useSubmitData from '../../hooks/useSubmitData'
@@ -9,14 +10,17 @@ import { Error } from '../Alerts/Error'
 import { Success } from '../Alerts/Success'
 import { initialFormValues } from '../../utils/initializeForm'
 
-export function CreateProjectModal({ isOpen, onClose, formValues = initialFormValues
-    }) {
+
+const ProjectModal = ({ isOpen, onClose, formValues = initialFormValues, isEdit = false, route = '/projects', method}) => {
     const {authorization} = useAuthorization()
     const {responseData: usersList } = useGetData('/users')
-    const {handleSubmit, resetMessage, successMessage, submitError, isLoadingSubmit } = useSubmitData('/projects', 'post')
+    const {handleSubmit, resetMessage, successMessage, submitError, isLoadingSubmit } = useSubmitData(route, method)
     const {formValidation, isFormValid, handleValidation, handleFormChange, Form, setForm } = useForm(formValues)
     
-    console.log
+    useEffect(()=>{
+        setForm(formValues)
+    },[formValues])
+
     const members = usersList.flatMap( ({_id, username}) =>  username !== authorization.username ? 
         [
             <Checkbox key={_id} value={username} checked={Form.members.includes(username)}>
@@ -26,18 +30,18 @@ export function CreateProjectModal({ isOpen, onClose, formValues = initialFormVa
         [] 
     )
     return (
-    <BasicModal title='Create Project'
+        <BasicModal title={`${isEdit ? 'Edit' : 'Create'} Project`}
         isOpen={isOpen} 
         onClose={() => {
             resetMessage()
             onClose()
         }} 
-    >
+        >
         {submitError !== '' && <Error message={submitError} /> }
         {successMessage !== '' && <Success message={successMessage} /> }
-        <VStack as='form' 
-            onSubmit={(e) => handleSubmit(e, Form)} 
+        <VStack as='form'  
             color='blue.800' padding='1em' borderRadius='10px' 
+            onSubmit={(e) => handleSubmit(e, Form)}
             onChange={(e) => handleValidation(e.target)} 
             spacing='10px'
         >
@@ -95,7 +99,7 @@ export function CreateProjectModal({ isOpen, onClose, formValues = initialFormVa
                     <h2>
                     <AccordionButton>
                     <FormHelperText flex='1' textAlign='left' fontSize='18px' fontWeight='600'>
-                        Add Member ?
+                       { `${isEdit ? 'Change' : 'Add'} Members?`}
                     </FormHelperText>   
                     <AccordionIcon />
                     </AccordionButton>
@@ -103,6 +107,7 @@ export function CreateProjectModal({ isOpen, onClose, formValues = initialFormVa
                     <AccordionPanel>
                         <CheckboxGroup colorScheme='blue' 
                             onChange={(members) => setForm(prev => ({...prev, members}))}
+                            value={Form.members}
                         >
                             <Stack spacing='1' direction='column'>
                                 {members.length > 0 ? 
@@ -149,4 +154,4 @@ export function CreateProjectModal({ isOpen, onClose, formValues = initialFormVa
     </BasicModal>
     )
 }
-export default CreateProjectModal
+export default ProjectModal
