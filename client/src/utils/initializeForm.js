@@ -14,9 +14,23 @@ const initializeForm = (fields, value) => {
 const initialFormValues = {
     'name': '', 
     description: '', 
-    status: '',
+    status: 'Open',
     members: [], 
     startDate: '',
     endDate: ''
 } 
-export {initializeForm, initialFormValues}
+
+const initialIssueFormValues = {
+    'name': '', 
+    description: '',
+    image: {}, 
+    status: 'Open',
+    label: 'Todo',
+    priority: 'Critical', 
+    members: [],
+    openingDate: '',
+    closingDate: '',
+    comments: [],
+}
+
+export {initializeForm, initialFormValues, initialIssueFormValues}

@@ -17,16 +17,6 @@ export const TeamTable = ({roles}) => {
     <>
         <Flex>
             <Heading fontSize='xl' fontWeight='bold'>TEAM</Heading>
-            <Spacer/>
-            <Button     
-                size='sm' 
-                colorScheme='blue'
-                loadingText='Adding Member'
-                isLoading={false} 
-                onClick={() => console.log('add member') }
-            >
-                Add Member
-            </Button>
         </Flex>
 
         <TableContainer>

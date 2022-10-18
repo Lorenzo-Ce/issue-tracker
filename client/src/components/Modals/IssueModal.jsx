@@ -8,14 +8,15 @@ import { useForm } from '../../hooks/useForm'
 import BasicModal from './BasicModal'
 import { Error } from '../Alerts/Error'
 import { Success } from '../Alerts/Success'
-import { initialFormValues } from '../../utils/initializeForm'
+import { initialIssueFormValues } from '../../utils/initializeForm'
 import { NameField } from './components/NameField'
 import { DescriptionField } from './components/DescriptionField'
 import { RadioField } from './components/RadioField'
 import { DateField } from './components/DateField'
 import { RolesField } from './components/RolesField'
 
-const ProjectModal = ({ isOpen, onClose, formValues = initialFormValues, isEdit = false, route = '/projects', method}) => {
+
+const issueModal = ({ isOpen, onClose, formValues = initialIssueFormValues, isEdit = false, route = '/projects', method}) => {
     const {authorization} = useAuthorization()
     const {responseData: usersList } = useGetData('/users')
     const {handleSubmit, resetMessage, successMessage, submitError, isLoadingSubmit } = useSubmitData(route, method)
@@ -34,7 +35,7 @@ const ProjectModal = ({ isOpen, onClose, formValues = initialFormValues, isEdit 
         [] 
     )
     return (
-        <BasicModal title={`${isEdit ? 'Edit' : 'Create'} Project`}
+        <BasicModal title={`Add Issue`}
         isOpen={isOpen} 
         onClose={() => {
             resetMessage()
@@ -49,6 +50,18 @@ const ProjectModal = ({ isOpen, onClose, formValues = initialFormValues, isEdit 
             onChange={(e) => handleValidation(e.target)} 
             spacing='10px'
         >
+
+            <FormControl 
+                id='image' 
+                isInvalid={formValidation.image}
+            >
+                <Input type='file'  
+                    name='image'
+                    accept='image/*'
+                    onChange={handleFormChange}
+                />             
+                <FormErrorMessage>Image must be 0.5MB and JPG file format</FormErrorMessage>
+            </FormControl>
             <NameField 
                 validateName={formValidation.name}
                 formName={Form.name}
@@ -60,34 +73,40 @@ const ProjectModal = ({ isOpen, onClose, formValues = initialFormValues, isEdit 
                 formDescription={Form.description}
                 handleFormChange={handleFormChange}
                 placeholder='Project'
-            />
-            <RadioField
-                title='Status'
-                id='status' 
-                fields={['Open', 'Paused', 'Closed']}
+            /> 
+            <RadioField 
+                title='Issue Status'
+                id='status'
+                fields = {['Open', 'Paused', 'Closed']}
                 formStatus={Form.status}
-                handleFormChange={handleFormChange}
+                handleFormChange={handleFormChange}        
+            />
+            <RadioField 
+                title='Type of issue'
+                id='label'
+                fields = {['Todo','Bug','Feature','Design']}
+                formStatus={Form.label}
+                handleFormChange={handleFormChange}        
+            />
+            <RadioField 
+                title='Issue Priority'
+                id='priority'
+                fields = {['Critical','Important','Normal','Low']}
+                formStatus={Form.priority}
+                handleFormChange={handleFormChange}        
             />
             <RolesField 
                 members={members}
                 formMembers={Form.members}
                 setForm={setForm}
-                title='Add Members?'
+                title='Assign Member to issue?'
             /> 
             <DateField 
-                id='startDate'
-                validateDate={formValidation.startDate}
-                formDate={Form.startDate}
+                id='openingDate'
+                validateDate={formValidation.openingDate}
+                formDate={Form.openingDate}
                 handleFormChange={handleFormChange}
-                title='Starting'
-            />
-            <DateField 
-                id='endDate'
-                validateDate={formValidation.endDate}
-                formDate={Form.endDate}
-                handleFormChange={handleFormChange}
-                title='Target'
-            />
+            />  
             <Button type='submit' mb='5px' 
                 colorScheme='blue'
                 loadingText='Submitting'
@@ -101,4 +120,4 @@ const ProjectModal = ({ isOpen, onClose, formValues = initialFormValues, isEdit 
     )
 }
 
-export default ProjectModal
+export default issueModal

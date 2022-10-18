@@ -2,18 +2,20 @@ import { Box, Heading, Spacer, Table, Thead, Tbody, Button, Tr, Th, Td, TableCon
 import React, { useState, useEffect, useRef } from 'react'
 import { Link, useOutletContext } from 'react-router-dom'
 import useAxiosProtect from '../hooks/useAxiosProtect'
+import useDeleteData from '../hooks/useDeleteData'
 import { Error } from './Alerts/Error'
 import { Label } from './Label'
-const ProjectModal = React.lazy(() => import('./Modals/ProjectModal'))
+import ProjectModal from './Modals/ProjectModal'
 
 export const Desk = () => {
     const [projects, setProjects, apiError, setApiError, isLoading]= useOutletContext()
     const { isOpen, onOpen, onClose } = useDisclosure()
     const { isOpen: isEditOpen, onOpen: onEditOpen, onClose: onEditClose } = useDisclosure()
     const [projectEdit, setProjectEdit] = useState({name:'', description:'', status:'', members:[], startDate:'', endDate:''})
+    const [hasUpdate, setHasUpdate] = useState(false)
     const axiosProtect = useAxiosProtect()
-    const refPreviousIsOpen = useRef(isOpen)
-    const refPreviousIsEditOpen = useRef(isEditOpen)
+    const {handleDelete, isDeleting} = useDeleteData('/projects/')
+    const refPreviousOpen = useRef(false)
 
     const handleOpenModal = (id) => {
         const {name, description, status, members, startDate, endDate} = projects.find(project => project._id === id)
@@ -32,7 +34,7 @@ export const Desk = () => {
                 </Td>
                 <Td>{members}</Td>
                 <Td><Label>{project.status}</Label></Td>
-                <Td color='white' display='flex' justifyContent='flex-end' pr='0'>
+                <Td color='white' textAlign='end'>
                     <Button cursor colorScheme='blue'
                         onClick={() => {
                             handleOpenModal(id)
@@ -40,6 +42,17 @@ export const Desk = () => {
                         }}
                     >
                         Edit
+                    </Button>
+                </Td>
+                <Td  textAlign='end'>
+                    <Button cursor colorScheme='red'
+                        isLoading={isDeleting}
+                        onClick={async () => {
+                            await handleDelete(id) 
+                            setHasUpdate(true)
+                        }}
+                    >
+                        X
                     </Button>
                 </Td>
             </Tr>
@@ -58,21 +71,23 @@ export const Desk = () => {
                 } else setApiError(`Network Error. Try to refresh or try again later.'`)  
             }
         }
-        if(refPreviousIsOpen.current && !isOpen){
+        if(refPreviousOpen.current && (!isEditOpen || !isOpen)){
             getProjects()
         }
-        if(refPreviousIsEditOpen.current && !isEditOpen){
+        if(hasUpdate){
             getProjects()
+            setHasUpdate(false)
         }
-        refPreviousIsOpen.current = isOpen
-        refPreviousIsEditOpen.current = isEditOpen
-    },[isOpen, isEditOpen])
+
+        refPreviousOpen.current = isOpen || isEditOpen
+        
+    },[isOpen, isEditOpen, hasUpdate])
 
     return(
         <>
         { isLoading ? 
         <Box h='80%'>Loading</Box> : 
-        <Box as='section' m='0 1em' bg='#FFF' borderRadius='10px' p='1em' boxShadow='rgba(0, 0, 0, 0.1) 0px 4px 12px'>
+        <Box as='section' maxWidth='900px' m='0 1em' bg='#FFF' borderRadius='10px' p='1em' boxShadow='rgba(0, 0, 0, 0.1) 0px 4px 12px'>
             <Box mb='0.5em' display='flex' flexDirection='row' alignItems='center'>
                 <Heading as='h3' color='blue.800' fontSize='1rem' textTransform='uppercase'>
                     Projects
@@ -94,7 +109,8 @@ export const Desk = () => {
                         <Th>Project</Th>
                         <Th>Team Members</Th>
                         <Th textAlign='center'>Status</Th>
-                        <Th width='min-content'></Th>
+                        <Th ></Th>
+                        <Th></Th>
                     </Tr>
                     </Thead>
                     <Tbody>
