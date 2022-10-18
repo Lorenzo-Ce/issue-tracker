@@ -35,10 +35,10 @@ const ProjectSchema = new Schema({
             min: 1,
             max: 30
         },
-        issueStatus: {
+        status: {
             type: String, 
             default: 'Open',
-            enum: ['Open', 'Closed']
+            enum: ['Open','Paused','Closed']
         },
         openingDate: Date,
         closingDate: Date,
@@ -61,10 +61,10 @@ const ProjectSchema = new Schema({
             text: String,
             date: Date
         }],
-        images:[{
+        image:{
             data: Buffer,
             type: String
-        }]
+        }
     }]
   });
 
