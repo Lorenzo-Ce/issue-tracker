@@ -62,7 +62,6 @@ const ProjectSchema = new Schema({
             date: Date
         }],
         image:{
-            data: Buffer,
             type: String
         }
     }]

@@ -12,6 +12,8 @@ const getIssues = async (req, res, err) => {
 }
 
 const addIssue = async (req, res, err) => {
+    console.log(req.body.name)
+    console.log(req.file)
     const _id = req.params?.id
     const name = req.body.name
     const label = req.body.label
@@ -23,15 +25,16 @@ const addIssue = async (req, res, err) => {
     }
     if(!_id) return res.sendStatus(400)
     try{
-        const foundProject = await Project.findById({_id}).exec()
-        if(!foundProject) return res.status(400).send({'error': 'issue not added'})
-        const issueNumber = foundProject.issueIncrement
-        const issueId = `${foundProject.name.slice(0,3).toUpperCase()}-${issueNumber}` 
-        foundProject.issues = [...foundProject.issues, {_id: issueId, ...req.body}]
-        foundProject.issueIncrement = issueNumber + 1
-        await foundProject.save()
+        // const foundProject = await Project.findById({_id}).exec()
+        // if(!foundProject) return res.status(400).send({'error': 'issue not added'})
+        // const issueNumber = foundProject.issueIncrement
+        // const issueId = `${foundProject.name.slice(0,3).toUpperCase()}-${issueNumber}` 
+        // foundProject.issues = [...foundProject.issues, {_id: issueId, ...req.body}]
+        // foundProject.issueIncrement = issueNumber + 1
+        // await foundProject.save()
         return res.sendStatus(201)
     } catch(error){
+        console.log(err)
         console.error(error)
     }
 }

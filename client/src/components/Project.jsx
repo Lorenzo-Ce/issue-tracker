@@ -49,6 +49,17 @@ export const Project = () => {
             onClose={onClose}
             method='post'
             route={`projects/${projectId}/issues`}
+            formValues= {{
+                'name': '', 
+                description: '',
+                image: {}, 
+                status: 'Open',
+                label: 'Todo',
+                priority: 'Critical', 
+                members: [],
+                openingDate: '',
+                comments: [],
+            }}
         />       
         </>
     )

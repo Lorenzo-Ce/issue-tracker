@@ -5,6 +5,18 @@ const { getAllProjects, addProject, deleteProject, getProject, updateProject } =
 const { getIssues, addIssue, removeIssue, updateIssue } = require('../../controller/projectsIssueController')
 const { verifyAccessToken } = require('../../middleware/verifyAccessToken')
 const { verifyAuthorization } = require('../../middleware/verifyAuthorization')
+const multer = require('multer')
+const fileFilter = require('../../config/fileFilter')
+const storage = require('../../config/storageOptions')
+const FILE_LIMIT_500KB = 1024 * 512
+
+const upload = multer({
+    storage: storage,
+    fileFilter,
+    limits: {
+        fileSize: FILE_LIMIT_500KB
+    }
+})
 
 router.use(verifyAccessToken)
 
@@ -19,8 +31,8 @@ router.route('/:id')
     
 router.route('/:id/issues')
     .get(verifyAuthorization(roles.Lead, roles.Member), getIssues)
-    .post(verifyAuthorization(roles.Lead, roles.Member), addIssue)
+    .post(verifyAuthorization(roles.Lead, roles.Member), upload.single('image'), addIssue)
     .delete(verifyAuthorization(roles.Lead), removeIssue)
-    .put(verifyAuthorization(roles.Lead, roles.Member), updateIssue)
+    .put(verifyAuthorization(roles.Lead, roles.Member), upload.single('image'), updateIssue)
 
 module.exports = router

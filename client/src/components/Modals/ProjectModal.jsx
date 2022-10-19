@@ -1,5 +1,4 @@
-import {FormControl, FormLabel, FormHelperText, FormErrorMessage, Radio, RadioGroup, Textarea, Input, CheckboxGroup, Checkbox, Button, VStack, Stack, Accordion,
-    AccordionItem, AccordionButton, AccordionPanel, AccordionIcon } from '@chakra-ui/react'
+import { Checkbox, Button, VStack } from '@chakra-ui/react'
 import { useEffect } from 'react'
 import { useAuthorization } from '../../hooks/useAuthorization'
 import useGetData from '../../hooks/useGetData'

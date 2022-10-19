@@ -1,7 +1,7 @@
 import useAxiosProtect from './useAxiosProtect'
 import { useState } from "react"
 
-const useSubmitData = (url, method) => {
+const useSubmitData = (url, method, isMultipart = false) => {
     
     const [successMessage, setSuccessMessage] = useState('')
     const [submitError, setSubmitError] = useState('')
@@ -19,11 +19,16 @@ const useSubmitData = (url, method) => {
         setSuccessMessage('')
         setIsLoading(true)
         try{
-            const data = JSON.stringify(payload)
+            const data = !isMultipart ? JSON.stringify(payload) : payload
             const response = await axiosProtect({
                 method,
                 url, 
-                data
+                data,
+                headers: {
+                    'Content-Type': !isMultipart ? 
+                        'application/json'
+                        :`multipart/form-data`, 
+                    'Accept': 'application/json' }
             })
             if(response.status >= 200 && response.status < 300){  
                 setSuccessMessage('Data upload to server!')
@@ -33,7 +38,8 @@ const useSubmitData = (url, method) => {
                 setSubmitError('Network Error. Submit failed, try again later.')
             }
             else{
-                const errorMessage = await err.json()
+                // TODO: fix error handling
+                const errorMessage = err
                 console.log(errorMessage)
                 setSubmitError(`Error ${err?.response?.status}: ${errorMessage}`)
             }

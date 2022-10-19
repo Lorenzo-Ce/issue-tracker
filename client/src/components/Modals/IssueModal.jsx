@@ -1,6 +1,5 @@
-import {FormControl, FormLabel, FormHelperText, FormErrorMessage, Radio, RadioGroup, Textarea, Input, CheckboxGroup, Checkbox, Button, VStack, Stack, Accordion,
-    AccordionItem, AccordionButton, AccordionPanel, AccordionIcon } from '@chakra-ui/react'
-import { useEffect } from 'react'
+import {FormControl, FormErrorMessage, Input, Checkbox, Button, VStack } from '@chakra-ui/react'
+import { useEffect, useRef } from 'react'
 import { useAuthorization } from '../../hooks/useAuthorization'
 import useGetData from '../../hooks/useGetData'
 import useSubmitData from '../../hooks/useSubmitData'
@@ -19,9 +18,9 @@ import { RolesField } from './components/RolesField'
 const issueModal = ({ isOpen, onClose, formValues = initialIssueFormValues, isEdit = false, route = '/projects', method}) => {
     const {authorization} = useAuthorization()
     const {responseData: usersList } = useGetData('/users')
-    const {handleSubmit, resetMessage, successMessage, submitError, isLoadingSubmit } = useSubmitData(route, method)
+    const {handleSubmit, resetMessage, successMessage, submitError, isLoadingSubmit } = useSubmitData(route, method, true)
     const {formValidation, isFormValid, handleValidation, handleFormChange, Form, setForm } = useForm(formValues)
-    
+
     useEffect(()=>{
         setForm(formValues)
     },[formValues])
@@ -44,9 +43,23 @@ const issueModal = ({ isOpen, onClose, formValues = initialIssueFormValues, isEd
         >
         {submitError !== '' && <Error message={submitError} /> }
         {successMessage !== '' && <Success message={successMessage} /> }
-        <VStack as='form'  
+        <VStack 
+            as='form'   
+            encType="multipart/form-data"
             color='blue.800' padding='1em' borderRadius='10px' 
-            onSubmit={(e) => handleSubmit(e, Form)}
+            onSubmit={(e) => {
+                const formData = new FormData()
+                Object.entries(Form).map( ([key, value]) => {
+                    formData.set(
+                        `${key}`, 
+                        Array.isArray(value) && key !== 'image' ?
+                        JSON.stringify(value) :
+                        value
+                    )
+                })
+                console.log(formData)
+                handleSubmit(e, formData)
+            }}
             onChange={(e) => handleValidation(e.target)} 
             spacing='10px'
         >
@@ -66,13 +79,13 @@ const issueModal = ({ isOpen, onClose, formValues = initialIssueFormValues, isEd
                 validateName={formValidation.name}
                 formName={Form.name}
                 handleFormChange={handleFormChange}
-                placeholder='Project'
+                placeholder='Issue'
             />
             <DescriptionField 
                 validateDescription={formValidation.description}
                 formDescription={Form.description}
                 handleFormChange={handleFormChange}
-                placeholder='Project'
+                placeholder='Issue'
             /> 
             <RadioField 
                 title='Issue Status'
