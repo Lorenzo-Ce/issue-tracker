@@ -80,6 +80,7 @@ const updateProject = async (req, res, err) => {
     const _id = req.params?.id
     if(!_id) return res.status(400).send({'error': 'missing id'})
     const name = req.body.name
+    const description = req.body.description
     const status = req.body.status
     const startDate = req.body.startDate
     const endDate = req.body.endDate
@@ -98,6 +99,7 @@ const updateProject = async (req, res, err) => {
     const membersExcluded = foundProject.members.filter(member => !members.includes(member))
     const membersAdded = members.filter(member => !foundProject.members.includes(member))
     foundProject.name = name
+    foundProject.description = description
     foundProject.status = status
     foundProject.startDate = startDate
     foundProject.endDate = endDate

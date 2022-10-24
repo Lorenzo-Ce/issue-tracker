@@ -1,6 +1,7 @@
 const Project = require('../model/Project')
 const User = require('../model/User')
 const mongoose = require('mongoose')
+const uniqid = require('uniqid');
 
 const getIssues = async (req, res, err) => {
     const _id = req.params?.id
@@ -11,31 +12,43 @@ const getIssues = async (req, res, err) => {
     res.status(200).send(issues)
 }
 
-const addIssue = async (req, res, err) => {
-    console.log(req.body.name)
-    console.log(req.file)
-    const _id = req.params?.id
-    const name = req.body.name
-    const label = req.body.label
-    const priority = req.body.priority
-    if(!name || !label || !priority){
+const addIssue = async (req, res, next) => {
+    const projectId = req?.params?.id
+    const name = req?.body?.name
+    const label = req?.body?.label
+    const priority = req?.body?.priority
+    if(!projectId || !name || !label || !priority){
         return res.status(400).send({
             'error' : 'one or more required fields are missing'
         })
     }
-    if(!_id) return res.sendStatus(400)
+    const members = JSON.parse(req.body?.members)
+    const issueCount = `${label.toLowerCase()}Count`
+    req.body.members = members
+    req.body.comments = JSON.parse(req.body?.comments)
+    req.body.image = req.file?.filename
+    req.body._id= uniqid() 
+    console.log(req.body._id)
     try{
-        // const foundProject = await Project.findById({_id}).exec()
-        // if(!foundProject) return res.status(400).send({'error': 'issue not added'})
-        // const issueNumber = foundProject.issueIncrement
-        // const issueId = `${foundProject.name.slice(0,3).toUpperCase()}-${issueNumber}` 
-        // foundProject.issues = [...foundProject.issues, {_id: issueId, ...req.body}]
-        // foundProject.issueIncrement = issueNumber + 1
-        // await foundProject.save()
+        const updatedProject = await Project.findOneAndUpdate( {_id: projectId}, 
+            {
+                '$push': {issues: req.body},
+                '$inc': {
+                    issueIncrement: 1,
+                    [issueCount]: 1
+                },
+            },
+            {
+                new: true,
+                rawResult: true
+            }
+        ).exec()
+        if(!updatedProject.ok) return res.sendStatus(500)
+        //TODO: add to User Model assigned fields and created fields
         return res.sendStatus(201)
     } catch(error){
-        console.log(err)
-        console.error(error)
+        console.log(error)
+        next(error)
     }
 }
 const removeIssue = async (req, res, err) => {

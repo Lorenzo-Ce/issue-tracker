@@ -28,6 +28,10 @@ const ProjectSchema = new Schema({
         }
     },
     issueIncrement: {type: Number, default : 0},
+    bugCount: {type: Number, default : 0},
+    todoCount: {type: Number, default : 0},
+    featureCount: {type: Number, default : 0},
+    designCount: {type: Number, default : 0},
     issues: [{
         _id: {type: String},
         name: {
