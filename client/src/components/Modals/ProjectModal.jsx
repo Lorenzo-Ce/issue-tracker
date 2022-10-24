@@ -29,8 +29,7 @@ const ProjectModal = ({ isOpen, onClose, formValues = initialFormValues, isEdit 
             <Checkbox key={_id} value={username} checked={Form.members.includes(username)}>
                 {username}
             </Checkbox>
-        ] : 
-        [] 
+        ] : [] 
     )
     return (
         <BasicModal title={`${isEdit ? 'Edit' : 'Create'} Project`}
@@ -44,7 +43,7 @@ const ProjectModal = ({ isOpen, onClose, formValues = initialFormValues, isEdit 
         {successMessage !== '' && <Success message={successMessage} /> }
         <VStack as='form'  
             color='blue.800' padding='1em' borderRadius='10px' 
-            onSubmit={(e) => handleSubmit(e, Form)}
+            onSubmit={async (e) =>{ handleSubmit(e, Form)}}
             onChange={(e) => handleValidation(e.target)} 
             spacing='10px'
         >

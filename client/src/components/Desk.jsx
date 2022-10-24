@@ -9,13 +9,13 @@ import ProjectModal from './Modals/ProjectModal'
 
 export const Desk = () => {
     const [projects, setProjects, apiError, setApiError, isLoading]= useOutletContext()
-    const { isOpen, onOpen, onClose } = useDisclosure()
-    const { isOpen: isEditOpen, onOpen: onEditOpen, onClose: onEditClose } = useDisclosure()
+    const { isOpen: isNewProjectOpen, onOpen: onNewProjectOpen, onClose : onNewProjectClose } = useDisclosure()
+    const { isOpen: isEditProjectOpen, onOpen: onEditOpen, onClose: onEditProjectClose } = useDisclosure()
     const [projectEdit, setProjectEdit] = useState({name:'', description:'', status:'', members:[], startDate:'', endDate:''})
     const [hasUpdate, setHasUpdate] = useState(false)
     const axiosProtect = useAxiosProtect()
     const {handleDelete, isDeleting} = useDeleteData('/projects/')
-    const refPreviousOpen = useRef(false)
+    const refWasModalOpen = useRef(false)
 
     const handleOpenModal = (id) => {
         const {name, description, status, members, startDate, endDate} = projects.find(project => project._id === id)
@@ -59,29 +59,33 @@ export const Desk = () => {
         )
     })
     useEffect(() => {
-        const getProjects = async () => {
+        const updateProjects = async () => {
             try{
                 setApiError(``)
                 const response = await axiosProtect.get('/projects')
                 setProjects(response.data)
-            }catch(err){
-                if(err?.response){
-                    const error = err.response 
-                    setApiError(`Error ${error?.status}: ${error?.statusText} ${error?.errorText}`)
-                } else setApiError(`Network Error. Try to refresh or try again later.'`)  
-            }
+            }catch(err){ 
+                if(err?.request){
+                    setApiError('Network Error. Submit failed, try again later.')
+                }
+                else if (err?.response){
+                    setApiError(`Error ${err?.response?.status}: ${err.response?.statusText} ${err?.response?.data?.error}`)
+                }
+                else{
+                    setApiError(`Ops Something went wrong, refresh the page or try again later`)
+                }
+            } 
         }
-        if(refPreviousOpen.current && (!isEditOpen || !isOpen)){
-            getProjects()
+        if(refWasModalOpen.current && (!isEditProjectOpen || !isNewProjectOpen)){
+            updateProjects()
         }
         if(hasUpdate){
-            getProjects()
+            updateProjects()
             setHasUpdate(false)
         }
-
-        refPreviousOpen.current = isOpen || isEditOpen
+        refWasModalOpen.current = isNewProjectOpen || isEditProjectOpen
         
-    },[isOpen, isEditOpen, hasUpdate])
+    },[isNewProjectOpen, isEditProjectOpen, hasUpdate])
 
     return(
         <>
@@ -95,7 +99,7 @@ export const Desk = () => {
                 <Spacer/>
                 <Button size='sm'
                     colorScheme='blue'
-                    onClick={onOpen}
+                    onClick={onNewProjectOpen}
                 >
                     Add Project
                 </Button>
@@ -121,13 +125,13 @@ export const Desk = () => {
         </Box> 
         }
             <ProjectModal 
-                isOpen={isOpen} 
-                onClose={onClose} 
+                isOpen={isNewProjectOpen} 
+                onClose={onNewProjectClose} 
                 method='post'
             />
             <ProjectModal 
-                isOpen={isEditOpen} 
-                onClose={onEditClose} 
+                isOpen={isEditProjectOpen} 
+                onClose={onEditProjectClose} 
                 formValues={projectEdit}
                 method='put' 
                 route={`projects/${projectEdit.id}`}

@@ -2,7 +2,6 @@ import { Heading, Text, Box } from "@chakra-ui/react"
 import { REGX_DATE } from "../utils/regex"
 
 export const ProjectInfo = ({name, status, description, startDate, endDate}) => {
-    // ([0-9]{4})
     
     return(
     <>

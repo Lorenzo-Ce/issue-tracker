@@ -32,16 +32,17 @@ const useSubmitData = (url, method, isMultipart = false) => {
             })
             if(response.status >= 200 && response.status < 300){  
                 setSuccessMessage('Data upload to server!')
+                return response?.data
             }    
         } catch (err){
             if(err?.request){
                 setSubmitError('Network Error. Submit failed, try again later.')
             }
+            else if (err?.response){
+                setSubmitError(`Error ${err?.response?.status}: ${err.response?.statusText} ${err?.response?.data}`)
+            }
             else{
-                // TODO: fix error handling
-                const errorMessage = err
-                console.log(errorMessage)
-                setSubmitError(`Error ${err?.response?.status}: ${errorMessage}`)
+                setSubmitError(`Ops Something went wrong, refresh the page or try again later`)
             }
         } finally {
             setIsLoading(false)

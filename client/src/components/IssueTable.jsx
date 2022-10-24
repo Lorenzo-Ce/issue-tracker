@@ -1,15 +1,14 @@
 import { Box, Heading, Table, Thead, Tbody, Button, Tr, Th, Td, TableContainer, Flex, Spacer } from "@chakra-ui/react"
 import {Label} from './Label'
 
-export const IssueTable = ({currentProject, onOpen}) => {
-    
+export const IssueTable = ({issues, onOpen}) => {
 
-    const issuesList = currentProject.issues?.map(({_id, name, label, issueStatus, priority}) =>                 
+    const issuesList = issues?.map(({_id, name, label, status, priority}) =>                 
         <Tr key={_id}>
             <Td fontWeight='700'>{name}</Td>
             <Td>{label}</Td>
             <Td>
-                <Label>{issueStatus}</Label>
+                <Label>{status}</Label>
             </Td>
             <Td>                
                 <Label>{priority}</Label>
