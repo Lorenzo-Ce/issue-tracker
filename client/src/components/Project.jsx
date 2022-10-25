@@ -1,27 +1,38 @@
 import { useState, useEffect, useRef } from 'react'
 import { Grid, GridItem, useDisclosure} from '@chakra-ui/react'
 import { useParams } from 'react-router-dom'
-import { ProjectInfo } from './ProjectInfo'
+import { ProjectInfo } from './Infos/ProjectInfo'
 import { TeamTable } from './TeamTable'
 import { IssueTable } from './IssueTable'
 import { IssueGraphic } from '../components/IssueGraphic'
 import IssueModal from './Modals/IssueModal'
 import useGetData from '../hooks/useGetData'
-import {  } from 'react'
+import useAxiosProtect from '../hooks/useAxiosProtect'
+import { IssueInfo } from './Infos/IssueInfo'
+
 
 export const Project = () => {
     const {projectId} = useParams()
+    const axiosProtect = useAxiosProtect()
     const { responseData : project, setResponseData: setProject, apiError, setApiError, isLoading } = useGetData(`/projects/${projectId}`)
     const { isOpen: isNewIssueOpen, onOpen: onNewIssueOpen, onClose : onNewIssueClose } = useDisclosure()
     const { isOpen: isEditIssueOpen, onOpen: onEditIssueOpen, onClose : onEditIssueClose } = useDisclosure()
+    const [ issueInfo, setIssueInfo ] = useState({})
     const refWasModalOpen = useRef(false)
+    
+    const handleIssueInfo = (e) => {
+        const issueId = e.target.dataset?.id
+        const issues = project?.issues
+        const issueInfo = issues.find(issue => issue._id === issueId)
+        issueInfo && setIssueInfo(issueInfo)
+    }
 
     useEffect(() => {
         const controller = new AbortController()
         const updateIssues = async () => {
             try{
                 setApiError(``)
-                const response = await axiosProtect.get('/projects', {signal: controller.signal})
+                const response = await axiosProtect.get(`/projects/${projectId}`, {signal: controller.signal})
                 setProject(response.data)
             }catch(err){ 
                 if(err?.request){
@@ -47,6 +58,7 @@ export const Project = () => {
             controller.abort()
         }
     },[isNewIssueOpen, isEditIssueOpen])
+    
     return( 
         isLoading ?
             <div>is Loading</div> 
@@ -58,7 +70,7 @@ export const Project = () => {
                     roles={project?.roles}
                 />
             </GridItem>
-            <GridItem as='section' bg='#FFF' borderRadius='10px' p='1em' boxShadow='rgba(0, 0, 0, 0.1) 0px 4px 12px'>
+            <GridItem as='section' bg='#FFF' borderRadius='10px' p='1em' boxShadow='rgba(0, 0, 0, 0.1) 0px 4px 12px' >
                 <ProjectInfo {...project}/>
             </GridItem>
             <GridItem as='section' bg='#FFF' borderRadius='10px' p='1em' boxShadow='rgba(0, 0, 0, 0.1) 0px 4px 12px'>
@@ -74,8 +86,20 @@ export const Project = () => {
                 <IssueTable 
                     issues={project?.issues}
                     onOpen={onNewIssueOpen}
+                    handleIssueInfo={handleIssueInfo}
                 />
             </GridItem>
+
+            {
+            Object.keys(issueInfo).length > 0 &&   
+            <GridItem gridColumn='1/-1' as='section' bg='#FFF' borderRadius='10px' p='1em' boxShadow='rgba(0, 0, 0, 0.1) 0px 4px 12px'>
+                <IssueInfo 
+                    issueInfo={issueInfo}
+                    setIssueInfo={setIssueInfo}
+                />
+            </GridItem>
+            }
+
         </Grid>
         <IssueModal 
             isOpen={isNewIssueOpen}
@@ -93,7 +117,7 @@ export const Project = () => {
                 openingDate: '',
                 comments: [],
             }}
-        />     
+        />
         </>
     
     )

@@ -1,11 +1,23 @@
 import { Box, Heading, Table, Thead, Tbody, Button, Tr, Th, Td, TableContainer, Flex, Spacer } from "@chakra-ui/react"
 import {Label} from './Label'
+import useHover from "../hooks/useHover"
 
-export const IssueTable = ({issues, onOpen}) => {
-
+export const IssueTable = ({issues, onOpen, handleIssueInfo}) => {
+    const {isHover, onHoverEnter, onHoverLeave} = useHover()
+    
     const issuesList = issues?.map(({_id, name, label, status, priority}) =>                 
         <Tr key={_id}>
-            <Td fontWeight='700'>{name}</Td>
+            <Td 
+                fontWeight='700'
+                color={isHover[`${_id}`] ? 'blue.200' : ''}
+                data-id={_id} 
+                onClick={handleIssueInfo}
+                cursor='pointer'
+                onMouseEnter={(e) => onHoverEnter(e, _id)}
+                onMouseLeave={(e) => onHoverLeave(e, _id)}
+            >     
+                {name}
+            </Td>
             <Td>{label}</Td>
             <Td>
                 <Label>{status}</Label>
@@ -13,7 +25,6 @@ export const IssueTable = ({issues, onOpen}) => {
             <Td>                
                 <Label>{priority}</Label>
             </Td>
-            <Td><a href='#'>More Info</a></Td>
         </Tr>
     )
     return(
@@ -35,9 +46,8 @@ export const IssueTable = ({issues, onOpen}) => {
                 <Tr>
                     <Th>Issue</Th>
                     <Th>Type</Th>
-                    <Th textAlign='center'>Status</Th>
-                    <Th textAlign='center'>Priority</Th>
-                    <Th>More Info</Th>
+                    <Th>Status</Th>
+                    <Th>Priority</Th>
                 </Tr>
                 </Thead>
                 <Tbody>

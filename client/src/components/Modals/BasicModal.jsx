@@ -1,18 +1,20 @@
 import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton,  Button } from '@chakra-ui/react'
 
-export function BasicModal({title, isOpen, onClose, children }) {
+export function BasicModal({title, isOpen, onClose, size='md', children }) {
         
         return (
             <Modal 
                 isOpen={isOpen} 
                 onClose={onClose}
-                scrollBehavior='inside'
+                size
             >
                 <ModalOverlay />
                 <ModalContent>
                 <ModalHeader>{title}</ModalHeader>
                 <ModalCloseButton />
-                <ModalBody>
+                <ModalBody
+                    overflow='scroll'
+                >
                     {children}
                 </ModalBody>
         
