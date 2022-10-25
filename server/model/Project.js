@@ -39,6 +39,10 @@ const ProjectSchema = new Schema({
             min: 1,
             max: 30
         },
+        author: {
+            type: String,
+            default: '',
+        },
         status: {
             type: String, 
             default: 'Open',
@@ -60,8 +64,7 @@ const ProjectSchema = new Schema({
             max: 500
         },
         comments: [{
-            user: String,
-            role: String,
+            author: String,
             text: String,
             date: Date
         }],

@@ -27,8 +27,8 @@ const addIssue = async (req, res, next) => {
     req.body.members = members
     req.body.comments = JSON.parse(req.body?.comments)
     req.body.image = req.file?.filename
+    req.body.author = req.username
     req.body._id= uniqid() 
-    console.log(req.body._id)
     try{
         const updatedProject = await Project.findOneAndUpdate( {_id: projectId}, 
             {

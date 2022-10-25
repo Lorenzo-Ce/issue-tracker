@@ -32,6 +32,7 @@ app.use('/logout', require('./routes/logout'))
 app.use('/refresh', require('./routes/refresh'))
 app.use('/users', require('./routes/api/users'))
 app.use('/projects', require('./routes/api/projects'))
+app.use('/images', express.static(path.join(__dirname, '/uploads')))
 
 app.all('*', (req, res) => {
     req.accepts('application/json') ? 
