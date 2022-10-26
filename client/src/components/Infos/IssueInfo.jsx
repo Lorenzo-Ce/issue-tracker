@@ -1,23 +1,43 @@
 import { Heading, Text, Box, Image, Flex, Input, InputGroup, InputRightElement, Button, useDisclosure } from "@chakra-ui/react"
-import { useState } from "react"
-import { REGX_DATE } from "../../utils/regex"
-import { Label } from "../Label"
 import { CloseIcon } from '@chakra-ui/icons'
+import { useState,useEffect } from "react"
 import useHover from "../../hooks/useHover"
-import BasicModal from "../Modals/BasicModal"
 import { useAuthorization } from "../../hooks/useAuthorization"
+import useSubmitData from "../../hooks/useSubmitData"
+import { Label } from "../Label"
+import BasicModal from "../Modals/BasicModal"
+import { REGX_DATE } from "../../utils/regex"
+import  {nanoid} from 'nanoid'
+import {  } from "react"
 
-
-export const IssueInfo = ({issueInfo, setIssueInfo}) => {
-    const {isHover, onHoverEnter, onHoverLeave, onHoverSwitch} = useHover()
+export const IssueInfo = ({projectId, issueInfo, setIssueInfo}) => {
+    const {isHover, onHoverEnter, onHoverLeave } = useHover()
     const {isOpen: isOpenImg, onClose: onCloseImg, onOpen: OnOpenImg} = useDisclosure()
-    
+    const {handleSubmit: submitComment, resetMessage, successMessage, submitError, isLoadingSubmit: isLoadingComment} = useSubmitData(`/projects/${projectId}/issues`, 'put' )
     const {authorization} = useAuthorization()
+    const [isPosting, setIsPosting] = useState(false)
     const [comment, setComment] = useState({
+        _id: '',
         author: authorization.username,
         text: '',
         date: '',
     })
+
+    useEffect(() => {
+        const subcomment = async (e, issueToUpdate) => {
+            const response = await submitComment(e, issueToUpdate)
+            const updatedIssue = response?.issues.find(issue => issue._id === issueInfo._id)
+            setIssueInfo(updatedIssue)
+            setIsPosting(false)
+        }
+        setComment(prevComment => ({...prevComment, _id: nanoid(), date: new Date().toISOString()}))
+        if(isPosting){
+            const newIssue = {...issueInfo}
+            newIssue.comments = [...newIssue.comments, comment]
+            subcomment(null, newIssue)
+        }
+    }, [isPosting])
+
 
     return(
     <>
@@ -79,31 +99,36 @@ export const IssueInfo = ({issueInfo, setIssueInfo}) => {
             </Box>
         </Box>
     </Box>
-    {issueInfo.comments.length === 0 &&    
-        <Box mt='1em'>
-        <Heading fontSize='md' fontWeight='bold' mb='0.2em'>
-            Comments
-        </Heading>
-        <Box 
-            background='blue.100' 
-            borderRadius='5px' 
-            boxShadow='rgba(0, 0, 0, 0.1) 0px 3px 10px'
-            mb='0.7em'
-        >
+    <Box mt='1em'>
+    <Heading fontSize='md' fontWeight='bold' mb='0.2em'>
+        Comments
+    </Heading>
+    {  
+        issueInfo.comments?.length > 0 ?
+        issueInfo.comments.map(({_id, author, text, date}) =>        
             <Box 
-                as='p' 
-                p='1em' 
-                fontSize='12px' 
-                color='blue.600'
+                key={_id}
+                background='blue.100' 
+                borderRadius='5px' 
+                boxShadow='rgba(0, 0, 0, 0.1) 0px 3px 10px'
+                mb='0.7em'
             >
-                <Text as='span' fontWeight='bold'>
-                    Author &#9679; 07/08/2000
-                </Text>
-                <Text fontSize='16px'>
-                   Message
-                </Text>
+                <Box
+                    p='1em' 
+                    fontSize='12px' 
+                    color='blue.600'
+                >
+                    <Text as='span' fontWeight='bold'>
+                        {author} &#9679; {date}
+                    </Text>
+                    <Text fontSize='16px'>
+                        {text}
+                    </Text>
+                </Box>
             </Box>
-        </Box>
+        )
+        : <Box></Box>
+    }
         <InputGroup size='md'>
             <Input
                 name="comment"
@@ -119,29 +144,25 @@ export const IssueInfo = ({issueInfo, setIssueInfo}) => {
                 <Button 
                     h='1.75rem' 
                     size='sm'
-                    isLoading={false} 
-                    onClick={() => {
-                        //setComment(prev => ({...prev, date: new Date().toISOString()})
-                        console.log(new Date().toISOString())
-                    }}
+                    isLoading={isLoadingComment} 
+                    onClick={() => {setIsPosting(true)}}
                 >
                     Comment
                 </Button>
             </InputRightElement>
         </InputGroup>
     </Box>
-    }
     <BasicModal isOpen={isOpenImg} onClose={onCloseImg} size='lg'>
     <Image 
-            src={`http://127.0.0.1:3500/images/${issueInfo.image}`} 
-            alt={issueInfo.name}
-            overflow='scroll'
-            transition='trasform 0.25s'
-        />       
+        src={`http://127.0.0.1:3500/images/${issueInfo.image}`} 
+        alt={issueInfo.name}
+        overflow='scroll'
+        transition='trasform 0.25s'
+    />       
     </BasicModal>
     </>
     )
 }
 
-//TODO Add update function, Add ZOOM
+//TODO Add ZOOM, add edit Issue Modal
 //

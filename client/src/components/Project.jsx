@@ -91,13 +91,15 @@ export const Project = () => {
             </GridItem>
 
             {
-            Object.keys(issueInfo).length > 0 &&   
+            issueInfo && Object.keys(issueInfo).length > 0 ?
             <GridItem gridColumn='1/-1' as='section' bg='#FFF' borderRadius='10px' p='1em' boxShadow='rgba(0, 0, 0, 0.1) 0px 4px 12px'>
                 <IssueInfo 
+                    projectId={project?._id}
                     issueInfo={issueInfo}
                     setIssueInfo={setIssueInfo}
                 />
-            </GridItem>
+            </GridItem> :
+            <div></div>
             }
 
         </Grid>

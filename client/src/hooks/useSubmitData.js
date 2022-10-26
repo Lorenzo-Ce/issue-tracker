@@ -14,7 +14,7 @@ const useSubmitData = (url, method, isMultipart = false) => {
     }
 
     const handleSubmit = async (event, payload) => {
-        event.preventDefault()
+        event?.preventDefault()
         setSubmitError('')
         setSuccessMessage('')
         setIsLoading(true)
