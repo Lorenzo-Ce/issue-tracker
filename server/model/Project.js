@@ -33,7 +33,7 @@ const ProjectSchema = new Schema({
     featureCount: {type: Number, default : 0},
     designCount: {type: Number, default : 0},
     issues: [{
-        _id: {type: String},
+        _id: String,
         name: {
             type: String,
             min: 1,
@@ -64,6 +64,7 @@ const ProjectSchema = new Schema({
             max: 500
         },
         comments: [{
+            _id: String,
             author: String,
             text: String,
             date: Date
