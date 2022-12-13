@@ -24,17 +24,19 @@ const issueModal = ({ isOpen, onClose, formValues = initialIssueFormValues, isEd
     useEffect(()=>{
         setForm(formValues)
     },[formValues])
-
-    const members = usersList.flatMap( ({_id, username}) =>  username !== authorization.username ? 
+    
+    const members = usersList.length > 0 && usersList.flatMap(({_id, username}) => 
+        username !== authorization.username ? 
         [
             <Checkbox key={_id} value={username} checked={Form.members.includes(username)}>
                 {username}
             </Checkbox>
         ] : 
-        [] 
+        []
     )
+
     return (
-        <BasicModal title={`Add Issue`}
+        <BasicModal title={`${isEdit ? 'Edit' : 'Add'} Issue`}
         isOpen={isOpen} 
         onClose={() => {
             resetMessage()
@@ -115,9 +117,17 @@ const issueModal = ({ isOpen, onClose, formValues = initialIssueFormValues, isEd
                 title='Assign Member to issue?'
             /> 
             <DateField 
+                title='Opening'
                 id='openingDate'
                 validateDate={formValidation.openingDate}
                 formDate={Form.openingDate}
+                handleFormChange={handleFormChange}
+            />  
+            <DateField 
+                title='Deadline'
+                id='closingDate'
+                validateDate={formValidation.closingDate}
+                formDate={Form.closingDate}
                 handleFormChange={handleFormChange}
             />  
             <Button type='submit' mb='5px' 

@@ -53,14 +53,14 @@ export const Sidebar = ({handleSidebar, isSidebarVisible}) => {
             </Box>
         }
         <Box as='section' mb='1em' display='flex' >
-            <Image src={userIcon} alt='userIcon' float='left' mr='0.4em'/>
+            <Image src={userIcon} boxSize='24px' alt='userIcon' float='left' mr='0.4em'/>
             <Text fontSize='lg'>Hello {authorization.username}</Text>
         </Box>
         <Accordion allowMultiple defaultIndex={[]}>
             <AccordionItem pl='0'>
             <h2>
                 <AccordionButton>
-                <Image src={teamIcon} alt='teamIcon' mr='0.4em'/>  
+                <Image src={teamIcon} boxSize='24px' alt='teamIcon' mr='0.4em'/>  
                 <Box flex='1' textAlign='left'>
                     Teams
                 </Box>
@@ -78,7 +78,7 @@ export const Sidebar = ({handleSidebar, isSidebarVisible}) => {
             <AccordionItem>
             <h2>
                 <AccordionButton>
-                <Image src={projectIcon} w='24px' h='24px' alt='teamIcon' mr='0.4em'/>
+                <Image src={projectIcon} boxSize='24px' alt='teamIcon' mr='0.4em'/>
                 <Box flex='1' textAlign='left'>
                     Projects
                 </Box>
@@ -95,7 +95,7 @@ export const Sidebar = ({handleSidebar, isSidebarVisible}) => {
             <AccordionItem>
             <h2>
                 <AccordionButton>
-                <Image src={issueIcon} w='24px' h='24px' alt='teamIcon' mr='0.4em'/>
+                <Image src={issueIcon} boxSize='24px' alt='teamIcon' mr='0.4em'/>
                 <Box flex='1' textAlign='left'>
                     Issues
                 </Box>

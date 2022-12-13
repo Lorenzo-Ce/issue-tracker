@@ -7,8 +7,8 @@ import Register from './components/Register'
 import Login from './components/Login'
 import Dashboard from './pages/Dashboard'
 import PersistLogin from './components/PersistLogin'
-import { Desk } from './components/Desk'
-import { Project } from './components/Project'
+import { Desk } from './pages/Desk'
+import { Project } from './pages/Project'
 
 function App() {
   const { authorization } = useAuthorization()

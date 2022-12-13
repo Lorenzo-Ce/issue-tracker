@@ -3,10 +3,11 @@ import { useState } from "react"
 
 const useDeleteData = (baseUrl) => {
     
+    const axiosProtect = useAxiosProtect()
     const [successMessage, setSuccessMessage] = useState('')
     const [deleteError, setDeleteError] = useState('')
     const [isDeleting, setIsDeleting] = useState(false)
-    const axiosProtect = useAxiosProtect()
+    const [ payload, setPayload ] = useState({})
 
     const resetMessage = () =>{
         setSuccessMessage('')
@@ -16,6 +17,7 @@ const useDeleteData = (baseUrl) => {
     const handleDelete = async (id) => {
         setDeleteError('')
         setSuccessMessage('')
+        setPayload({})
         setIsDeleting(true)
         try{
             const response = await axiosProtect({
@@ -24,6 +26,7 @@ const useDeleteData = (baseUrl) => {
             })
             if(response.status >= 200 && response.status < 300){  
                 setSuccessMessage('Data deleted!')
+                setPayload(response?.data)
             }    
         } catch (err){
             if(err?.request){
@@ -43,7 +46,8 @@ const useDeleteData = (baseUrl) => {
         resetMessage, 
         successMessage, 
         deleteError, 
-        isDeleting
+        isDeleting,
+        payload
     }
 }
 

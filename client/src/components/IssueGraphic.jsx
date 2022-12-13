@@ -2,7 +2,27 @@ import { Heading, Box, List, ListItem, Flex } from "@chakra-ui/react"
 import { PieChart } from 'react-minimal-pie-chart';
 
 
-export const IssueGraphic = ({issueIncrement, todoCount, bugCount, featureCount, designCount}) => {
+export const IssueGraphic = ({issueIncrement, issues}) => {
+
+    let featureCount = 0
+    let designCount = 0
+    let todoCount = 0
+    let bugCount = 0
+
+    issues && issues.map(issue => {
+        if (issue ==='Todo'){
+            todoCount++
+        }
+        else if(issue ==='Bug'){
+            bugCount++
+        }
+        else if(issue === 'Feature'){
+            featureCount++
+        }
+        else {
+            designCount++
+        }
+    })
 
     const dataInfo = [
         { title: 'Features', value: featureCount, color: '#8ecae6' },

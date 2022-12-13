@@ -20,7 +20,8 @@ const REGX_EMAIL = new RegExp('^[a-zA-Z0-9_!#$%&’*+/=?`{|}~^-]+(?:\\.[a-zA-Z0-
 // (\d{2})- = $2 two digits followed by dash (05)-
 // (\d{2})  = $3 two digits (18)
 // (T.*$)   = $4 char T and every charater followed (T16:00:00Z)
-const REGX_DATE = /(\d{4})-(\d{2})-(\d{2})(T.*$)/g
+const REGX_DATETIME = /(\d{4})-(\d{2})-(\d{2})(T.*$)/g
+const REGX_DATE = /(\d{4})-(\d{2})-(\d{2})/g
 
 
-export {REGX_USERNAME, REGX_PSW, REGX_EMAIL, REGX_DATE}
+export {REGX_USERNAME, REGX_PSW, REGX_EMAIL, REGX_DATETIME, REGX_DATE}

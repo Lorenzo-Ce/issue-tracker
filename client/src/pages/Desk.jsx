@@ -1,11 +1,11 @@
-import { Box, Heading, Spacer, Table, Thead, Tbody, Button, Tr, Th, Td, TableContainer, useDisclosure } from '@chakra-ui/react'
+import { Box, Heading, Spacer, Button, useDisclosure } from '@chakra-ui/react'
 import React, { useState, useEffect, useRef } from 'react'
-import { Link, useOutletContext } from 'react-router-dom'
+import { useOutletContext } from 'react-router-dom'
 import useAxiosProtect from '../hooks/useAxiosProtect'
 import useDeleteData from '../hooks/useDeleteData'
-import { Error } from './Alerts/Error'
-import { Label } from './Label'
-import ProjectModal from './Modals/ProjectModal'
+import { Error } from '../components/Alerts/Error'
+import ProjectModal from '../components/Modals/ProjectModal'
+import { ProjectTable } from '../components/Tables/ProjectTable'
 
 export const Desk = () => {
     const [projects, setProjects, apiError, setApiError, isLoading]= useOutletContext()
@@ -24,40 +24,6 @@ export const Desk = () => {
         setProjectEdit({id, name, description, status, members, startDate: formatStartDate, endDate: formatEndDate})
     }
 
-    const ProjectList = projects.length > 0 && projects.map(project => {
-        const members = project.members.toString().replace(/[,]/g, ', ')
-        const id = project._id
-        return (
-            <Tr key={id}>
-                <Td color='blue.600'>
-                    <Link to={id}>{project.name}</Link> 
-                </Td>
-                <Td>{members}</Td>
-                <Td><Label>{project.status}</Label></Td>
-                <Td color='white' textAlign='end'>
-                    <Button cursor colorScheme='blue'
-                        onClick={() => {
-                            handleOpenModal(id)
-                            onEditOpen()
-                        }}
-                    >
-                        Edit
-                    </Button>
-                </Td>
-                <Td  textAlign='end'>
-                    <Button cursor colorScheme='red'
-                        isLoading={isDeleting}
-                        onClick={async () => {
-                            await handleDelete(id) 
-                            setHasUpdate(true)
-                        }}
-                    >
-                        X
-                    </Button>
-                </Td>
-            </Tr>
-        )
-    })
     useEffect(() => {
         const updateProjects = async () => {
             try{
@@ -104,24 +70,18 @@ export const Desk = () => {
                     Add Project
                 </Button>
             </Box>
-            {apiError !== '' ? 
-            <Error message={apiError} /> :
-             <TableContainer>
-                <Table variant='simple' size='sm'>
-                    <Thead>
-                    <Tr backgroundColor='#ededed'>
-                        <Th>Project</Th>
-                        <Th>Team Members</Th>
-                        <Th textAlign='center'>Status</Th>
-                        <Th ></Th>
-                        <Th></Th>
-                    </Tr>
-                    </Thead>
-                    <Tbody>
-                        {ProjectList}
-                    </Tbody>
-                </Table>
-            </TableContainer>} 
+            {
+                apiError !== '' ? 
+                <Error message={apiError} /> :
+                <ProjectTable 
+                    projects={projects} 
+                    handleOpenModal={handleOpenModal} 
+                    onEditOpen={onEditOpen}
+                    handleDelete={handleDelete}
+                    isDeleting={isDeleting}
+                    setHasUpdate={setHasUpdate}
+            />
+            }
         </Box> 
         }
             <ProjectModal 

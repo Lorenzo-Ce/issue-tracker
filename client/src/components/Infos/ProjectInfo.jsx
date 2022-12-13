@@ -1,6 +1,6 @@
 import { Heading, Text, Box } from "@chakra-ui/react"
-import { REGX_DATE } from "../../utils/regex"
-import { Label } from "../Label"
+import { REGX_DATETIME } from "../../utils/regex"
+import { Label } from "../Alerts/Label"
 
 export const ProjectInfo = ({name, status, description, startDate, endDate}) => {
     
@@ -17,11 +17,11 @@ export const ProjectInfo = ({name, status, description, startDate, endDate}) => 
         </Box>
         <Box>
             <Text fontWeight='bold' fontSize='13px' textTransform='uppercase'>Opening Date</Text>  
-            {startDate ? startDate.replace(REGX_DATE, '$3-$2-$1') : ' Not Defined'}
+            {startDate ? startDate.replace(REGX_DATETIME, '$3-$2-$1') : ' Not Defined'}
         </Box>
         <Box>
             <Text fontWeight='bold' fontSize='13px' textTransform='uppercase'>Deadline </Text>
-            {endDate ? endDate.replace(REGX_DATE, '$3-$2-$1') : ' Not Defined' }
+            {endDate ? endDate.replace(REGX_DATETIME, '$3-$2-$1') : ' Not Defined' }
         </Box>
         </Box>
     </>

@@ -1,15 +1,14 @@
 import { useState, useEffect, useRef } from 'react'
 import { Grid, GridItem, useDisclosure} from '@chakra-ui/react'
 import { useParams } from 'react-router-dom'
-import { ProjectInfo } from './Infos/ProjectInfo'
-import { TeamTable } from './TeamTable'
-import { IssueTable } from './IssueTable'
+import { ProjectInfo } from '../components/Infos/ProjectInfo'
+import { TeamTable } from '../components/Tables/TeamTable'
+import { IssueTable } from '../components/Tables/IssueTable'
 import { IssueGraphic } from '../components/IssueGraphic'
-import IssueModal from './Modals/IssueModal'
+import IssueModal from '../components/Modals/IssueModal'
 import useGetData from '../hooks/useGetData'
 import useAxiosProtect from '../hooks/useAxiosProtect'
-import { IssueInfo } from './Infos/IssueInfo'
-
+import { IssueInfo } from '../components/Infos/IssueInfo'
 
 export const Project = () => {
     const {projectId} = useParams()
@@ -19,14 +18,18 @@ export const Project = () => {
     const { isOpen: isEditIssueOpen, onOpen: onEditIssueOpen, onClose : onEditIssueClose } = useDisclosure()
     const [ issueInfo, setIssueInfo ] = useState({})
     const refWasModalOpen = useRef(false)
-    
-    const handleIssueInfo = (e) => {
-        const issueId = e.target.dataset?.id
+
+    //Gets and format the issue information for preview and edit
+    const handleIssueInformation = (issueId) => {
         const issues = project?.issues
         const issueInfo = issues.find(issue => issue._id === issueId)
-        issueInfo && setIssueInfo(issueInfo)
+        if(issueInfo){
+            issueInfo.openingDate = issueInfo.openingDate?.split('T')[0] 
+            issueInfo.closingDate = issueInfo.closingDate?.split('T')[0] 
+            setIssueInfo(issueInfo)
+        }
     }
-
+    //Updates issues after modals close
     useEffect(() => {
         const controller = new AbortController()
         const updateIssues = async () => {
@@ -49,10 +52,6 @@ export const Project = () => {
         if(refWasModalOpen.current && (!isNewIssueOpen || !isEditIssueOpen)){
             updateIssues()
         }
-        // if(hasUpdate){
-        //     updateIssues()
-        //     setHasUpdate(false)
-        // }
         refWasModalOpen.current = isNewIssueOpen || isEditIssueOpen
         return () => {
             controller.abort()
@@ -71,35 +70,37 @@ export const Project = () => {
                 />
             </GridItem>
             <GridItem as='section' bg='#FFF' borderRadius='10px' p='1em' boxShadow='rgba(0, 0, 0, 0.1) 0px 4px 12px' >
-                <ProjectInfo {...project}/>
+                <ProjectInfo 
+                    {...project}
+                />
             </GridItem>
             <GridItem as='section' bg='#FFF' borderRadius='10px' p='1em' boxShadow='rgba(0, 0, 0, 0.1) 0px 4px 12px'>
                 <IssueGraphic 
                     issueIncrement = {project?.issueIncrement}
-                    todoCount = {project?.todoCount}
-                    bugCount = {project?.bugCount}
-                    featureCount = {project?.featureCount}
-                    designCount = {project?.designCount}
+                    issues= {project?.issues}
                 />
             </GridItem>
             <GridItem gridColumn='1/-1' as='section' bg='#FFF' borderRadius='10px' p='1em' boxShadow='rgba(0, 0, 0, 0.1) 0px 4px 12px'>
                 <IssueTable 
+                    projectId={project?._id}
                     issues={project?.issues}
                     onOpen={onNewIssueOpen}
-                    handleIssueInfo={handleIssueInfo}
+                    onEditIssueOpen={onEditIssueOpen}
+                    handleIssueInfo={handleIssueInformation}
+                    setProject={setProject}
                 />
             </GridItem>
 
             {
-            issueInfo && Object.keys(issueInfo).length > 0 ?
-            <GridItem gridColumn='1/-1' as='section' bg='#FFF' borderRadius='10px' p='1em' boxShadow='rgba(0, 0, 0, 0.1) 0px 4px 12px'>
-                <IssueInfo 
-                    projectId={project?._id}
-                    issueInfo={issueInfo}
-                    setIssueInfo={setIssueInfo}
-                />
-            </GridItem> :
-            <div></div>
+                issueInfo && Object.keys(issueInfo).length > 0 ?
+                <GridItem gridColumn='1/-1' as='section' bg='#FFF' borderRadius='10px' p='1em' boxShadow='rgba(0, 0, 0, 0.1) 0px 4px 12px'>
+                    <IssueInfo 
+                        projectId={project?._id}
+                        issueInfo={issueInfo}
+                        setIssueInfo={setIssueInfo}
+                    />
+                </GridItem> :
+                <div></div>
             }
 
         </Grid>
@@ -117,8 +118,17 @@ export const Project = () => {
                 priority: 'Critical', 
                 members: [],
                 openingDate: '',
+                closingDate: '',
                 comments: [],
             }}
+        />
+        <IssueModal 
+            isEdit
+            isOpen={isEditIssueOpen}
+            onClose={onEditIssueClose}
+            formValues={{...issueInfo, members: []}}
+            method='put'
+            route={`projects/${projectId}/issues`}
         />
         </>
     

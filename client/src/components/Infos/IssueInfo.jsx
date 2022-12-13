@@ -4,11 +4,11 @@ import { useState,useEffect } from "react"
 import useHover from "../../hooks/useHover"
 import { useAuthorization } from "../../hooks/useAuthorization"
 import useSubmitData from "../../hooks/useSubmitData"
-import { Label } from "../Label"
+import { Label } from "../Alerts/Label"
 import BasicModal from "../Modals/BasicModal"
-import { REGX_DATE } from "../../utils/regex"
+import { REGX_DATE, REGX_DATETIME } from "../../utils/regex"
 import  {nanoid} from 'nanoid'
-import {  } from "react"
+import format from "date-fns/format"
 
 export const IssueInfo = ({projectId, issueInfo, setIssueInfo}) => {
     const {isHover, onHoverEnter, onHoverLeave } = useHover()
@@ -40,7 +40,7 @@ export const IssueInfo = ({projectId, issueInfo, setIssueInfo}) => {
 
 
     return(
-    <>
+    <>    
         <Flex 
             alignItems='baseline'
             justifyContent='space-between'
@@ -49,11 +49,11 @@ export const IssueInfo = ({projectId, issueInfo, setIssueInfo}) => {
                 {issueInfo.name}
             </Heading>
             <CloseIcon 
+                p='2px'
                 boxSize='20px'
                 cursor='pointer'
                 color={isHover['closeIcon'] ? 'red.500' : 'red.300'} 
                 border={isHover['closeIcon'] ? '1px solid' : '0px'}
-                p='2px'
                 borderColor={isHover['closeIcon'] ? 'red.500' : 'white'}
                 borderRadius='50vh'
                 transition='color 1s ease-out, border-color 0.5s;'
@@ -62,8 +62,7 @@ export const IssueInfo = ({projectId, issueInfo, setIssueInfo}) => {
                 onClick={() => {setIssueInfo({})}}
             />
         </Flex>
-    <Box 
-        display='flex' 
+    <Flex  
         flexDirection={['column', 'row']}
         justifyContent='space-between'
     >
@@ -83,7 +82,7 @@ export const IssueInfo = ({projectId, issueInfo, setIssueInfo}) => {
                         {issueInfo.description} 
                     </p>
             </Box>
-            <Box display='flex' gap='1em' flexWrap='wrap' mt='0.5em' fontSize='12px'>
+            <Flex gap='1em' flexWrap='wrap' mt='0.5em' fontSize='12px'>
                 <Box>
                     <Text fontWeight='bold' textTransform='uppercase'>Status</Text> 
                     <Label padding='0.1em 0.5em'>{issueInfo.status}</Label>
@@ -96,16 +95,19 @@ export const IssueInfo = ({projectId, issueInfo, setIssueInfo}) => {
                     <Text fontWeight='bold' textTransform='uppercase'>Closing date </Text>
                     {issueInfo.closingDate ? issueInfo.closingDate.replace(REGX_DATE, '$3-$2-$1') : ' Not Defined' }
                 </Box>
-            </Box>
+            </Flex>
         </Box>
-    </Box>
+    </Flex>
     <Box mt='1em'>
     <Heading fontSize='md' fontWeight='bold' mb='0.2em'>
         Comments
     </Heading>
     {  
-        issueInfo.comments?.length > 0 ?
-        issueInfo.comments.map(({_id, author, text, date}) =>        
+        issueInfo.comments?.length > 0 &&
+        issueInfo.comments.map(({_id, author, text, date}) => {        
+        const timezoneDate = format(new Date(date), "dd-MM-yyyy kk:mm")
+
+        return(
             <Box 
                 key={_id}
                 background='blue.100' 
@@ -119,15 +121,15 @@ export const IssueInfo = ({projectId, issueInfo, setIssueInfo}) => {
                     color='blue.600'
                 >
                     <Text as='span' fontWeight='bold'>
-                        {author} &#9679; {date}
+                        {author} &#9679; {timezoneDate}
                     </Text>
                     <Text fontSize='16px'>
                         {text}
                     </Text>
                 </Box>
             </Box>
+        )}
         )
-        : <Box></Box>
     }
         <InputGroup size='md'>
             <Input
@@ -138,9 +140,9 @@ export const IssueInfo = ({projectId, issueInfo, setIssueInfo}) => {
                 value={comment.text}
                 onChange={e => {setComment(prev => ({...prev, text: e.target.value}))}}
             />
-                <InputRightElement 
-                    width='6rem'
-                >
+            <InputRightElement 
+                width='6rem'
+            >
                 <Button 
                     h='1.75rem' 
                     size='sm'
@@ -157,6 +159,8 @@ export const IssueInfo = ({projectId, issueInfo, setIssueInfo}) => {
         src={`http://127.0.0.1:3500/images/${issueInfo.image}`} 
         alt={issueInfo.name}
         overflow='scroll'
+        width='100%'
+        margin='0 auto'
         transition='trasform 0.25s'
     />       
     </BasicModal>
@@ -164,5 +168,8 @@ export const IssueInfo = ({projectId, issueInfo, setIssueInfo}) => {
     )
 }
 
-//TODO Add ZOOM, add edit Issue Modal
-//
+//TODO: ISSUEINFO 
+// add eliminate comment ,
+//add eliminate issue 
+// add edit Issue Modal
+// fix modals size through field
