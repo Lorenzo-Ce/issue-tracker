@@ -35,14 +35,14 @@ const useSubmitData = (url, method, isMultipart = false) => {
                 return response?.data
             }    
         } catch (err){
-            if(err?.request){
+            if (err?.response && err?.response?.status !== 0){
+                setSubmitError(`Error ${err?.response?.status}: ${err.response?.statusText} ${err?.response?.data?.error}`)
+            }
+            else if(err?.request){
                 setSubmitError('Network Error. Submit failed, try again later.')
             }
-            else if (err?.response){
-                setSubmitError(`Error ${err?.response?.status}: ${err.response?.statusText} ${err?.response?.data}`)
-            }
             else{
-                setSubmitError(`Ops Something went wrong, refresh the page or try again later`)
+                setSubmitError('Error something went wrong with your request. Try again later.')
             }
         } finally {
             setIsLoading(false)

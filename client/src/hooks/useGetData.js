@@ -23,14 +23,14 @@ const useGetData = (url) => {
                 const result = response.data
                 setResponseData(result)
             }catch(err){ 
-                if(err?.request){
-                    setApiError('Network Error. Submit failed, try again later.')
-                }
-                else if (err?.response){
+                if (err?.response && err?.response?.status !== 0){
                     setApiError(`Error ${err?.response?.status}: ${err.response?.statusText} ${err?.response?.data?.error}`)
                 }
+                else if(err?.request){
+                    setApiError('Network Error. Request failed, try again later.')
+                }
                 else{
-                    setApiError(`Ops Something went wrong, refresh the page or try again later`)
+                    setApiError('Error something went wrong with your request. Try again later.')
                 }
             } finally {
                 isMounted && setIsLoading(false)

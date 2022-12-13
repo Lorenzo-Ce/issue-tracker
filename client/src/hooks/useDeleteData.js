@@ -24,17 +24,17 @@ const useDeleteData = (baseUrl) => {
                 method: 'delete',
                 url: `${baseUrl}${id}`, 
             })
-            if(response.status >= 200 && response.status < 300){  
-                setSuccessMessage('Data deleted!')
-                setPayload(response?.data)
-            }    
+            setSuccessMessage('Data deleted!')
+            setPayload(response?.data) 
         } catch (err){
-            if(err?.request){
+            if (err?.response && err?.response?.status !== 0){
+                setDeleteError(`Error ${err?.response?.status}: ${err.response?.statusText} ${err?.response?.data?.error}`)
+            }
+            else if(err?.request){
                 setDeleteError('Network Error. Delete failed, try again later.')
             }
             else{
-                console.log(err)
-                setDeleteError(`Error ${err?.response?.status}: ${err?.response?.data}`)
+                setDeleteError('Error something went wrong with your request. Try again later.')
             }
         } finally {
             setIsDeleting(false)

@@ -30,12 +30,14 @@ export default function Login (){
             navigate('/dashboard', {replace: true})
             
         } catch (err){
-            if(err?.request){
-                setErrorMessage('Network Error. Registration failed, try again later.')
+            if(err?.response && err?.response?.status !== 0){
+                setErrorMessage(`Error ${err?.response?.status}: ${err?.response?.data?.error}.`)
+            }
+            else if(err?.request){
+                setErrorMessage('Network Error. Login failed, try again later.')                
             }
             else{
-                const errorMessage = await err.json()
-                setErrorMessage(`Error ${err?.response?.status}: ${errorMessage}`)
+                setErrorMessage('Error something went wrong with your request. Try again later.')
             }
         } finally {
             setIsLoading(false)
