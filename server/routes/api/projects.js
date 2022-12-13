@@ -32,7 +32,9 @@ router.route('/:id')
 router.route('/:id/issues')
     .get(verifyAuthorization(roles.Lead, roles.Member), getIssues)
     .post(verifyAuthorization(roles.Lead, roles.Member), upload.single('image'), addIssue)
-    .delete(verifyAuthorization(roles.Lead), removeIssue)
     .put(verifyAuthorization(roles.Lead, roles.Member), upload.single('image'), updateIssue)
+
+router.route('/:id/issues/:issueId')
+    .delete(verifyAuthorization(roles.Lead), removeIssue)
 
 module.exports = router

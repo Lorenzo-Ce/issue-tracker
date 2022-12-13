@@ -28,10 +28,6 @@ const ProjectSchema = new Schema({
         }
     },
     issueIncrement: {type: Number, default : 0},
-    bugCount: {type: Number, default : 0},
-    todoCount: {type: Number, default : 0},
-    featureCount: {type: Number, default : 0},
-    designCount: {type: Number, default : 0},
     issues: [{
         _id: String,
         name: {
@@ -39,6 +35,7 @@ const ProjectSchema = new Schema({
             min: 1,
             max: 30
         },
+        members:[String],
         author: {
             type: String,
             default: '',
