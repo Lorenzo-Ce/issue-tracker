@@ -2,7 +2,7 @@ const express = require('express')
 const roles = require('../../config/roles')
 const router = express.Router()
 const { getAllProjects, addProject, deleteProject, getProject, updateProject } = require('../../controller/projectsController')
-const { getIssues, addIssue, removeIssue, updateIssue } = require('../../controller/projectsIssueController')
+const { getIssues, addIssue, updateIssue, removeIssue, removeComment } = require('../../controller/projectsIssueController')
 const { verifyAccessToken } = require('../../middleware/verifyAccessToken')
 const { verifyAuthorization } = require('../../middleware/verifyAuthorization')
 const multer = require('multer')
@@ -36,5 +36,8 @@ router.route('/:id/issues')
 
 router.route('/:id/issues/:issueId')
     .delete(verifyAuthorization(roles.Lead), removeIssue)
+
+router.route('/:id/issues/:issueId/:commentId')
+    .delete(removeComment)
 
 module.exports = router
