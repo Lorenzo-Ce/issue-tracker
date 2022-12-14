@@ -1,13 +1,12 @@
-import { Box, Heading, Table, Thead, Tbody, Button, Tr, Th, Td, TableContainer, Flex, Spacer } from "@chakra-ui/react"
+import { Heading, Table, Thead, Tbody, Button, Tr, Th, Td, TableContainer, Flex, Spacer } from "@chakra-ui/react"
 import { useEffect } from "react"
 import {Label} from '../Alerts/Label'
-import useHover from "../../hooks/useHover"
 import useDeleteData from "../../hooks/useDeleteData"
 
-    export const IssueTable = ({projectId, issues, onOpen, onEditIssueOpen, handleIssueInfo, setProject}) => {
-    const {isHover, onHoverEnter, onHoverLeave} = useHover()
+    export const IssueTable = ({projectId, issues, openNewIssueModal, openEditIssueModal, handleIssueInfo, setProject}) => {
     const {handleDelete, isDeleting, payload} = useDeleteData(`/projects/${projectId}/issues/`)
-
+    
+    console.log(issues)
     useEffect(()=> {
         payload.length > 0 &&                         
         setProject(prevProject => (
@@ -18,16 +17,16 @@ import useDeleteData from "../../hooks/useDeleteData"
     }, [payload])
 
 
-    const issuesList = issues?.map(({_id, name, label, status, priority}) =>                 
+    const issuesList = issues && issues?.map(({_id, name, label, status, priority}) =>                 
         <Tr key={_id}>
             <Td 
-                fontWeight='700'
-                color={isHover[`${_id}`] ? 'blue.200' : ''}
                 data-id={_id} 
                 onClick={(e) => handleIssueInfo(_id)}
                 cursor='pointer'
-                onMouseEnter={(e) => onHoverEnter(e, _id)}
-                onMouseLeave={(e) => onHoverLeave(e, _id)}
+                fontWeight='700'
+                color=''
+                _hover={{color:'blue.200'}}
+                transition='color 0.2s'
             >     
                 {name}
             </Td>
@@ -43,7 +42,7 @@ import useDeleteData from "../../hooks/useDeleteData"
                     fontSize='sm' 
                     cursor 
                     colorScheme='blue'
-                    onClick={() => {handleIssueInfo(_id), onEditIssueOpen()}}
+                    onClick={() => {handleIssueInfo(_id), openEditIssueModal()}}
                 >
                     Edit
                 </Button>
@@ -71,7 +70,7 @@ import useDeleteData from "../../hooks/useDeleteData"
             <Button     
                 size='sm' 
                 colorScheme='blue'
-                onClick={onOpen}
+                onClick={openNewIssueModal}
             >
                 Add Issue
             </Button>

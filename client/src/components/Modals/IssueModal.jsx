@@ -136,7 +136,7 @@ const issueModal = ({ isOpen, onClose, formValues = initialIssueFormValues, isEd
                 isLoading={isLoadingSubmit} 
                 isDisabled={!isFormValid}
             >
-                Submit Project
+                Submit Issue
             </Button>
         </VStack>
     </BasicModal>

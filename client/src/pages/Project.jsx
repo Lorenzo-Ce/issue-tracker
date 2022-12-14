@@ -9,20 +9,21 @@ import IssueModal from '../components/Modals/IssueModal'
 import useGetData from '../hooks/useGetData'
 import useAxiosProtect from '../hooks/useAxiosProtect'
 import { IssueInfo } from '../components/Infos/IssueInfo'
+import { initialIssueFormValues } from '../utils/initializeForm'
 
 export const Project = () => {
     const {projectId} = useParams()
     const axiosProtect = useAxiosProtect()
     const { responseData : project, setResponseData: setProject, apiError, setApiError, isLoading } = useGetData(`/projects/${projectId}`)
-    const { isOpen: isNewIssueOpen, onOpen: onNewIssueOpen, onClose : onNewIssueClose } = useDisclosure()
-    const { isOpen: isEditIssueOpen, onOpen: onEditIssueOpen, onClose : onEditIssueClose } = useDisclosure()
-    const [ issueInfo, setIssueInfo ] = useState({})
+    const { isOpen: isNewIssueOpen, onOpen: openNewIssueModal, onClose : closeNewIssueModal } = useDisclosure()
+    const { isOpen: isEditIssueOpen, onOpen: openEditIssueModal, onClose : closeEditIssue } = useDisclosure()
+    const [ issueInfo, setIssueInfo ] = useState({'name': '', description: '',image: {}, status: 'Open',label: 'Todo',priority: 'Critical', members: [],openingDate: '',closingDate: '',comments: [],
+    })
     const refWasModalOpen = useRef(false)
-
-    //Gets and format the issue information for preview and edit
+    
+    //Find and format issue information based on id for preview and edit
     const handleIssueInformation = (issueId) => {
-        const issues = project?.issues
-        const issueInfo = issues.find(issue => issue._id === issueId)
+        const issueInfo = project?.issues?.find(issue => issue._id === issueId)
         if(issueInfo){
             issueInfo.openingDate = issueInfo.openingDate?.split('T')[0] 
             issueInfo.closingDate = issueInfo.closingDate?.split('T')[0] 
@@ -51,6 +52,7 @@ export const Project = () => {
         }
         if(refWasModalOpen.current && (!isNewIssueOpen || !isEditIssueOpen)){
             updateIssues()
+            setIssueInfo(initialIssueFormValues)
         }
         refWasModalOpen.current = isNewIssueOpen || isEditIssueOpen
         return () => {
@@ -84,49 +86,37 @@ export const Project = () => {
                 <IssueTable 
                     projectId={project?._id}
                     issues={project?.issues}
-                    onOpen={onNewIssueOpen}
-                    onEditIssueOpen={onEditIssueOpen}
+                    openNewIssueModal={openNewIssueModal}
+                    openEditIssueModal={openEditIssueModal}
                     handleIssueInfo={handleIssueInformation}
                     setProject={setProject}
                 />
             </GridItem>
 
             {
-                issueInfo && Object.keys(issueInfo).length > 0 ?
+                issueInfo.name !== '' &&
                 <GridItem gridColumn='1/-1' as='section' bg='#FFF' borderRadius='10px' p='1em' boxShadow='rgba(0, 0, 0, 0.1) 0px 4px 12px'>
                     <IssueInfo 
                         projectId={project?._id}
                         issueInfo={issueInfo}
                         setIssueInfo={setIssueInfo}
+                        setProject={setProject}
                     />
-                </GridItem> :
-                <div></div>
+                </GridItem> 
             }
 
         </Grid>
         <IssueModal 
             isOpen={isNewIssueOpen}
-            onClose={onNewIssueClose}
+            onClose={closeNewIssueModal}
             method='post'
             route={`projects/${projectId}/issues`}
-            formValues= {{
-                'name': '', 
-                description: '',
-                image: {}, 
-                status: 'Open',
-                label: 'Todo',
-                priority: 'Critical', 
-                members: [],
-                openingDate: '',
-                closingDate: '',
-                comments: [],
-            }}
         />
         <IssueModal 
             isEdit
             isOpen={isEditIssueOpen}
-            onClose={onEditIssueClose}
-            formValues={{...issueInfo, members: []}}
+            onClose={closeEditIssue}
+            formValues={issueInfo}
             method='put'
             route={`projects/${projectId}/issues`}
         />

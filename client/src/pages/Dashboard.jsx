@@ -4,7 +4,6 @@ import { Box, Image, Heading } from '@chakra-ui/react'
 import { Sidebar } from '../components/Sidebar'
 import useGetData from '../hooks/useGetData'
 
-
 export function Dashboard() {
     const {responseData: projects, setResponseData: setProjects, apiError, setApiError, isLoading} = useGetData('/projects')
     const [isSidebarVisible, setIsSidebarVisible] = useState(() => {
@@ -34,7 +33,7 @@ export function Dashboard() {
                     isSidebarVisible={isSidebarVisible} 
                 /> : 
                 <Image m='1em 1em' boxSize='24px' cursor='pointer' src='/menuIcon.svg'
-                    alt='burger menu' onClick={handleSidebar} 
+                    alt='burger menu' position='sticky' top='1em' onClick={handleSidebar} 
                 /> }
             {/*<Outlet based on link>*/}
             <Box width={['100%']} p='1em 1em'>

@@ -2,20 +2,18 @@ import { Box, Text, Image, Button, Spacer, Flex,
         Accordion, AccordionItem, AccordionButton, AccordionPanel, AccordionIcon} from '@chakra-ui/react'
 import { CloseIcon } from '@chakra-ui/icons'
 import { useEffect, useState } from 'react'
-import { useAuthorization } from '../hooks/useAuthorization'
+import { useNavigate } from 'react-router-dom'
 import axios from '../utils/axios'
+import { useAuthorization } from '../hooks/useAuthorization'
 import userIcon from '/userIcon.svg'
 import teamIcon from '/teamIcon.svg'
-import projectIcon from '/projectIcon.svg'
 import issueIcon from '/issueIcon.svg'
-import { useNavigate } from 'react-router-dom'
+import projectIcon from '/projectIcon.svg'
 
-
-
-export const Sidebar = ({handleSidebar, isSidebarVisible}) => {
+export const Sidebar = ({handleSidebar}) => {
+    const navigate = useNavigate()
     const {authorization, setAuthorization} = useAuthorization()
     const [isLoading, setIsLoading] = useState(false)
-    const navigate = useNavigate()
     const [isIconVisible, setIsIconVisible] = useState(() => {
         return window.innerWidth > 800 ? true : false
     })
@@ -44,17 +42,31 @@ export const Sidebar = ({handleSidebar, isSidebarVisible}) => {
     }
     return(
     <Flex flexDirection='column' as='aside' textAlign='left' padding='0.8em 0.4em' w="220px" h='100vh' bg='white' color='blue.800' boxShadow='rgba(0, 0, 0, 0.1) 0px 4px 12px'
-        position={isIconVisible ? 'relative' : 'fixed'} zIndex='10'
+        position={isIconVisible ? 'sticky' : 'fixed'} top='0' zIndex='10'
     >    
         {!isIconVisible && 
             <Box as='section' mb='0.5em'  display='flex' justifyContent='flex-end'>
-                <CloseIcon boxSize='18px' mr='0.5em' color='red.500' cursor='pointer' focusable 
-                onClick={handleSidebar}/>
+                <CloseIcon
+                    id='closeIcon' 
+                    boxSize='16px' mr='0.5em' 
+                    border='0'
+                    color='red.400' 
+                    cursor='pointer' 
+                    focusable
+                    onClick={handleSidebar}
+                    transition='color 0.3s, transform 0.3s'
+                    _hover={{
+                        color: 'red.500',
+                        transform: 'scale(1.3)',
+                        borderColor: 'red.500',
+                        borderRadius: '100vh'
+                    }}
+                />
             </Box>
         }
         <Box as='section' mb='1em' display='flex' >
             <Image src={userIcon} boxSize='24px' alt='userIcon' float='left' mr='0.4em'/>
-            <Text fontSize='lg'>Hello {authorization.username}</Text>
+            <Text fontSize='lg'>Hello, {authorization.username}</Text>
         </Box>
         <Accordion allowMultiple defaultIndex={[]}>
             <AccordionItem pl='0'>

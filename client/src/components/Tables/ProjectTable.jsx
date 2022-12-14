@@ -1,7 +1,6 @@
 import { Table, Thead, Tbody, Button, Tr, Th, Td, TableContainer } from "@chakra-ui/react"
 import { Link } from 'react-router-dom'
 import {Label} from '../Alerts/Label'
-import useHover from "../../hooks/useHover"
 
 export const ProjectTable = (
     {   projects, 
@@ -12,7 +11,6 @@ export const ProjectTable = (
         setHasUpdate
     }) => {
 
-    const {isHover, onHoverEnter, onHoverLeave} = useHover()
     
     const ProjectList = projects.length > 0 && projects.map(project => {
         const members = project.members.toString().replace(/[,]/g, ', ')
