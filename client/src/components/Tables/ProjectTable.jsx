@@ -1,6 +1,8 @@
-import { Table, Thead, Tbody, Button, Tr, Th, Td, TableContainer } from "@chakra-ui/react"
+import { useMemo } from "react"
+import { Box, Table, Thead, Tbody, Button, Tr, Th, Td, TableContainer } from "@chakra-ui/react"
 import { Link } from 'react-router-dom'
 import {Label} from '../Alerts/Label'
+import { BasicTable } from "./BasicTable"
 
 export const ProjectTable = (
     {   projects, 
@@ -53,23 +55,96 @@ export const ProjectTable = (
         )
     })
 
-    
+    const columns = useMemo(
+        () => [
+            {
+                Header: "Projects",
+                columns: [
+                    {
+                        Header: "Project",
+                        accessor: "name",
+                        Cell: (props) => (
+                            <Box
+                                cursor='pointer'
+                                fontSize='14px'
+                                fontWeight='700'
+                                color=''
+                                _hover={{color:'blue.200'}}
+                                transition='color 0.2s' 
+                                onClick={() => { 
+                                    const tableRowId = props.row.id 
+                                    return handleIssueInfo(props.data[tableRowId]._id)
+                                }}
+                            >
+                                <Link to={props.data[props.row.id]._id}>{props.value}</Link>  
+                            </Box>
+                        )
+                    },
+                    {
+                        Header: "Team Members",
+                        accessor: "members",
+                    },
+                    {
+                        Header: "Status",
+                        accessor: "status",
+                        Cell: (props) => (<Label>{props.value}</Label>)
+
+                    },
+                    {
+                        Header: "",
+                        accessor: "edit",
+                        Cell: (props) => (
+                        <Button          
+                            fontSize='sm' 
+                            cursor 
+                            colorScheme='blue'
+                            onClick={() => {
+                                const tableRowId = props.row.id 
+                                const projectId = props.data[tableRowId]._id
+                                return handleOpenModal(projectId), onEditOpen()
+                            }}
+                        >
+                            Edit
+                        </Button>)
+                    },
+                    {
+                        Header: "",
+                        accessor: "delete",
+                        Cell: (props) => (
+                        <Button          
+                            fontSize='sm' 
+                            cursor 
+                            colorScheme='red'
+                            isLoading={ isDeleting }
+                            onClick={async () => {
+                                const tableRowId = props.row.id
+                                const projectId = props.data[tableRowId]._id
+                                await handleDelete(projectId) 
+                                setHasUpdate(true)
+                            }}
+                        >
+                            X
+                        </Button>)
+                    }
+                ]
+            }
+        ], []
+    )
+    const tableData = useMemo(() => {
+        console.log(projects)
+        return projects.length > 0 ? projects.map(project => ({
+            ...project, edit: "edit", delete: "x"
+        })) : 
+        []
+    }
+    ,[projects])
+
+
+
+
     return(
-        <TableContainer>
-            <Table variant='simple' size='sm'>
-                <Thead>
-                <Tr backgroundColor='#ededed'>
-                    <Th>Project</Th>
-                    <Th>Team Members</Th>
-                    <Th textAlign='center'>Status</Th>
-                    <Th ></Th>
-                    <Th></Th>
-                </Tr>
-                </Thead>
-                <Tbody>
-                    {ProjectList}
-                </Tbody>
-            </Table>
-        </TableContainer>
+        <>
+            <BasicTable columns={columns} tableData={tableData}/>            
+        </>
     )
 }

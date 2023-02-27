@@ -104,9 +104,11 @@ import { REGX_DATETIME } from "../../utils/regex"
         ], []
     )
     const tableData = useMemo(() => {
-        return issues.map(({_id, name, label, status, priority, closingDate}) => ({
+        return issues.length > 0 ? 
+        issues.map(({_id, name, label, status, priority, closingDate}) => ({
             _id, name, label, status, priority, closingDate, edit: "edit", delete: "x"
-        }))
+        })) :
+        []
     }
     ,[issues])
 
