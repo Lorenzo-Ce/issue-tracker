@@ -41,7 +41,7 @@ export const IssueInfo = ({projectId, issueInfo, setIssueInfo, setProject}) => {
     }, [isPosting])
 
     useEffect(() => {
-        if(successDeleteMessage !==''){
+        if(successDeleteMessage !== ''){
             setIssueInfo(updatedIssue)
             setProject(prevProject => {
                 const issueIndex = prevProject.issues.findIndex(issue => issue._id === updatedIssue._id)
@@ -121,7 +121,7 @@ export const IssueInfo = ({projectId, issueInfo, setIssueInfo, setProject}) => {
     </Heading>
     {  
         issueInfo.comments?.length > 0 &&
-        issueInfo.comments.map(({_id, author, text, date}) => {        
+        issueInfo.comments?.map(({_id, author, text, date}) => {        
             const timezoneDate = format(new Date(date), "dd-MM-yyyy kk:mm")
             return(
                 <Box 

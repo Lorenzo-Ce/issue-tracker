@@ -1,6 +1,6 @@
 import { Box } from "@chakra-ui/react"
 
-export const Label = ({children, cursor = false, padding='0.3em 0.5em', size=''}) => {
+export const Label = ({children, cursor = false, padding='0.3em 0.5em'}) => {
 
     const colorPicker = (key) => {
         let color

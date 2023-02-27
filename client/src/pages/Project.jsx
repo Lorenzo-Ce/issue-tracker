@@ -83,6 +83,7 @@ export const Project = () => {
                 />
             </GridItem>
             <GridItem gridColumn='1/-1' as='section' bg='#FFF' borderRadius='10px' p='1em' boxShadow='rgba(0, 0, 0, 0.1) 0px 4px 12px'>
+                {project.issues ?
                 <IssueTable 
                     projectId={project?._id}
                     issues={project?.issues}
@@ -90,7 +91,9 @@ export const Project = () => {
                     openEditIssueModal={openEditIssueModal}
                     handleIssueInfo={handleIssueInformation}
                     setProject={setProject}
-                />
+                /> :
+                "No Issue Here"
+                }
             </GridItem>
 
             {

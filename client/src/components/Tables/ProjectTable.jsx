@@ -52,6 +52,8 @@ export const ProjectTable = (
             </Tr>
         )
     })
+
+    
     return(
         <TableContainer>
             <Table variant='simple' size='sm'>
