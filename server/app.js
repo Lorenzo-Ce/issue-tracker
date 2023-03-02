@@ -36,8 +36,8 @@ app.use('/images', express.static(path.join(__dirname, '/uploads')))
 
 app.all('*', (req, res) => {
     req.accepts('application/json') ? 
-    res.status(404).send({'Error' : '404 Not Found'}) :
-    res.status(404).send('Error: 404 Not Found')
+    res.status(404).send({'Error' : '404 Route Not Found'}) :
+    res.status(404).send('Error: 404 Route Not Found')
 })
 app.use(parseErrorHandler)
 app.use(errorHandler)

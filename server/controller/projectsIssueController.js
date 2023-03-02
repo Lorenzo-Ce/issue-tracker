@@ -1,7 +1,24 @@
+const mongoose = require('mongoose')
 const Project = require('../model/Project')
 const User = require('../model/User')
-const mongoose = require('mongoose')
 const uniqid = require('uniqid');
+
+const getUserIssues = async (req, res, err) => {
+    const username = req?.username
+    if(!username) return res.status(400).send({'error': 'username missing'})
+    try{
+        const foundUser = await User.findOne({username})
+        if(!foundUser) return res.status(400).send({'error': 'user not found'})
+        const projects = foundUser.projects
+        const projectsIds = [...projects.keys()].map(ids => mongoose.Types.ObjectId(ids))
+        if(projectsIds.length === 0) return res.sendStatus(204)
+        const Issues = await Project.find({_id: {$in: projectsIds}}).select('_id issues').exec()
+        if(Issues.length === 0) return res.sendStatus(204)
+        res.status(200).send(Issues)
+    }catch(error){
+        console.log(error)
+    }
+}
 
 const getIssues = async (req, res, err) => {
     const _id = req.params?.id
@@ -116,4 +133,4 @@ const removeComment = async (req, res, err) => {
     }
 }
 
-module.exports = {getIssues, addIssue, updateIssue, removeIssue, removeComment }
+module.exports = {getUserIssues, getIssues, addIssue, updateIssue, removeIssue, removeComment }
