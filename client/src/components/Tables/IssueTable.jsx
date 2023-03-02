@@ -5,7 +5,14 @@ import useDeleteData from "../../hooks/useDeleteData"
 import { BasicTable } from "./BasicTable"
 import { REGX_DATETIME } from "../../utils/regex"
 
-    export const IssueTable = ({projectId, issues, openNewIssueModal, openEditIssueModal, handleIssueInfo, setProject}) => {
+export const IssueTable = ({
+        projectId, 
+        issues, 
+        openNewIssueModal, 
+        openEditIssueModal, 
+        handleIssueInfo, 
+        setProject
+    }) => {
     const {handleDelete, isDeleting, payload} = useDeleteData(`/projects/${projectId}/issues/`)
     
     useEffect(()=> {
@@ -17,92 +24,91 @@ import { REGX_DATETIME } from "../../utils/regex"
         ))
     }, [payload])
 
-    const columns = useMemo(
-        () => [
-            {
-                Header: "Issues",
-                columns: [
-                    {
-                        Header: "Issue",
-                        accessor: "name",
-                        Cell: (props) => (
-                            <Box
-                                cursor='pointer'
-                                fontSize='14px'
-                                fontWeight='700'
-                                color=''
-                                _hover={{color:'blue.200'}}
-                                transition='color 0.2s' 
-                                onClick={() => { 
-                                    const tableRowId = props.row.id 
-                                    return handleIssueInfo(props.data[tableRowId]._id)
-                                }}
-                            >
-                                {props.value}
-                            </Box>
-                        )
-                    },
-                    {
-                        Header: "Type",
-                        accessor: "label",
-                    },
-                    {
-                        Header: "Status",
-                        accessor: "status",
-                        Cell: (props) => (<Label>{props.value}</Label>)
-
-                    },
-                    {
-                        Header: "Priority",
-                        accessor: "priority",
-                        Cell: (props) => (<Label>{props.value}</Label>)
-                    },
-                    {
-                        Header: "Target Date",
-                        accessor: "closingDate",
-                        Cell: (props) =>{
-                            const value = props.value.replace(REGX_DATETIME, "$3/$2/$1")
-                            return (<Box fontSize='12px'>{value}</Box>)
-                        }
-                    },
-                    {
-                        Header: "",
-                        accessor: "edit",
-                        Cell: (props) => (
-                        <Button          
-                            fontSize='sm' 
-                            cursor 
-                            colorScheme='blue'
-                            onClick={() => {
+    const columns = useMemo(() => [
+        {
+            Header: "Issues",
+            columns: [
+                {
+                    Header: "Issue",
+                    accessor: "name",
+                    Cell: (props) => (
+                        <Box
+                            cursor='pointer'
+                            fontSize='14px'
+                            fontWeight='700'
+                            color=''
+                            _hover={{color:'blue.200'}}
+                            transition='color 0.2s' 
+                            onClick={() => { 
                                 const tableRowId = props.row.id 
-                                return handleIssueInfo(props.data[tableRowId]._id), 
-                                openEditIssueModal()}}
-                        >
-                            Edit
-                        </Button>)
-                    },
-                    {
-                        Header: "",
-                        accessor: "delete",
-                        Cell: (props) => (
-                        <Button          
-                            fontSize='sm' 
-                            cursor 
-                            colorScheme='red'
-                            isLoading={ isDeleting }
-                            onClick={async () => {
-                                const tableRowId = props.row.id
-                                const issueId = props.data[tableRowId]._id
-                                await handleDelete(issueId) 
+                                return handleIssueInfo(props.data[tableRowId]._id)
                             }}
                         >
-                            X
-                        </Button>)
+                            {props.value}
+                        </Box>
+                    )
+                },
+                {
+                    Header: "Type",
+                    accessor: "label",
+                },
+                {
+                    Header: "Status",
+                    accessor: "status",
+                    Cell: (props) => (<Label>{props.value}</Label>)
+
+                },
+                {
+                    Header: "Priority",
+                    accessor: "priority",
+                    Cell: (props) => (<Label>{props.value}</Label>)
+                },
+                {
+                    Header: "Target Date",
+                    accessor: "closingDate",
+                    Cell: (props) =>{
+                        const value = props.value.replace(REGX_DATETIME, "$3/$2/$1")
+                        return (<Box fontSize='12px'>{value}</Box>)
                     }
-                ]
-            }
-        ], []
-    )
+                },
+                {
+                    Header: "",
+                    accessor: "edit",
+                    Cell: (props) => (
+                    <Button          
+                        fontSize='sm' 
+                        cursor 
+                        colorScheme='blue'
+                        onClick={() => {
+                            const tableRowId = props.row.id 
+                            return handleIssueInfo(props.data[tableRowId]._id), 
+                            openEditIssueModal()}}
+                    >
+                        Edit
+                    </Button>)
+                },
+                {
+                    Header: "",
+                    accessor: "delete",
+                    Cell: (props) => (
+                    <Button          
+                        fontSize='sm' 
+                        cursor 
+                        colorScheme='red'
+                        isLoading={ isDeleting }
+                        onClick={async () => {
+                            const tableRowId = props.row.id
+                            const issueId = props.data[tableRowId]._id
+                            await handleDelete(issueId) 
+                        }}
+                    >
+                        X
+                    </Button>)
+                }
+            ]
+        }
+    ], [])
+
     const tableData = useMemo(() => {
         return issues.length > 0 ? 
         issues.map(({_id, name, label, status, priority, closingDate}) => ({

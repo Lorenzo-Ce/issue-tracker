@@ -2,7 +2,7 @@ import { Box, Table, Thead, Tbody, Tr, Th, Td, Flex, Tooltip, Select, NumberInpu
 import { ChevronUpIcon, ChevronDownIcon, ArrowRightIcon, ArrowLeftIcon, ChevronRightIcon, ChevronLeftIcon } from "@chakra-ui/icons";
 import { useTable, useSortBy, usePagination } from "react-table";
 
-export const BasicTable = ({columns, tableData}) => {
+export const BasicTable = ({columns, tableData, tablePageSize=5}) => {
 
     const {
         getTableProps,
@@ -23,7 +23,7 @@ export const BasicTable = ({columns, tableData}) => {
         {
             columns,
             data: tableData,
-            initialState: { pageIndex: 0,  pageSize: 5 },
+            initialState: { pageIndex: 0,  pageSize: tablePageSize },
         },
         useSortBy,
         usePagination

@@ -2,7 +2,7 @@ import { Box, Text, Image, Button, Spacer, Flex,
         Accordion, AccordionItem, AccordionButton, AccordionPanel, AccordionIcon} from '@chakra-ui/react'
 import { CloseIcon } from '@chakra-ui/icons'
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import axios from '../utils/axios'
 import { useAuthorization } from '../hooks/useAuthorization'
 import userIcon from '/userIcon.svg'
@@ -17,6 +17,7 @@ export const Sidebar = ({handleSidebar}) => {
     const [isIconVisible, setIsIconVisible] = useState(() => {
         return window.innerWidth > 800 ? true : false
     })
+    
     useEffect(() => {
         const showIcon = e => {
             const {innerWidth} = e.target
@@ -64,64 +65,40 @@ export const Sidebar = ({handleSidebar}) => {
                 />
             </Box>
         }
-        <Box as='section' mb='1em' display='flex' >
+        <Box 
+            as='section' 
+            display='flex' 
+            pb='1em' 
+            borderBottom='2px solid lightgray'
+        >
             <Image src={userIcon} boxSize='24px' alt='userIcon' float='left' mr='0.4em'/>
             <Text fontSize='lg'>Hello, {authorization.username}</Text>
         </Box>
-        <Accordion allowMultiple defaultIndex={[]}>
-            <AccordionItem pl='0'>
-            <h2>
-                <AccordionButton>
-                <Image src={teamIcon} boxSize='24px' alt='teamIcon' mr='0.4em'/>  
-                <Box flex='1' textAlign='left'>
-                    Teams
-                </Box>
-                <AccordionIcon />
-                </AccordionButton>
-            </h2>
-            <AccordionPanel pb={4}>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-                veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-                commodo consequat.
-            </AccordionPanel>
-            </AccordionItem>
-
-            <AccordionItem>
-            <h2>
-                <AccordionButton>
-                <Image src={projectIcon} boxSize='24px' alt='teamIcon' mr='0.4em'/>
-                <Box flex='1' textAlign='left'>
-                    Projects
-                </Box>
-                <AccordionIcon />
-                </AccordionButton>
-            </h2>
-            <AccordionPanel pb={4}>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-                veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-                commodo consequat.
-            </AccordionPanel>
-            </AccordionItem>
-            <AccordionItem>
-            <h2>
-                <AccordionButton>
-                <Image src={issueIcon} boxSize='24px' alt='teamIcon' mr='0.4em'/>
-                <Box flex='1' textAlign='left'>
-                    Issues
-                </Box>
-                <AccordionIcon />
-                </AccordionButton>
-            </h2>
-            <AccordionPanel pb={4}>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-                veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-                commodo consequat.
-            </AccordionPanel>
-            </AccordionItem>
-        </Accordion>
+        <h2>
+        <Flex 
+            justifyContent='space-between' 
+            alignItems='center' 
+            p='0.5em 0.7em'
+            borderBottom='1px solid lightgray'
+        >
+            <Link to='/dashboard'>
+                Dashboard
+            </Link>
+            <Image src={projectIcon} boxSize='20px' alt='teamIcon' mr='0.4em'/>
+        </Flex>
+        </h2>
+        <h2>
+        <Flex 
+            justifyContent='space-between' 
+            alignItems='center' 
+            p='0.5em 0.7em'
+        >
+            <Link to='/issues'>
+                Issues
+            </Link>
+            <Image src={issueIcon} boxSize='20px' alt='teamIcon' mr='0.4em'/>
+        </Flex>
+        </h2>
     <Spacer/>
         <Button     
             mb='5px' 

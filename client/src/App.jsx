@@ -6,6 +6,7 @@ import {RequireAuthorization} from './components/RequireAuthorization'
 import Register from './components/Register'
 import Login from './components/Login'
 import Dashboard from './pages/Dashboard'
+import Issues from './pages/Issues'
 import PersistLogin from './components/PersistLogin'
 import { Desk } from './pages/Desk'
 import { Project } from './pages/Project'
@@ -22,6 +23,7 @@ function App() {
               {/*Protected Routes*/}
               <Route element={<PersistLogin />}>
                 <Route element={<RequireAuthorization {...authorization}/>}>
+                    <Route path='issues' element={<Issues />}/>
                     <Route path='dashboard' element={<Dashboard/>}>
                       <Route path='' element={<Desk/>}/>
                       <Route path=':projectId' element={<Project />}/>                      
