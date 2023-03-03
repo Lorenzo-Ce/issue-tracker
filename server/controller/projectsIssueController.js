@@ -12,9 +12,40 @@ const getUserIssues = async (req, res, err) => {
         const projects = foundUser.projects
         const projectsIds = [...projects.keys()].map(ids => mongoose.Types.ObjectId(ids))
         if(projectsIds.length === 0) return res.sendStatus(204)
-        const Issues = await Project.find({_id: {$in: projectsIds}}).select('_id issues').exec()
-        if(Issues.length === 0) return res.sendStatus(204)
-        res.status(200).send(Issues)
+        const issuesList = await Project.aggregate([
+            {
+                $match: { _id: {$in: projectsIds} }
+            },
+            {
+                $addFields: { "issues.projectId": { $toString: "$_id"} }
+            },                    
+            {   
+                $group: { 
+                    _id: null,
+                    issues: { $push: "$issues" }
+                }
+            },
+            {
+                $project: {
+                    issues:{    
+                        $reduce: {
+                            input: "$issues",
+                            initialValue: [],
+                            in: { $concatArrays: ["$$value", '$$this']}}, 
+                }}
+            },
+            {
+                $project: {
+                    issues:{    
+                        $filter: {
+                            input: "$issues",
+                            as: "issue",
+                            cond: { $eq: ["$$issue.author",username]}} 
+                }}
+            }
+        ]).exec()
+        if(issuesList.length === 0) return res.sendStatus(204)
+        res.status(200).send(issuesList[0])
     }catch(error){
         console.log(error)
     }
