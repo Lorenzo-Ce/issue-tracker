@@ -67,8 +67,19 @@ export const IssueTable = ({
                     Header: "Target Date",
                     accessor: "closingDate",
                     Cell: (props) =>{
-                        const value = props.value.replace(REGX_DATETIME, "$3/$2/$1")
-                        return (<Box fontSize='12px'>{value}</Box>)
+                        const closingDate = props.value
+                        const closingDateFormat = closingDate.replace(REGX_DATETIME, "$3/$2/$1")
+                        const currentDate =  new Date().toJSON()
+                        const isNotClosed = props.row.values.status !== 'Closed'
+                        const isPastDeadline = closingDate <= currentDate && isNotClosed
+                        return (
+                            <Box fontSize='12px'
+                                color={isPastDeadline && 'red.400'}
+                                fontWeight={isPastDeadline && 'bold'}
+                            >   
+                                {closingDateFormat}
+                            </Box>
+                        )
                     }
                 },
                 {

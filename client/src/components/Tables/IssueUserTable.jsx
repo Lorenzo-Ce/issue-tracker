@@ -5,7 +5,7 @@ import { Label } from '../Alerts/Label'
 import { REGX_DATETIME } from "../../utils/regex"
 import { Link } from "react-router-dom"
 
-export const IssueUserTable = ({projects}) => {
+export const IssueUserTable = ({issues}) => {
 
     const columns = useMemo(() => [
         {
@@ -46,11 +46,12 @@ export const IssueUserTable = ({projects}) => {
                 {
                     Header: "Target Date",
                     accessor: "closingDate",
-                    Cell: (props) =>{
+                    Cell: (props) =>{              
                         const closingDate = props.value
                         const closingDateFormat = closingDate.replace(REGX_DATETIME, "$3/$2/$1")
                         const currentDate =  new Date().toJSON()
-                        const isPastDeadline = closingDate <= currentDate
+                        const isNotClosed = props.row.values.status !== 'Closed'
+                        const isPastDeadline = closingDate <= currentDate && isNotClosed
                         return (
                             <Box fontSize='12px'
                                 color={isPastDeadline && 'red.400'}
@@ -65,21 +66,18 @@ export const IssueUserTable = ({projects}) => {
     ], [])
     
     const tableData = useMemo(() => {
-        if( projects.length > 0) { 
-            const result = projects.flatMap(({_id, issues}) => 
-                issues.map( issue => ({projectId: _id, ...issue}))
-            )
-           return result
+        if( issues && issues.length > 0) { 
+           return issues
         }
         else{
             return []
         }
     }
-    ,[projects])
+    ,[issues])
 
     return(
     <>
-        <BasicTable columns={columns} tableData={tableData} tablePageSize={7}/>
+        <BasicTable columns={columns} tableData={tableData} tablePageSize={5}/>
     </>
     )
 }

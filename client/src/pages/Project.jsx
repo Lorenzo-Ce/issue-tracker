@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom'
 import { ProjectInfo } from '../components/Infos/ProjectInfo'
 import { TeamTable } from '../components/Tables/TeamTable'
 import { IssueTable } from '../components/Tables/IssueTable'
-import { IssueGraphic } from '../components/IssueGraphic'
+import { IssueTypeChart } from '../components/Charts/IssueTypeChart'
 import IssueModal from '../components/Modals/IssueModal'
 import useGetData from '../hooks/useGetData'
 import useAxiosProtect from '../hooks/useAxiosProtect'
@@ -62,8 +62,8 @@ export const Project = () => {
     
     return( 
         isLoading ?
-            <div>is Loading</div> 
-        :
+            <div>is Loading</div> : 
+            project &&
         <>
         <Grid templateColumns={['repeat(auto-fit, minmax(300px, 1fr))']} gap='1em'>
             <GridItem as='section' bg='#FFF' borderRadius='10px' p='1em' boxShadow='rgba(0, 0, 0, 0.1) 0px 4px 12px'>     
@@ -77,8 +77,7 @@ export const Project = () => {
                 />
             </GridItem>
             <GridItem as='section' bg='#FFF' borderRadius='10px' p='1em' boxShadow='rgba(0, 0, 0, 0.1) 0px 4px 12px'>
-                <IssueGraphic 
-                    issueIncrement = {project?.issueIncrement}
+                <IssueTypeChart 
                     issues= {project?.issues}
                 />
             </GridItem>
@@ -123,7 +122,6 @@ export const Project = () => {
             method='put'
             route={`projects/${projectId}/issues`}
         />
-        </>
-    
-    )
+        </> 
+        )
 }
