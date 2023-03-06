@@ -14,15 +14,33 @@ import { RadioField } from './components/RadioField'
 import { DateField } from './components/DateField'
 import { RolesField } from './components/RolesField'
 
-const ProjectModal = ({ isOpen, onClose, formValues = initialFormValues, isEdit = false, route = '/projects', method}) => {
+const ProjectModal = ({ setProjects, isOpen, onClose, formValues = initialFormValues, isEdit = false, route = '/projects', method}) => {
     const {authorization} = useAuthorization()
     const {responseData: usersList } = useGetData('/users')
-    const {handleSubmit, resetMessage, successMessage, submitError, isLoadingSubmit } = useSubmitData(route, method)
+    const {handleSubmit, payload, resetMessage, successMessage, submitError, isLoadingSubmit } = useSubmitData(route, method)
     const {formValidation, isFormValid, handleValidation, handleFormChange, Form, setForm } = useForm(formValues)
     
     useEffect(()=>{
         setForm(formValues)
     },[formValues])
+    useEffect(() => {
+        if(successMessage !== ""){
+            if(!isEdit){
+                setProjects(prevProjects => ([...prevProjects, payload]))
+            } else {
+                setProjects(prevProjects => {
+                    const newProjects = prevProjects.map(project => 
+                        project._id ===  payload._id ? 
+                        payload : 
+                        project)
+                
+                        console.log(newProjects)
+                        return newProjects
+                    })
+            }
+        }
+    }, [successMessage])
+
 
     const members = usersList.flatMap( ({_id, username}) =>  username !== authorization.username ? 
         [

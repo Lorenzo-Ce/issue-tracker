@@ -6,6 +6,7 @@ const useSubmitData = (url, method, isMultipart = false) => {
     const [successMessage, setSuccessMessage] = useState('')
     const [submitError, setSubmitError] = useState('')
     const [isLoadingSubmit, setIsLoading] = useState(false)
+    const [payload, setPayload] = useState({})
     const axiosProtect = useAxiosProtect()
 
     const resetMessage = () =>{
@@ -32,6 +33,7 @@ const useSubmitData = (url, method, isMultipart = false) => {
             })
             if(response.status >= 200 && response.status < 300){  
                 setSuccessMessage('Data upload to server!')
+                setPayload(response?.data)
                 return response?.data
             }    
         } catch (err){
@@ -51,6 +53,7 @@ const useSubmitData = (url, method, isMultipart = false) => {
 
     return {
         handleSubmit, 
+        payload,
         resetMessage, 
         successMessage, 
         submitError, 

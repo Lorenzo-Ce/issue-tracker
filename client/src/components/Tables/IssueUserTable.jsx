@@ -66,12 +66,9 @@ export const IssueUserTable = ({issues}) => {
     ], [])
     
     const tableData = useMemo(() => {
-        if( issues && issues.length > 0) { 
-           return issues
-        }
-        else{
-            return []
-        }
+        issues && issues.length > 0 ?
+        issues :
+        []
     }
     ,[issues])
 

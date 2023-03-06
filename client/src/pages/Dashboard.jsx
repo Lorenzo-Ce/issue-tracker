@@ -1,11 +1,9 @@
 import { Outlet } from 'react-router-dom'
 import { Box, Image, Heading } from '@chakra-ui/react'
 import { Sidebar } from '../components/Sidebar'
-import useGetData from '../hooks/useGetData'
 import useSidebar from '../hooks/useSidebar'
 
 export function Dashboard() {
-    const {responseData: projects, setResponseData: setProjects, apiError, setApiError, isLoading} = useGetData('/projects')
     const {isSidebarVisible, handleSidebar} = useSidebar()
 
     return(
@@ -24,12 +22,11 @@ export function Dashboard() {
                     alt='burger menu' position='sticky' top='1em' onClick={handleSidebar} 
                 /> 
             }
-            {/*<Outlet based on link>*/}
             <Box width={['100%']} p='1em 1em'>
                 <Heading fontSize='2xl' color='blue.800' mb='1em'>
                     DESK COMPONENT
                 </Heading>
-                <Outlet context={[projects, setProjects, apiError, setApiError, isLoading]}/>
+                <Outlet />
             </Box>
         </Box>
     )

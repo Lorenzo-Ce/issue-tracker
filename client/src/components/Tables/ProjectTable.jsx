@@ -1,5 +1,5 @@
 import { useMemo } from "react"
-import { Box, Table, Thead, Tbody, Button, Tr, Th, Td, TableContainer } from "@chakra-ui/react"
+import { Box, Button } from "@chakra-ui/react"
 import { Link } from 'react-router-dom'
 import {Label} from '../Alerts/Label'
 import { BasicTable } from "./BasicTable"
@@ -10,7 +10,6 @@ export const ProjectTable = (
         onEditOpen, 
         handleDelete,
         isDeleting,
-        setHasUpdate
     }) => {
 
     const columns = useMemo(() => [
@@ -20,18 +19,22 @@ export const ProjectTable = (
                 {
                     Header: "Project",
                     accessor: "name",
-                    Cell: (props) => (
-                        <Box
-                            cursor='pointer'
-                            fontSize='14px'
-                            fontWeight='700'
-                            color=''
-                            _hover={{color:'blue.200'}}
-                            transition='color 0.2s' 
-                        >
-                            <Link to={props.data[props.row.id]._id}>{props.value}</Link>  
-                        </Box>
-                    )
+                    Cell: (props) => {
+                        const tableRowId = props.row.id 
+                        const projectId = props.data[tableRowId]._id
+                        return(
+                            <Box
+                                cursor='pointer'
+                                fontSize='14px'
+                                fontWeight='700'
+                                color=''
+                                _hover={{color:'blue.200'}}
+                                transition='color 0.2s' 
+                            >
+                                <Link to={projectId}>{props.value}</Link>  
+                            </Box>
+                        )
+                    }
                 },
                 {
                     Header: "Team Members",
@@ -52,9 +55,10 @@ export const ProjectTable = (
                         cursor 
                         colorScheme='blue'
                         onClick={() => {
+                            console.log(props)
                             const tableRowId = props.row.id 
                             const projectId = props.data[tableRowId]._id
-                            return handleOpenModal(projectId), onEditOpen()
+                            handleOpenModal(projectId, props.data), onEditOpen()
                         }}
                     >
                         Edit
@@ -73,7 +77,6 @@ export const ProjectTable = (
                             const tableRowId = props.row.id
                             const projectId = props.data[tableRowId]._id
                             await handleDelete(projectId) 
-                            setHasUpdate(true)
                         }}
                     >
                         X
@@ -83,16 +86,10 @@ export const ProjectTable = (
         }
     ], [])
 
-    const tableData = useMemo(() => 
+const tableData = useMemo(() => 
         projects.length > 0 ? 
-        projects.map(project => ({
-            ...project, edit: "edit", delete: "x"
-        })) : 
-        []
-    , [projects])
-
-
-
+        projects :
+        [], [projects])
 
     return(
         <>

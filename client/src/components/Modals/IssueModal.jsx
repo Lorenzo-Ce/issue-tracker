@@ -15,7 +15,7 @@ import { DateField } from './components/DateField'
 import { RolesField } from './components/RolesField'
 
 
-const issueModal = ({ isOpen, onClose, formValues = initialIssueFormValues, isEdit = false, route = '/projects', method}) => {
+const issueModal = ({setProject, isOpen, onClose, formValues = initialIssueFormValues, isEdit = false, route = '/projects', method}) => {
     const {authorization} = useAuthorization()
     const {responseData: usersList } = useGetData('/users')
     const {handleSubmit, resetMessage, successMessage, submitError, isLoadingSubmit } = useSubmitData(route, method, true)

@@ -25,8 +25,6 @@ export const Project = () => {
     const handleIssueInformation = (issueId) => {
         const issueInfo = project?.issues?.find(issue => issue._id === issueId)
         if(issueInfo){
-            issueInfo.openingDate = issueInfo.openingDate?.split('T')[0] 
-            issueInfo.closingDate = issueInfo.closingDate?.split('T')[0] 
             setIssueInfo(issueInfo)
         }
     }
@@ -108,13 +106,15 @@ export const Project = () => {
             }
 
         </Grid>
-        <IssueModal 
+        <IssueModal
+            setProject={setProject}    
             isOpen={isNewIssueOpen}
             onClose={closeNewIssueModal}
             method='post'
             route={`projects/${projectId}/issues`}
         />
         <IssueModal 
+            setProject={setProject}
             isEdit
             isOpen={isEditIssueOpen}
             onClose={closeEditIssue}
