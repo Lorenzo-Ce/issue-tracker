@@ -1,8 +1,9 @@
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const User = require('../model/User')
+const logErrorConsole = require('./utils/logErrorConsole')
 
-const loginUser = async (req, res, err) => {
+const loginUser = async (req, res, next) => {
     const {email, password} = req.body
     if(!email || !password){
         return res.status(400).send({
@@ -12,7 +13,7 @@ const loginUser = async (req, res, err) => {
     }
     try{
         const matchedUser = await User.findOne({email : email}).exec()
-        if(!matchedUser) {return res.status(400).send({'error' : 'You have entered an invalid email or password'})}
+        if(!matchedUser) return res.status(400).send({'error' : 'You have entered an invalid email or password'})
         
         const result = await bcrypt.compare(password, matchedUser.password)
         if(!result) return  res.status(403).send({'error' : 'You have entered an invalid email or password'})
@@ -44,8 +45,9 @@ const loginUser = async (req, res, err) => {
             'accessToken' : accessToken,
             'username':  matchedUser.username
         })
-    }catch(err){
-        console.log(err)
+    }catch(error){
+        logErrorConsole(error.name, error.message)
+        next(error)
     }
 }
 

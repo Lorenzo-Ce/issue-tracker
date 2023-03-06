@@ -17,8 +17,14 @@ const ProjectSchema = new Schema({
         enum: ['Open','Paused','Closed'],
         default: 'Open'
     },
-    startDate: Date,
-    endDate: Date,
+    startDate: {
+        type: Date,
+        get: (date) => date.toISOString().split('T')[0]
+    },
+    endDate: {
+        type: Date,
+        get: (date) => date.toISOString().split('T')[0]
+    },
     members: [String],
     roles: {
         type: Map,
@@ -45,8 +51,14 @@ const ProjectSchema = new Schema({
             default: 'Open',
             enum: ['Open','Paused','Closed']
         },
-        openingDate: Date,
-        closingDate: Date,
+        openingDate: {
+            type: Date,
+            get: (date) => date.toISOString().split('T')[0]
+        },
+        closingDate: {
+            type: Date,
+            get: (date) => date.toISOString().split('T')[0]
+        },
         label: {
             type: String, 
             enum:['Todo','Bug','Feature','Design']
@@ -70,7 +82,9 @@ const ProjectSchema = new Schema({
             type: String
         }
     }]
-  });
+  }, {toObject: { getters: true, setters: true },
+  toJSON: { getters: true, setters: true },
+  runSettersOnQuery: true,});
 
   const Project = mongoose.model('Project', ProjectSchema)
 

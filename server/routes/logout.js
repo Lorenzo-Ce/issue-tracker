@@ -1,7 +1,8 @@
 const express = require('express')
-const { logOutUser } = require('../controller/logoutController')
 const router = express.Router()
+const { logOutUser } = require('../controller/logoutController')
+const errorHandler = require('../middleware/errorHandler')
 
-router.post('/', logOutUser)
+router.post('/', logOutUser, errorHandler)
 
 module.exports = router

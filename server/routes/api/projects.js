@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const roles = require('../../config/roles')
+const errorHandler = require('../../middleware/errorHandler')
 const { getAllProjects, addProject, deleteProject, getProject, updateProject } = require('../../controller/projectsController')
 const { getUserIssues, getIssues, addIssue, updateIssue, removeIssue, removeComment } = require('../../controller/projectsIssueController')
 const { verifyAccessToken } = require('../../middleware/verifyAccessToken')
@@ -42,5 +43,7 @@ router.route('/:id/issues/:issueId')
 
 router.route('/:id/issues/:issueId/:commentId')
     .delete(removeComment)
+
+router.use(errorHandler)
 
 module.exports = router
