@@ -65,13 +65,12 @@ export const IssueUserTable = ({issues}) => {
         }
     ], [])
     
-    const tableData = useMemo(() => {
-        issues && issues.length > 0 ?
+    const tableData = useMemo(() => 
+        issues && issues?.length > 0 ?
         issues :
         []
-    }
     ,[issues])
-
+    console.log(tableData)
     return(
     <>
         <BasicTable columns={columns} tableData={tableData} tablePageSize={5}/>

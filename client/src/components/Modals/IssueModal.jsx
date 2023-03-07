@@ -18,17 +18,23 @@ import { RolesField } from './components/RolesField'
 const issueModal = ({setProject, isOpen, onClose, formValues = initialIssueFormValues, isEdit = false, route = '/projects', method}) => {
     const {authorization} = useAuthorization()
     const {responseData: usersList } = useGetData('/users')
-    const {handleSubmit, resetMessage, successMessage, submitError, isLoadingSubmit } = useSubmitData(route, method, true)
+    const {handleSubmit, payload: newIssues, resetMessage, successMessage, submitError, isLoadingSubmit } = useSubmitData(route, method, true)
     const {formValidation, isFormValid, handleValidation, handleFormChange, Form, setForm } = useForm(formValues)
 
     useEffect(()=>{
         setForm(formValues)
     },[formValues])
+
+    useEffect(() => {
+        if(successMessage !== ""){
+            setProject(prevProject => ({...prevProject, issues: newIssues }))
+        }
+    }, [successMessage])
     
-    const members = usersList.length > 0 && usersList.flatMap(({_id, username}) => 
+    const members = usersList?.length > 0 && usersList.flatMap(({_id, username}) => 
         username !== authorization.username ? 
         [
-            <Checkbox key={_id} value={username} checked={Form.members.includes(username)}>
+            <Checkbox key={_id} value={username} checked={Form?.members?.includes(username)}>
                 {username}
             </Checkbox>
         ] : 

@@ -7,7 +7,7 @@ const useDeleteData = (baseUrl) => {
     const [deleteMessage, setDeleteMessage] = useState('')
     const [deleteError, setDeleteError] = useState('')
     const [isDeleting, setIsDeleting] = useState(false)
-    const [ remainingData, setRemainingData ] = useState([])
+    const [ remainingData, setRemainingData ] = useState()
 
     const resetMessage = () =>{
         setDeleteMessage('')
@@ -17,7 +17,7 @@ const useDeleteData = (baseUrl) => {
     const handleDelete = async (id) => {
         setDeleteError('')
         setDeleteMessage('')
-        setRemainingData([])
+        setRemainingData()
         setIsDeleting(true)
         try{
             const response = await axiosProtect({

@@ -11,14 +11,14 @@ import { IssuePriorityChart } from '../components/Charts/IssuePriorityChart'
 export function Issues() {
     const {responseData: issueList, apiError, isLoading} = useGetData('/projects/issues')
     const {isSidebarVisible, handleSidebar} = useSidebar()
-    
+    console.log(issueList)
     const issuesFormat = useMemo(() =>
-        issueList?.issues ? 
-        issueList.issues :
+        issueList ? 
+        issueList :
         []
-        , [issueList]
+        , [isLoading]
     )
-
+    console.log(issuesFormat)
     return(
         <Box 
             display={'flex'} 

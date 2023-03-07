@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { Grid, GridItem, useDisclosure} from '@chakra-ui/react'
 import { useParams } from 'react-router-dom'
 import { ProjectInfo } from '../components/Infos/ProjectInfo'
@@ -7,57 +7,28 @@ import { IssueTable } from '../components/Tables/IssueTable'
 import { IssueTypeChart } from '../components/Charts/IssueTypeChart'
 import IssueModal from '../components/Modals/IssueModal'
 import useGetData from '../hooks/useGetData'
-import useAxiosProtect from '../hooks/useAxiosProtect'
 import { IssueInfo } from '../components/Infos/IssueInfo'
-import { initialIssueFormValues } from '../utils/initializeForm'
+import useDeleteData from '../hooks/useDeleteData'
 
 export const Project = () => {
     const {projectId} = useParams()
-    const axiosProtect = useAxiosProtect()
     const { responseData : project, setResponseData: setProject, apiError, setApiError, isLoading } = useGetData(`/projects/${projectId}`)
     const { isOpen: isNewIssueOpen, onOpen: openNewIssueModal, onClose : closeNewIssueModal } = useDisclosure()
     const { isOpen: isEditIssueOpen, onOpen: openEditIssueModal, onClose : closeEditIssue } = useDisclosure()
-    const [ issueInfo, setIssueInfo ] = useState({'name': '', description: '',image: {}, status: 'Open',label: 'Todo',priority: 'Critical', members: [],openingDate: '',closingDate: '',comments: [],
-    })
-    const refWasModalOpen = useRef(false)
-    
+    const [ issueInfo, setIssueInfo ] = useState({ 'name': '', description: '',image: {}, status: 'Open',label: 'Todo',priority: 'Critical', members: [],openingDate: '',closingDate: '',comments: [] })
+
     //Find and format issue information based on id for preview and edit
-    const handleIssueInformation = (issueId) => {
-        const issueInfo = project?.issues?.find(issue => issue._id === issueId)
+    const handleIssueInformation = (issueId, issueList) => {
+        const issueInfo = issueList?.find(issue => issue._id === issueId)
+        console.log(issueList)
         if(issueInfo){
             setIssueInfo(issueInfo)
         }
     }
-    //Updates issues after modals close
     useEffect(() => {
-        const controller = new AbortController()
-        const updateIssues = async () => {
-            try{
-                setApiError(``)
-                const response = await axiosProtect.get(`/projects/${projectId}`, {signal: controller.signal})
-                setProject(response.data)
-            }catch(err){ 
-                if(err?.request){
-                    setApiError('Network Error. Submit failed, try again later.')
-                }
-                else if (err?.response){
-                    setApiError(`Error ${err?.response?.status}: ${err.response?.statusText} ${err?.response?.data?.error}`)
-                }
-                else{
-                    setApiError(`Ops Something went wrong, refresh the page or try again later`)
-                }
-            } 
-        }
-        if(refWasModalOpen.current && (!isNewIssueOpen || !isEditIssueOpen)){
-            updateIssues()
-            setIssueInfo(initialIssueFormValues)
-        }
-        refWasModalOpen.current = isNewIssueOpen || isEditIssueOpen
-        return () => {
-            controller.abort()
-        }
-    },[isNewIssueOpen, isEditIssueOpen])
-    
+
+    }, [])
+   
     return( 
         isLoading ?
             <div>is Loading</div> : 

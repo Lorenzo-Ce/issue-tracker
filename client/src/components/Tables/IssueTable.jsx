@@ -13,16 +13,17 @@ export const IssueTable = ({
         handleIssueInfo, 
         setProject
     }) => {
-    const {handleDelete, isDeleting, payload} = useDeleteData(`/projects/${projectId}/issues/`)
+    const {handleDelete, isDeleting, remainingData} = useDeleteData(`/projects/${projectId}/issues/`)
     
     useEffect(()=> {
-        payload?.length > 0 &&                         
+        if(remainingData){                     
         setProject(prevProject => (
             {...prevProject,
-            issues: payload
+            issues: remainingData?.length > 0 ? remainingData : []
             }
-        ))
-    }, [payload])
+        )) 
+    }
+    }, [remainingData])
 
     const columns = useMemo(() => [
         {
@@ -41,7 +42,8 @@ export const IssueTable = ({
                             transition='color 0.2s' 
                             onClick={() => { 
                                 const tableRowId = props.row.id 
-                                return handleIssueInfo(props.data[tableRowId]._id)
+                                console.log(props.data)
+                                return handleIssueInfo(props.data[tableRowId]._id, props.data)
                             }}
                         >
                             {props.value}
@@ -92,7 +94,7 @@ export const IssueTable = ({
                         colorScheme='blue'
                         onClick={() => {
                             const tableRowId = props.row.id 
-                            return handleIssueInfo(props.data[tableRowId]._id), 
+                            return handleIssueInfo(props.data[tableRowId]._id, props.data), 
                             openEditIssueModal()}}
                     >
                         Edit
@@ -122,9 +124,7 @@ export const IssueTable = ({
 
     const tableData = useMemo(() => 
         issues?.length > 0 ? 
-        issues.map(({_id, name, label, status, priority, closingDate}) => ({
-            _id, name, label, status, priority, closingDate
-        })) :
+        issues :
         []
     ,[issues])
 

@@ -12,11 +12,11 @@ import  {nanoid} from 'nanoid'
 import format from "date-fns/format"
 import imagePlaceholder from "../../assets/imagePlaceholder.png"
 
-export const IssueInfo = ({projectId, issueInfo, setIssueInfo, setProject}) => {
+export const IssueInfo = ({projectId, setProject, issueInfo, setIssueInfo}) => {
     const {authorization} = useAuthorization()
     const {isOpen: isOpenImg, onClose: onCloseImg, onOpen: OnOpenImg} = useDisclosure()
     const {handleSubmit: submitComment, resetMessage, successMessage, submitError, isLoadingSubmit: isLoadingComment} = useSubmitData(`/projects/${projectId}/issues`, 'put' )
-    const {handleDelete: deleteComment, successMessage: successDeleteMessage, isDeleting, payload: updatedIssue} = useDeleteData(`/projects/${projectId}/issues/${issueInfo._id}/`)
+    const {handleDelete: deleteComment, deleteMessage: successDeleteMessage, isDeleting: isDeletingComment, remainingData: updatedIssue} = useDeleteData(`/projects/${projectId}/issues/${issueInfo._id}/`)
     const [isPosting, setIsPosting] = useState(false)
     const [comment, setComment] = useState({
         _id: '',
@@ -94,10 +94,8 @@ export const IssueInfo = ({projectId, issueInfo, setIssueInfo, setProject}) => {
         <Box
             width={{sm: '49%', md: '59%'}}
         >
-            <Box>
-                <p> 
+            <Box as='p'>
                     {issueInfo.description} 
-                </p>
             </Box>
             <Flex gap='1em' flexWrap='wrap' mt='0.5em' fontSize='12px'>
                 <Box>
@@ -120,8 +118,8 @@ export const IssueInfo = ({projectId, issueInfo, setIssueInfo, setProject}) => {
         Comments
     </Heading>
     {  
-        issueInfo.comments?.length > 0 &&
-        issueInfo.comments?.map(({_id, author, text, date}) => {        
+        issueInfo?.comments?.length > 0 &&
+        issueInfo?.comments?.map(({_id, author, text, date}) => {        
             const timezoneDate = format(new Date(date), "dd-MM-yyyy kk:mm")
             return(
                 <Box 
@@ -138,7 +136,7 @@ export const IssueInfo = ({projectId, issueInfo, setIssueInfo, setProject}) => {
                     >               
                     {
                         author === authorization.username &&
-                        isDeleting ? 
+                        isDeletingComment ? 
                             <TimeIcon 
                                 float='right'
                                 boxSize='15px'
