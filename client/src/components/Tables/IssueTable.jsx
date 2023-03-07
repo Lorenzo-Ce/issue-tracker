@@ -16,7 +16,7 @@ export const IssueTable = ({
     const {handleDelete, isDeleting, payload} = useDeleteData(`/projects/${projectId}/issues/`)
     
     useEffect(()=> {
-        payload.length > 0 &&                         
+        payload?.length > 0 &&                         
         setProject(prevProject => (
             {...prevProject,
             issues: payload
@@ -120,13 +120,12 @@ export const IssueTable = ({
         }
     ], [])
 
-    const tableData = useMemo(() => {
-        return issues.length > 0 ? 
+    const tableData = useMemo(() => 
+        issues?.length > 0 ? 
         issues.map(({_id, name, label, status, priority, closingDate}) => ({
-            _id, name, label, status, priority, closingDate, edit: "edit", delete: "x"
+            _id, name, label, status, priority, closingDate
         })) :
         []
-    }
     ,[issues])
 
     return(

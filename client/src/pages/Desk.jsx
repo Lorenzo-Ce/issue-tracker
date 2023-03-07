@@ -1,5 +1,5 @@
 import { Box, Heading, Spacer, Button, useDisclosure } from '@chakra-ui/react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import useDeleteData from '../hooks/useDeleteData'
 import { Error } from '../components/Alerts/Error'
 import ProjectModal from '../components/Modals/ProjectModal'
@@ -11,8 +11,8 @@ export const Desk = () => {
     const { isOpen: isNewProjectOpen, onOpen: onNewProjectOpen, onClose : onNewProjectClose } = useDisclosure()
     const { isOpen: isEditProjectOpen, onOpen: onEditOpen, onClose: onEditProjectClose } = useDisclosure()
     const [projectEdit, setProjectEdit] = useState({name:'', description:'', status:'', members:[], startDate:'', endDate:''})
-    const {handleDelete, isDeleting} = useDeleteData('/projects/')
-    
+    const {handleDelete, remainingData, deleteMessage, isDeleting} = useDeleteData('/projects/')
+
     const handleOpenModal = (id, projectsList) => {
         const foundProject = projectsList.find(project => project._id === id)
         if(foundProject){         
@@ -20,6 +20,16 @@ export const Desk = () => {
             setProjectEdit({id, name, description, status, members, startDate, endDate})
         }
     }
+
+    useEffect(() => {
+        if(deleteMessage !== ''){
+            if(deleteMessage === 'Data deleted'){
+                setProjects(remainingData)
+            } else {
+                setApiError(deleteMessage)
+            }
+        }
+    }, [isDeleting])
 
     return(
         <>

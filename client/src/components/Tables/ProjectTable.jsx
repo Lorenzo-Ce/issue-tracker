@@ -5,7 +5,7 @@ import {Label} from '../Alerts/Label'
 import { BasicTable } from "./BasicTable"
 
 export const ProjectTable = (
-    {   projects, 
+    {   projects,
         handleOpenModal, 
         onEditOpen, 
         handleDelete,
