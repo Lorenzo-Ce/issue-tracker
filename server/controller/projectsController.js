@@ -75,7 +75,7 @@ const getProject = async (req, res, next) => {
     try{
         const foundProject = await Project.findById({_id}).exec()
         if(!foundProject) return res.sendStatus(404)
-        return res.status(200).send(foundProject)
+        return res.status(200).send(foundProject.toObject({getters: true}))
     }catch(error){
         logErrorConsole(error.name, error.message)
         next(error)
@@ -125,19 +125,35 @@ const updateProject = async (req, res, next) => {
 const deleteProject = async (req, res, next) => {
     const _id = req.params?.id
     const username = req.username
-    if(!_id) return res.status(400).send({'error': 'missing id'})
+    if(!_id || !username) return res.status(400).send({'error': 'missing id or username'})
     try{
         const foundProject = await Project.findById({_id}).exec()
         if(!foundProject) return res.sendStatus(204)
-        await User.find()
+        const result = await Project.findByIdAndDelete( { _id },{ rawResult: true } ).exec()
+        if(!result.ok) return res.sendStatus(500) // Internal Server Issue 
         const projectIdField = `projects.${_id}`
-        const response = await User.updateMany({username: {$in: foundProject.members}}, {$unset: {[projectIdField]: ""}}).exec()
-        const result = await Project.deleteOne({_id}).exec()
-        if(!result.acknowledged) return res.sendStatus(500) // Internal Server Issue 
-        //TODO: Return updated remaining Projects
-        const remainingProjects = await Project.find({ members: {$elemMatch : {username}}})
-        console.log(remainingProjects)
-        return res.status(200).send({remainingProjects})
+        await User.updateMany(
+            {
+                username: {
+                    $in: foundProject.members
+                }
+            }, 
+            {
+                $unset: { 
+                    [projectIdField]: "" 
+                }
+            }
+        ).exec()
+        const remainingProjects = await Project.find({
+            _id : {
+                $ne: mongoose.Types.ObjectId(_id)
+            },
+            members: {
+                $elemMatch: {$eq: username}
+            }
+        }).exec()
+
+        return res.status(200).send(remainingProjects)
     }catch(error){
         logErrorConsole(error.name, error.message)
         next(error)

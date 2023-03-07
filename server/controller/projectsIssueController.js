@@ -44,9 +44,9 @@ const getUserIssues = async (req, res, next) => {
                             cond: { $eq: ["$$issue.author",username]}} 
                 }}
             }
-        ]).exec()
+        ]).lean().exec()
         if(issuesList.length === 0) return res.sendStatus(204)
-        res.status(200).send(issuesList[0])
+        res.status(200).send(issuesList[0].issues)
     }catch(error){
         logErrorConsole(error.name, error.message)
         next(error)
@@ -57,10 +57,9 @@ const getIssues = async (req, res, next) => {
     const _id = req.params?.id
     if(!_id) return res.sendStatus(400)
     try{
-        const foundProject = await Project.findById({_id}).exec()
-        if(!foundProject) return res.status(400).send({'error': 'project not found'})
-        const issues = foundProject.issues
-        res.status(200).send(issues)
+        const foundIssues = await Project.find({_id}, 'issues').exec()
+        if(!foundIssues) return res.status(400).send({'error': 'issues not found'})
+        res.status(200).send(foundIssues)
     }catch(error){
         logErrorConsole(error.name, error.message)
         next(error)
@@ -94,8 +93,9 @@ const addIssue = async (req, res, next) => {
             }
         ).exec()
         if(!updatedProject.ok) return res.sendStatus(500)
-        return res.sendStatus(201)
+        return res.status(201).send(updatedProject?.value?.issues)
     } catch(error){
+        console.log(error)
         logErrorConsole(error.name, error.message)
         next(error)
     }
@@ -120,9 +120,9 @@ const updateIssue = async (req, res, next) => {
             rawResult: true,
         }
         ).exec()
-        if(!updatedProject.ok) return res.status(400).send({'error': 'project not found'})
-        const updatedIssues = updatedProject.value?.issues
-        return res.status(200).send({issues: updatedIssues})
+        if(!updatedProject?.ok) return res.status(400).send({'error': 'project not found'})
+        const updatedIssues = updatedProject?.value?.issues
+        return res.status(200).send(updatedIssues)
     }catch(error){
         logErrorConsole(error.name, error.message)
         next(error)

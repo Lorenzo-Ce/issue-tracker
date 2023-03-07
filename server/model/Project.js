@@ -82,9 +82,11 @@ const ProjectSchema = new Schema({
             type: String
         }
     }]
-  }, {toObject: { getters: true, setters: true },
-  toJSON: { getters: true, setters: true },
-  runSettersOnQuery: true,});
+  }, {
+        toObject: { getters: true, setters: true },
+        toJSON: { getters: true, setters: true },
+        runSettersOnQuery: true
+    });
 
   const Project = mongoose.model('Project', ProjectSchema)
 
