@@ -75,7 +75,7 @@ const getProject = async (req, res, next) => {
     try{
         const foundProject = await Project.findById({_id}).exec()
         if(!foundProject) return res.sendStatus(404)
-        return res.status(200).send(foundProject.toObject({getters: true}))
+        return res.status(200).send(foundProject.toObject({getters: true, flattenMaps: true }))
     }catch(error){
         logErrorConsole(error.name, error.message)
         next(error)

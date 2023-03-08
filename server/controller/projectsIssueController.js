@@ -44,7 +44,7 @@ const getUserIssues = async (req, res, next) => {
                             cond: { $eq: ["$$issue.author",username]}} 
                 }}
             }
-        ]).lean().exec()
+        ]).exec()
         if(issuesList.length === 0) return res.sendStatus(204)
         res.status(200).send(issuesList[0].issues)
     }catch(error){
@@ -95,7 +95,6 @@ const addIssue = async (req, res, next) => {
         if(!updatedProject.ok) return res.sendStatus(500)
         return res.status(201).send(updatedProject?.value?.issues)
     } catch(error){
-        console.log(error)
         logErrorConsole(error.name, error.message)
         next(error)
     }
