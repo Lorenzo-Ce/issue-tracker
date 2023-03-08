@@ -1,12 +1,10 @@
-import { Box, Text, Image, Button, Spacer, Flex,
-        Accordion, AccordionItem, AccordionButton, AccordionPanel, AccordionIcon} from '@chakra-ui/react'
+import { Box, Text, Image, Button, Spacer, Flex } from '@chakra-ui/react'
 import { CloseIcon } from '@chakra-ui/icons'
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import axios from '../utils/axios'
 import { useAuthorization } from '../hooks/useAuthorization'
 import userIcon from '/userIcon.svg'
-import teamIcon from '/teamIcon.svg'
 import issueIcon from '/issueIcon.svg'
 import projectIcon from '/projectIcon.svg'
 
@@ -42,7 +40,7 @@ export const Sidebar = ({handleSidebar}) => {
         }
     }
     return(
-    <Flex flexDirection='column' as='aside' textAlign='left' padding='0.8em 0.4em' w="220px" h='100vh' bg='white' color='blue.800' boxShadow='rgba(0, 0, 0, 0.1) 0px 4px 12px'
+    <Flex flexDirection='column' as='aside' textAlign='left' padding='0.8em 0.4em' width='200px' h='100vh' bg='white' color='blue.800' boxShadow='rgba(0, 0, 0, 0.1) 0px 4px 12px'
         position={isIconVisible ? 'sticky' : 'fixed'} top='0' zIndex='10'
     >    
         {!isIconVisible && 
@@ -94,7 +92,7 @@ export const Sidebar = ({handleSidebar}) => {
             p='0.5em 0.7em'
         >
             <Link to='/issues'>
-                Issues
+                My Issues
             </Link>
             <Image src={issueIcon} boxSize='20px' alt='teamIcon' mr='0.4em'/>
         </Flex>

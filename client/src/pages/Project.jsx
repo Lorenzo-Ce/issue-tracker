@@ -8,7 +8,6 @@ import { IssueTypeChart } from '../components/Charts/IssueTypeChart'
 import IssueModal from '../components/Modals/IssueModal'
 import useGetData from '../hooks/useGetData'
 import { IssueInfo } from '../components/Infos/IssueInfo'
-import useDeleteData from '../hooks/useDeleteData'
 
 export const Project = () => {
     const {projectId} = useParams()
@@ -20,14 +19,10 @@ export const Project = () => {
     //Find and format issue information based on id for preview and edit
     const handleIssueInformation = (issueId, issueList) => {
         const issueInfo = issueList?.find(issue => issue._id === issueId)
-        console.log(issueList)
         if(issueInfo){
             setIssueInfo(issueInfo)
         }
     }
-    useEffect(() => {
-
-    }, [])
    
     return( 
         isLoading ?
@@ -65,7 +60,7 @@ export const Project = () => {
             </GridItem>
 
             {
-                issueInfo.name !== '' &&
+                issueInfo?.name !== '' &&
                 <GridItem gridColumn='1/-1' as='section' bg='#FFF' borderRadius='10px' p='1em' boxShadow='rgba(0, 0, 0, 0.1) 0px 4px 12px'>
                     <IssueInfo 
                         projectId={project?._id}

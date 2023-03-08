@@ -1,4 +1,4 @@
-import { Box, Heading, Spacer, Button, useDisclosure } from '@chakra-ui/react'
+import { Box, Flex, Grid, GridItem, useDisclosure } from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
 import useDeleteData from '../hooks/useDeleteData'
 import { Error } from '../components/Alerts/Error'
@@ -35,31 +35,29 @@ export const Desk = () => {
         <>
         { isLoading ? 
         <Box h='80%'>Loading</Box> : 
-        <Box as='section' maxWidth='900px' m='0 1em' bg='#FFF' borderRadius='10px' p='1em' boxShadow='rgba(0, 0, 0, 0.1) 0px 4px 12px'>
-            <Box mb='0.5em' display='flex' flexDirection='row' alignItems='center'>
-                <Heading as='h3' color='blue.800' fontSize='1rem' textTransform='uppercase'>
-                    Projects
-                </Heading>
-                <Spacer/>
-                <Button size='sm'
-                    colorScheme='blue'
-                    onClick={onNewProjectOpen}
-                >
-                    Add Project
-                </Button>
-            </Box>
-            {
-                apiError !== '' ? 
-                <Error message={apiError} /> :
-                <ProjectTable 
-                    projects={projects} 
-                    handleOpenModal={handleOpenModal} 
-                    onEditOpen={onEditOpen}
-                    handleDelete={handleDelete}
-                    isDeleting={isDeleting}
-            />
+        <Grid gap='1em' >
+           <GridItem
+                overflowX='auto' 
+                gridColumn='1/-1'
+                as='section' bg='#FFF' 
+                borderRadius='10px' p='1em' 
+                boxShadow='rgba(0, 0, 0, 0.1) 0px 4px 12px' 
+            >
+                {
+                    apiError !== '' ? 
+                    <Error message={apiError} /> :
+                    <ProjectTable 
+                        projects={projects} 
+                        onNewProjectOpen={onNewProjectOpen}
+                        handleOpenModal={handleOpenModal} 
+                        onEditOpen={onEditOpen}
+                        handleDelete={handleDelete}
+                        isDeleting={isDeleting}
+                    />
+                   
             }
-        </Box> 
+             </GridItem>
+        </Grid>
         }
             <ProjectModal 
                 setProjects ={setProjects}
@@ -76,6 +74,6 @@ export const Desk = () => {
                 route={`projects/${projectEdit.id}`}
                 isEdit
             />
-        </>
+    </>    
     )
 }

@@ -19,10 +19,8 @@ export const IssueUserTable = ({issues}) => {
                             cursor='pointer'
                             fontSize='14px'
                             fontWeight='700'
-                            color=''
                             _hover={{color:'blue.200'}}
                             transition='color 0.2s' 
-                            onClick={() => console.log(props)}
                         >
                             <Link to={`/dashboard/${props.data[props.row.id].projectId}`}>{props.value}</Link> 
                         </Box>
@@ -53,7 +51,8 @@ export const IssueUserTable = ({issues}) => {
                         const isNotClosed = props.row.values.status !== 'Closed'
                         const isPastDeadline = closingDate <= currentDate && isNotClosed
                         return (
-                            <Box fontSize='12px'
+                            <Box 
+                                fontSize='sm'
                                 color={isPastDeadline && 'red.400'}
                                 fontWeight={isPastDeadline && 'bold'}
                             >
@@ -66,14 +65,18 @@ export const IssueUserTable = ({issues}) => {
     ], [])
     
     const tableData = useMemo(() => 
-        issues && issues?.length > 0 ?
+        issues?.length > 0 ?
         issues :
         []
     ,[issues])
-    console.log(tableData)
+
     return(
-    <>
-        <BasicTable columns={columns} tableData={tableData} tablePageSize={5}/>
-    </>
+        <>
+            <BasicTable 
+                columns={columns} 
+                tableData={tableData} 
+                tablePageSize={5}
+            />
+        </>
     )
 }

@@ -9,20 +9,19 @@ import { IssueStatusChart } from '../components/Charts/IssueStatusChart'
 import { IssuePriorityChart } from '../components/Charts/IssuePriorityChart'
 
 export function Issues() {
-    const {responseData: issueList, apiError, isLoading} = useGetData('/projects/issues')
+    const {responseData: issueList, isLoading} = useGetData('/projects/issues')
     const {isSidebarVisible, handleSidebar} = useSidebar()
-    console.log(issueList)
+
     const issuesFormat = useMemo(() =>
         issueList ? 
         issueList :
         []
         , [isLoading]
     )
-    console.log(issuesFormat)
+
     return(
         <Box 
-            display={'flex'} 
-            min-width={'100%'} 
+            display='flex'
             color='blue.700'
         >
             {
@@ -35,7 +34,7 @@ export function Issues() {
                     alt='burger menu' position='sticky' top='1em' onClick={handleSidebar} 
                 />
             }
-            <Box width={['100%']} p='1em 1em'>
+            <Box width='100%' p='1em 1em'>
                 <Heading fontSize='2xl' color='blue.800' mb='1em'>
                     MY ISSUES 
                 </Heading>
@@ -43,8 +42,8 @@ export function Issues() {
                     isLoading ?
                     <Box>Loading</Box> :
                     (   
-                        <>
-                            <Grid templateColumns={['repeat(auto-fit, minmax(200px, 1fr))']} gap='0.5em' mb='1em'>
+                        <Box>
+                            <Grid templateColumns={['repeat(auto-fill, minmax(200px, 1fr))']} gap='0.5em' mb='1em'>
                             <GridItem as='section' bg='#FFF' borderRadius='10px' p='1em' boxShadow='rgba(0, 0, 0, 0.1) 0px 4px 12px'>
                                 <IssueTypeChart issues={issuesFormat}/>
                             </GridItem>                            
@@ -54,11 +53,12 @@ export function Issues() {
                             <GridItem as='section' bg='#FFF' borderRadius='10px' p='1em' boxShadow='rgba(0, 0, 0, 0.1) 0px 4px 12px'>
                                 <IssuePriorityChart issues={issuesFormat}/>
                             </GridItem>                            
-                            </Grid>
-                            <Box bgColor='white' borderRadius='10px' p='1em' boxShadow='rgba(0, 0, 0, 0.1) 0px 4px 12px'>            
+                            <GridItem as='section' gridColumn='-1/1' bg='#FFF' borderRadius='10px' p='1em' boxShadow='rgba(0, 0, 0, 0.1) 0px 4px 12px'>
                                 <IssueUserTable issues={issuesFormat} />
-                            </Box>
-                        </>
+                            </GridItem>                            
+
+                            </Grid>
+                        </Box>
                     )
                 }
                </Box>

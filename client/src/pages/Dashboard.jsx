@@ -8,8 +8,7 @@ export function Dashboard() {
 
     return(
         <Box 
-            display='flex' 
-            min-width='100%' 
+            display='flex'
             color='blue.700'
         >
             {
@@ -22,7 +21,7 @@ export function Dashboard() {
                     alt='burger menu' position='sticky' top='1em' onClick={handleSidebar} 
                 /> 
             }
-            <Box width={['100%']} p='1em 1em'>
+            <Box p='1em 1em' width='100%'>
                 <Heading fontSize='2xl' color='blue.800' mb='1em'>
                     DESK COMPONENT
                 </Heading>

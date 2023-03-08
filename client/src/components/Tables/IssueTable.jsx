@@ -37,12 +37,10 @@ export const IssueTable = ({
                             cursor='pointer'
                             fontSize='14px'
                             fontWeight='700'
-                            color=''
                             _hover={{color:'blue.200'}}
                             transition='color 0.2s' 
                             onClick={() => { 
                                 const tableRowId = props.row.id 
-                                console.log(props.data)
                                 return handleIssueInfo(props.data[tableRowId]._id, props.data)
                             }}
                         >
@@ -141,7 +139,10 @@ export const IssueTable = ({
                 Add Issue
             </Button>
         </Flex>
-        <BasicTable columns={columns} tableData={tableData}/>
+        <BasicTable 
+            columns={columns} 
+            tableData={tableData}
+        />
     </>
     )
 }

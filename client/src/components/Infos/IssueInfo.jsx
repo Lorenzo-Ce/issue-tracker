@@ -15,8 +15,8 @@ import imagePlaceholder from "../../assets/imagePlaceholder.png"
 export const IssueInfo = ({projectId, setProject, issueInfo, setIssueInfo}) => {
     const {authorization} = useAuthorization()
     const {isOpen: isOpenImg, onClose: onCloseImg, onOpen: OnOpenImg} = useDisclosure()
-    const {handleSubmit: submitComment, resetMessage, successMessage, submitError, isLoadingSubmit: isLoadingComment} = useSubmitData(`/projects/${projectId}/issues`, 'put' )
-    const {handleDelete: deleteComment, deleteMessage: successDeleteMessage, isDeleting: isDeletingComment, remainingData: updatedIssue} = useDeleteData(`/projects/${projectId}/issues/${issueInfo._id}/`)
+    const {handleSubmit: submitComment, isLoadingSubmit: isLoadingComment} = useSubmitData(`/projects/${projectId}/issues`, 'put' )
+    const {handleDelete: deleteComment, deleteMessage: successDeleteMessage, isDeleting: isDeletingComment, remainingData: updatedIssue} = useDeleteData(`/projects/${projectId}/issues/${issueInfo?._id}/`)
     const [isPosting, setIsPosting] = useState(false)
     const [comment, setComment] = useState({
         _id: '',
@@ -28,9 +28,13 @@ export const IssueInfo = ({projectId, setProject, issueInfo, setIssueInfo}) => {
     useEffect(() => {
         const subcomment = async (e, issueToUpdate) => {
             const response = await submitComment(e, issueToUpdate)
-            const updatedIssue = response?.issues.find(issue => issue._id === issueInfo._id)
-            setIssueInfo(updatedIssue)
-            setIsPosting(false)
+            if(response && response.length > 0){
+                const updatedIssue = response?.find(issue => issue._id === issueInfo._id)
+                setIssueInfo(updatedIssue)
+                setIsPosting(false)
+            } else {
+                setIsPosting(false)
+            }
         }
         setComment(prevComment => ({...prevComment, _id: nanoid(), date: new Date().toISOString()}))
         if(isPosting){
@@ -193,7 +197,7 @@ export const IssueInfo = ({projectId, setProject, issueInfo, setIssueInfo}) => {
     <Image 
         src={`http://127.0.0.1:3500/images/${issueInfo.image}`} 
         alt={issueInfo.name}
-        overflow='scroll'
+        overflow='auto'
         width='100%'
         margin='0 auto'
         transition='trasform 0.25s'

@@ -6,18 +6,13 @@ function useRefreshToken() {
     const refreshAccessToken = async () => { 
 
       try{
-        const response = await axios.get('refresh', 
-          { 
-            headers: {'Content-Type': 'application/json', 'Accept': 'application/json' },
-            withCredentials: true
-          }
-        )
+        const response = await axios.get('refresh')
         const accessToken = response?.data?.accessToken
         const username = response?.data?.username
         setAuthorization(prevAuth => ({...prevAuth, accessToken, username}))
         return accessToken
       }catch(err){
-        console.error(err)
+        console.log(err)
       }
     }
   

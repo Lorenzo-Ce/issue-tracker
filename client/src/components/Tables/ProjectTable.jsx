@@ -1,11 +1,12 @@
 import { useMemo } from "react"
-import { Box, Button } from "@chakra-ui/react"
+import { Box, Flex, Spacer, Heading, Button } from "@chakra-ui/react"
 import { Link } from 'react-router-dom'
 import {Label} from '../Alerts/Label'
 import { BasicTable } from "./BasicTable"
 
 export const ProjectTable = (
     {   projects,
+        onNewProjectOpen,
         handleOpenModal, 
         onEditOpen, 
         handleDelete,
@@ -25,9 +26,8 @@ export const ProjectTable = (
                         return(
                             <Box
                                 cursor='pointer'
-                                fontSize='14px'
+                                fontSize='sm'
                                 fontWeight='700'
-                                color=''
                                 _hover={{color:'blue.200'}}
                                 transition='color 0.2s' 
                             >
@@ -39,6 +39,10 @@ export const ProjectTable = (
                 {
                     Header: "Team Members",
                     accessor: "members",
+                },
+                {
+                    Header: "DeadLine",
+                    accessor: "endDate",
                 },
                 {
                     Header: "Status",
@@ -55,7 +59,6 @@ export const ProjectTable = (
                         cursor 
                         colorScheme='blue'
                         onClick={() => {
-                            console.log(props)
                             const tableRowId = props.row.id 
                             const projectId = props.data[tableRowId]._id
                             handleOpenModal(projectId, props.data), onEditOpen()
@@ -91,9 +94,25 @@ const tableData = useMemo(() =>
         projects :
         [], [projects])
 
-    return(
-        <>
-            <BasicTable columns={columns} tableData={tableData}/>            
-        </>
+    return(     
+    <>
+        <Flex mb='0.5em'>
+            <Heading as='h3' color='blue.800' fontSize='1rem' textTransform='uppercase'>
+                    Projects
+            </Heading>
+            <Spacer />
+            <Button     
+                size='sm' 
+                colorScheme='blue'
+                onClick={onNewProjectOpen}
+            >
+                Add Issue
+            </Button>
+        </Flex> 
+        <BasicTable 
+            columns={columns} 
+            tableData={tableData}
+        />    
+    </>
     )
 }

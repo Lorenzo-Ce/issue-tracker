@@ -1,5 +1,4 @@
-import { Heading, Table, Thead, Tbody, Tr, Th, Td, TableContainer, Button, Flex, Spacer, propNames } from "@chakra-ui/react"
-import { useEffect } from "react"
+import { Heading, Table, Thead, Tbody, Tr, Th, Td, TableContainer, Flex } from "@chakra-ui/react"
 
 export const TeamTable = ({roles}) => {
     

@@ -1,4 +1,4 @@
-import { Box, Table, Thead, Tbody, Tr, Th, Td, Flex, Tooltip, Select, NumberInput, NumberInputField, NumberInputStepper, NumberIncrementStepper, NumberDecrementStepper, IconButton, Text } from "@chakra-ui/react";
+import { Box, TableContainer, Table, Thead, Tbody, Tr, Th, Td, Flex, Tooltip, Select, NumberInput, NumberInputField, NumberInputStepper, NumberIncrementStepper, NumberDecrementStepper, IconButton, Text } from "@chakra-ui/react";
 import { ChevronUpIcon, ChevronDownIcon, ArrowRightIcon, ArrowLeftIcon, ChevronRightIcon, ChevronLeftIcon } from "@chakra-ui/icons";
 import { useTable, useSortBy, usePagination } from "react-table";
 
@@ -30,9 +30,9 @@ export const BasicTable = ({columns, tableData, tablePageSize=5}) => {
         )
 
     return(
-    <Box overflowX='scroll'>
-        <Table size='sm' {...getTableProps()}>
-            <Thead>
+    <TableContainer overflowX='scroll'>
+        <Table size='sm' {...getTableProps()} overflowX='scroll'>
+            <Thead overflowX='scroll'>
             {headerGroups.map((headerGroup) => (
                 <Tr {...headerGroup.getHeaderGroupProps()}>
                 {headerGroup.headers.map((column) => (
@@ -154,7 +154,7 @@ export const BasicTable = ({columns, tableData, tablePageSize=5}) => {
           </Tooltip>
         </Flex>
       </Flex>
-    </Box>
+    </TableContainer>
     )
     
 }
