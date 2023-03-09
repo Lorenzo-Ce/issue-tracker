@@ -1,4 +1,4 @@
-import { Box, Flex, Grid, GridItem, useDisclosure } from '@chakra-ui/react'
+import { Spinner, Grid, GridItem, useDisclosure } from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
 import useDeleteData from '../hooks/useDeleteData'
 import { Error } from '../components/Alerts/Error'
@@ -34,30 +34,40 @@ export const Desk = () => {
     return(
         <>
         { isLoading ? 
-        <Box h='80%'>Loading</Box> : 
-        <Grid gap='1em' >
-           <GridItem
-                overflowX='auto' 
-                gridColumn='1/-1'
-                as='section' bg='#FFF' 
-                borderRadius='10px' p='1em' 
-                boxShadow='rgba(0, 0, 0, 0.1) 0px 4px 12px' 
+            <Grid 
+                placeContent='center'
+                height='80vh'
             >
-                {
-                    apiError !== '' ? 
-                    <Error message={apiError} /> :
-                    <ProjectTable 
-                        projects={projects} 
-                        onNewProjectOpen={onNewProjectOpen}
-                        handleOpenModal={handleOpenModal} 
-                        onEditOpen={onEditOpen}
-                        handleDelete={handleDelete}
-                        isDeleting={isDeleting}
-                    />
-                   
-            }
-             </GridItem>
-        </Grid>
+                <Spinner
+                    thickness='7px'
+                    speed='0.7s'
+                    emptyColor='gray.200'
+                    color='blue.500'
+                    size='xl'
+                />
+            </Grid>  : 
+            <Grid gap='1em' >
+                <GridItem
+                    overflowX='auto' 
+                    gridColumn='1/-1'
+                    as='section' bg='#FFF' 
+                    borderRadius='10px' p='1em' 
+                    boxShadow='rgba(0, 0, 0, 0.1) 0px 4px 12px' 
+                >
+                    {
+                        apiError !== '' ? 
+                        <Error message={apiError} /> :
+                        <ProjectTable 
+                            projects={projects} 
+                            onNewProjectOpen={onNewProjectOpen}
+                            handleOpenModal={handleOpenModal} 
+                            onEditOpen={onEditOpen}
+                            handleDelete={handleDelete}
+                            isDeleting={isDeleting}
+                        />           
+                    }
+                </GridItem>
+            </Grid>
         }
             <ProjectModal 
                 setProjects ={setProjects}

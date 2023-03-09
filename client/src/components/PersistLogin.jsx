@@ -1,8 +1,8 @@
 import { Outlet } from "react-router-dom"
 import { useState, useEffect } from "react"
+import {Grid, Spinner} from "@chakra-ui/react"
 import { useAuthorization } from "../hooks/useAuthorization"
 import useRefreshToken from "../hooks/useRefreshToken"
-
 
 export const PersistLogin = () => {
     const [ isLoading, setIsLoading ] = useState(true)
@@ -26,7 +26,20 @@ export const PersistLogin = () => {
     },[])
     return(
         <>
-            {isLoading ? <div>Loading ...</div> : <Outlet/>}
+            {isLoading ?             
+                <Grid 
+                    placeContent='center'
+                    height='80vh'
+                >
+                <Spinner
+                    thickness='7px'
+                    speed='0.7s'
+                    emptyColor='gray.200'
+                    color='blue.500'
+                    size='xl'
+                />
+                </Grid>  : 
+                <Outlet/>}
         </>
     )
 }

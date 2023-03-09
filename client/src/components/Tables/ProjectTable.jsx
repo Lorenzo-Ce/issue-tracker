@@ -106,7 +106,7 @@ const tableData = useMemo(() =>
                 colorScheme='blue'
                 onClick={onNewProjectOpen}
             >
-                Add Issue
+                Add Project
             </Button>
         </Flex> 
         <BasicTable 

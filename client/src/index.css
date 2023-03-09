@@ -28,8 +28,9 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh !important;
-  background-image: url( '/background.jpg') !important;
-  background-repeat: no-repeat !important;
+  background-image: url('') !important;
+  background-color: rgba(203, 238, 249, 0.682);
+  background-repeat: repeat !important;
   background-position: top left !important;
-  background-size: cover !important;
+  background-size: auto !important;
 }

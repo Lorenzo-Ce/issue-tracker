@@ -1,5 +1,5 @@
 import {Heading, Box, FormControl, FormLabel, FormErrorMessage, Input, Button, VStack, Text } from '@chakra-ui/react'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useForm } from '../hooks/useForm'
 import { useAuthorization } from '../hooks/useAuthorization'
@@ -9,18 +9,18 @@ import axios from '../utils/axios'
 export default function Login (){
     
     const {formValidation,isFormValid, handleValidation, 
-        handleFormChange, Form, errorMessage, setErrorMessage} = useForm({email:'', password:''})
+        handleFormChange, Form, setForm, errorMessage, setErrorMessage} = useForm({email:'', password:''})
     const [isLoading, setIsLoading] = useState(false)
-    const {authorization, setAuthorization} = useAuthorization()
+    const { setAuthorization} = useAuthorization()
     const navigate = useNavigate()
 
-    const handleSubmit = async (event) => {
+    const handleSubmit = async (event, form) => {
         event.preventDefault()
         setErrorMessage('')
         setIsLoading(true)
 
         try{
-            const response = await axios.post('/login', JSON.stringify(Form))   
+            const response = await axios.post('/login', JSON.stringify(form))   
             setAuthorization(prevAuth => (
                 {...prevAuth, 
                     accessToken: response?.data?.accessToken,
@@ -46,12 +46,19 @@ export default function Login (){
 
     return(
         <Box as='form' 
-            onSubmit={handleSubmit} 
-            color={'blue.800'} w={['95%', '400px']} padding={'1em'} borderRadius={'10px'} boxShadow={'rgba(0, 0, 0, 0.1) 0px 4px 12px'}
-            bgColor='#FFF' placeSelf='center'
+            onSubmit={(e) => handleSubmit(e, Form)} 
+            color='blue.800' 
+            w={['90%', '400px']} 
+            bgColor='#FFF'
+            padding='1em' 
+            borderRadius='10px' 
+            boxShadow='rgba(0, 0, 0, 0.1) 0px 4px 12px' 
+            placeSelf='center'
             onChange={(e) => handleValidation(e.target)}
         >
-            <VStack spacing={'10px'}>
+            <VStack 
+                spacing='10px'
+            >
                 <Heading>Login</Heading>
                 {errorMessage !== '' && <Error message={errorMessage} /> }
                 <FormControl isRequired 
@@ -87,9 +94,27 @@ export default function Login (){
                     Login
                 </Button>
         </VStack>
-        <VStack mt='1em' mb='1em'gap='1em' >
+        <VStack p='1em' gap='1em' >
             <Text as='sub'>
-                Login as <Link to='/login'>GUEST ACCOUNT</Link>
+                Login as&nbsp;
+                <Box 
+                    cursor='pointer'
+                    display='inline-block'
+                    fontWeight='bold'
+                    color='blue.700'
+                    _hover={{
+                        color: 'blue.400'
+                    }}
+                    onClick={async (e) => {
+                        const guestCredentials = {
+                            email:'guestaccount@guest.com', 
+                            password:'GuestAccount@01'
+                        }
+                        await handleSubmit(e, guestCredentials)
+                    }}
+                >
+                    GUEST ACCOUNT
+                </Box>
             </Text>
             <Text as='sub'>
                 Need an account? <Link to='/signup'>Register Now</Link>

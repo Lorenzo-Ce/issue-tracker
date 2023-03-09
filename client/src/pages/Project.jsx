@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react'
-import { Grid, GridItem, useDisclosure} from '@chakra-ui/react'
+import { useState } from 'react'
+import { Spinner, Grid, GridItem, useDisclosure} from '@chakra-ui/react'
 import { useParams } from 'react-router-dom'
 import { ProjectInfo } from '../components/Infos/ProjectInfo'
 import { TeamTable } from '../components/Tables/TeamTable'
@@ -26,10 +26,21 @@ export const Project = () => {
    
     return( 
         isLoading ?
-            <div>is Loading</div> : 
+            <Grid 
+                placeContent='center'
+                height='80vh'
+            >
+                <Spinner
+                    thickness='7px'
+                    speed='0.7s'
+                    emptyColor='gray.200'
+                    color='blue.500'
+                    size='xl'
+                />
+            </Grid> : 
             project &&
         <>
-        <Grid templateColumns={['repeat(auto-fit, minmax(300px, 1fr))']} gap='1em'>
+        <Grid templateColumns={['repeat(auto-fit, minmax(200px, 1fr))']} gap='1em'>
             <GridItem as='section' bg='#FFF' borderRadius='10px' p='1em' boxShadow='rgba(0, 0, 0, 0.1) 0px 4px 12px'>     
                 <TeamTable 
                     roles={project?.roles}

@@ -44,7 +44,11 @@ export default function Register (){
     return(
         <Box as='form' 
             onSubmit={handleSubmit} 
-            color={'blue.800'} w={['95%', '400px']} padding='1em' borderRadius='10px' boxShadow={'rgba(0, 0, 0, 0.1) 0px 4px 12px'}
+            color='blue.800' 
+            w={['90%', '400px']} 
+            padding='1em' 
+            borderRadius='10px' 
+            boxShadow='rgba(0, 0, 0, 0.1) 0px 4px 12px'
             bgColor='#FFF' placeSelf='center'
             onChange={(e) => handleValidation(e.target)}
         >
@@ -107,7 +111,7 @@ export default function Register (){
                     Register
                 </Button>
         </VStack>
-        <VStack  mt='1em' mb='1em'gap='1em' >
+        <VStack  p='1em' gap='1em' >
                 <Text as='sub'>
                     Already have an account? <Link to='/login'>Login Now</Link>
                 </Text>

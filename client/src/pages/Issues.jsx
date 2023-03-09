@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { Box, Image, Heading, Grid, GridItem } from '@chakra-ui/react'
+import { Box, Image, Heading, Grid, GridItem, Spinner } from '@chakra-ui/react'
 import useGetData from '../hooks/useGetData'
 import useSidebar from '../hooks/useSidebar'
 import { Sidebar } from '../components/Sidebar'
@@ -40,7 +40,18 @@ export function Issues() {
                 </Heading>
                 {   
                     isLoading ?
-                    <Box>Loading</Box> :
+                    <Grid 
+                        placeContent='center'
+                        height='80vh'
+                    >
+                        <Spinner
+                            thickness='7px'
+                            speed='0.7s'
+                            emptyColor='gray.200'
+                            color='blue.500'
+                            size='xl'
+                        />
+                    </Grid>  :
                     (   
                         <Box>
                             <Grid templateColumns={['repeat(auto-fill, minmax(200px, 1fr))']} gap='0.5em' mb='1em'>
@@ -56,7 +67,6 @@ export function Issues() {
                             <GridItem as='section' gridColumn='-1/1' bg='#FFF' borderRadius='10px' p='1em' boxShadow='rgba(0, 0, 0, 0.1) 0px 4px 12px'>
                                 <IssueUserTable issues={issuesFormat} />
                             </GridItem>                            
-
                             </Grid>
                         </Box>
                     )
