@@ -32,6 +32,7 @@ export const useForm = (formFields) => {
          case 'password': isInvalid = !REGX_PSW.test(value); break;
          case 'confirmPassword': isInvalid = value !== Form.password; break;
          case 'endDate': isInvalid = value < Form.startDate; break;
+         case 'closingDate': isInvalid = value < Form.openingDate; break;
          case 'image' : isInvalid = file.type !=='image/jpeg' || file.size >= FILE_SIZE_LIMIT; break;
          default: isInvalid = false;
         }
