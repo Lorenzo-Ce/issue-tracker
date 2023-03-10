@@ -1,7 +1,7 @@
 const User = require('../model/User')
 const bcrypt = require('bcrypt')
 
-const registerNewUser = async (req, res, err) => {
+const registerNewUser = async (req, res) => {
     const {email, username, password} = req.body
     if(!email || !username || !password){
         return res.status(400).send({"error" : `Missing one or more of the required field: Email, password, username`})

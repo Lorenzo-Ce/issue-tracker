@@ -3,6 +3,8 @@ const Project = require('../model/Project')
 const User = require('../model/User')
 const uniqid = require('uniqid');
 const logErrorConsole = require('./utils/logErrorConsole');
+const fs = require('fs');
+const path = require('path');
 
 const getUserIssues = async (req, res, next) => {
     const username = req?.username
@@ -57,7 +59,7 @@ const getIssues = async (req, res, next) => {
     const _id = req.params?.id
     if(!_id) return res.sendStatus(400)
     try{
-        const foundIssues = await Project.find({_id}, 'issues').exec()
+        const foundIssues = await Project.find({_id}, 'issues').lean().exec()
         if(!foundIssues) return res.status(400).send({'error': 'issues not found'})
         res.status(200).send(foundIssues)
     }catch(error){
@@ -93,7 +95,9 @@ const addIssue = async (req, res, next) => {
             }
         ).exec()
         if(!updatedProject.ok) return res.sendStatus(500)
-        return res.status(201).send(updatedProject?.value?.issues)
+        const projectToSend = updatedProject.value.toObject({getters: true, flattenMaps: true })
+        const newIssues = projectToSend?.issues
+        return res.status(201).send(newIssues)
     } catch(error){
         logErrorConsole(error.name, error.message)
         next(error)
@@ -106,8 +110,18 @@ const updateIssue = async (req, res, next) => {
     req.body.comments = typeof(req.body.comments) === 'string' ? JSON.parse(req.body?.comments) : req.body.comments
     if(req.file?.filename){
         req.body.image = req.file?.filename
+        const foundProject = await Project.findOne(
+            {
+            _id,
+            'issues': {$elemMatch:  {_id: updateIssueId}}
+            }, 'issues.$'
+        ).lean().exec()
+        const storedImagePath = foundProject?.issues[0]?.image
+        if(storedImagePath && storedImagePath !== '' ){
+            fs.rmSync(path.join(__dirname, '..', 'uploads', storedImagePath), {force: true})
+        }
     }
-    if(!_id || !updateIssueId || updateIssueId === '') return res.status(400).send({'error' : 'one or more required fields are missing'})
+    if(!_id || !updateIssueId) return res.status(400).send({'error' : 'one or more required fields are missing'})
     try{
         const updatedProject = await Project.findOneAndUpdate({
             _id,
@@ -120,7 +134,8 @@ const updateIssue = async (req, res, next) => {
         }
         ).exec()
         if(!updatedProject?.ok) return res.status(400).send({'error': 'project not found'})
-        const updatedIssues = updatedProject?.value?.issues
+        const projectToSend = updatedProject.value.toObject({getters: true, flattenMaps: true })
+        const updatedIssues = projectToSend?.issues
         return res.status(200).send(updatedIssues)
     }catch(error){
         logErrorConsole(error.name, error.message)
@@ -132,13 +147,21 @@ const removeIssue = async (req, res, next) => {
     const deleteIssueId = req.params?.issueId
     if(!_id || !deleteIssueId) return res.status(400).send({'error': 'missing id'})
     try{
+        let imageToRemove = ''
         const foundProject = await Project.findById({_id}).exec()
         if(!foundProject) return res.status(400).send({'error': 'project not found'})
         const issues = foundProject.issues
-        foundProject.issues = issues.filter(issue => issue._id != deleteIssueId)
+        foundProject.issues = issues.filter(issue =>{ 
+            if(issue._id === deleteIssueId && issue.image){
+                imageToRemove = issue.image        
+            } 
+            return issue._id !== deleteIssueId
+        })
         foundProject.issueIncrement = foundProject.issueIncrement - 1
         await foundProject.save()
-        return res.status(200).send(foundProject.issues)
+        imageToRemove !== '' && fs.rmSync(path.join(__dirname, '..', 'uploads', imageToRemove), {force: true})
+        const projectToSend = foundProject.toObject({getters: true, flattenMaps: true })
+        return res.status(200).send(projectToSend.issues)
     }catch(error){
         logErrorConsole(error.name, error.message)
         next(error)
@@ -156,7 +179,7 @@ const removeComment = async (req, res, next) => {
         if(!foundIssue) return res.status(400).send({'error': 'issue not found'}) 
         foundIssue.comments = foundIssue.comments.filter(comment => comment._id != deleteCommentId)
         await foundProject.save()
-        return res.status(200).send(foundIssue)
+        return res.status(200).send(foundIssue.toObject({getters: true, flattenMaps: true }))
     }catch(error){
         logErrorConsole(error.name, error.message)
         next(error)
