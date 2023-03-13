@@ -1,5 +1,5 @@
 import axios from '../utils/axios'
-import { useAuthorization } from './useAuthorization'
+import useAuthorization from './useAuthorization'
 
 function useRefreshToken() {
     const { authorization, setAuthorization } = useAuthorization()

@@ -6,18 +6,18 @@ import ProjectModal from '../components/Modals/ProjectModal'
 import { ProjectTable } from '../components/Tables/ProjectTable'
 import useGetData from '../hooks/useGetData'
 
-export const Desk = () => {
+const Desk = () => {
     const {responseData: projects, setResponseData: setProjects, apiError, setApiError, isLoading} = useGetData('/projects')
     const { isOpen: isNewProjectOpen, onOpen: onNewProjectOpen, onClose : onNewProjectClose } = useDisclosure()
     const { isOpen: isEditProjectOpen, onOpen: onEditOpen, onClose: onEditProjectClose } = useDisclosure()
-    const [projectEdit, setProjectEdit] = useState({name:'', description:'', status:'', members:[], startDate:'', endDate:''})
+    const [projectEdit, setProjectEdit] = useState({id:'', name:'', description:'', status:'', members:[], startDate:'', endDate:''})
     const {handleDelete, remainingData, deleteMessage, isDeleting} = useDeleteData('/projects/')
 
-    const handleOpenModal = (id, projectsList) => {
-        const foundProject = projectsList.find(project => project._id === id)
+    const handleOpenModal = (id = '', projectsList = []) => {
+        const foundProject = projectsList && projectsList.find(project => project._id === id)
         if(foundProject){         
-            const {name, description, status, members, startDate, endDate} = foundProject
-            setProjectEdit({id, name, description, status, members, startDate, endDate})
+            const {_id, name, description, status, members, startDate, endDate} = foundProject
+            setProjectEdit({id: _id, name, description, status, members, startDate, endDate})
         }
     }
 
@@ -87,3 +87,5 @@ export const Desk = () => {
     </>    
     )
 }
+
+export default Desk

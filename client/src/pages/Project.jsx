@@ -9,7 +9,7 @@ import IssueModal from '../components/Modals/IssueModal'
 import useGetData from '../hooks/useGetData'
 import { IssueInfo } from '../components/Infos/IssueInfo'
 
-export const Project = () => {
+const Project = () => {
     const {projectId} = useParams()
     const { responseData : project, setResponseData: setProject, apiError, setApiError, isLoading } = useGetData(`/projects/${projectId}`)
     const { isOpen: isNewIssueOpen, onOpen: openNewIssueModal, onClose : closeNewIssueModal } = useDisclosure()
@@ -102,3 +102,5 @@ export const Project = () => {
         </> 
         )
 }
+
+export default Project

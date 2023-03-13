@@ -1,6 +1,6 @@
 import {FormControl, FormErrorMessage, Input, Checkbox, Button, VStack } from '@chakra-ui/react'
 import { useEffect } from 'react'
-import { useAuthorization } from '../../hooks/useAuthorization'
+import useAuthorization from '../../hooks/useAuthorization'
 import useGetData from '../../hooks/useGetData'
 import useSubmitData from '../../hooks/useSubmitData'
 import { useForm } from '../../hooks/useForm'

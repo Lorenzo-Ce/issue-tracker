@@ -87,7 +87,7 @@ export const ProjectTable = (
                 }
             ]
         }
-    ], [])
+    ], [projects])
 
 const tableData = useMemo(() => 
         projects?.length > 0 ? 

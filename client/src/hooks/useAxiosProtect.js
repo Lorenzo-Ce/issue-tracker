@@ -1,7 +1,7 @@
 import { axiosProtect } from "../utils/axios"
 import { useEffect } from "react"
 import useRefreshToken from "./useRefreshToken"
-import { useAuthorization } from "./useAuthorization"
+import useAuthorization from "./useAuthorization"
 
 const useAxiosProtect = () => {
     const {refreshAccessToken} = useRefreshToken()

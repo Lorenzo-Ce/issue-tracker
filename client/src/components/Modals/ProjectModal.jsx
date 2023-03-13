@@ -1,6 +1,6 @@
 import { Checkbox, Button, VStack } from '@chakra-ui/react'
 import { useEffect } from 'react'
-import { useAuthorization } from '../../hooks/useAuthorization'
+import useAuthorization from '../../hooks/useAuthorization'
 import useGetData from '../../hooks/useGetData'
 import useSubmitData from '../../hooks/useSubmitData'
 import { useForm } from '../../hooks/useForm'
@@ -34,7 +34,6 @@ const ProjectModal = ({ setProjects, isOpen, onClose, formValues = initialFormVa
                         payload : 
                         project)
                 
-                        console.log(newProjects)
                         return newProjects
                     })
             }

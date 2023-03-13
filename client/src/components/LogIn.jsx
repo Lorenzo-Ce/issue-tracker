@@ -2,12 +2,11 @@ import {Heading, Box, FormControl, FormLabel, FormErrorMessage, Input, Button, V
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useForm } from '../hooks/useForm'
-import { useAuthorization } from '../hooks/useAuthorization'
+import useAuthorization from '../hooks/useAuthorization'
 import { Error } from './Alerts/Error'
 import axios from '../utils/axios'
 
-export default function Login (){
-    
+const Login = () => {    
     const {formValidation,isFormValid, handleValidation, 
         handleFormChange, Form, setForm, errorMessage, setErrorMessage} = useForm({email:'', password:''})
     const [isLoading, setIsLoading] = useState(false)
@@ -124,3 +123,5 @@ export default function Login (){
         </Box>
     )
 }
+
+export default Login

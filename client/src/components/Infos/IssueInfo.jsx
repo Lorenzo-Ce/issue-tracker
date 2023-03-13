@@ -1,7 +1,7 @@
 import { Heading, Text, Box, Image, Flex, Input, InputGroup, InputRightElement, Button, useDisclosure } from "@chakra-ui/react"
 import { CloseIcon, DeleteIcon, TimeIcon } from '@chakra-ui/icons'
-import { useState,useEffect } from "react"
-import { useAuthorization } from "../../hooks/useAuthorization"
+import { useState,useEffect, lazy } from "react"
+import useAuthorization from "../../hooks/useAuthorization"
 import useSubmitData from "../../hooks/useSubmitData"
 import useDeleteData from "../../hooks/useDeleteData"
 import { Label } from "../Alerts/Label"
@@ -10,7 +10,7 @@ import { initialIssueFormValues } from "../../utils/initializeForm"
 import { REGX_DATETIME } from "../../utils/regex"
 import  {nanoid} from 'nanoid'
 import format from "date-fns/format"
-import imagePlaceholder from "../../assets/imagePlaceholder.png"
+const imagePlaceholder = lazy (() => import("../../assets/imagePlaceholder.png"))
 
 export const IssueInfo = ({projectId, setProject, issueInfo, setIssueInfo}) => {
     const {authorization} = useAuthorization()
@@ -87,6 +87,7 @@ export const IssueInfo = ({projectId, setProject, issueInfo, setIssueInfo}) => {
     >
         <Image 
             src={issueInfo.image !== '' ?`http://127.0.0.1:3500/images/${issueInfo.image}` : '' } 
+            loading='lazy'
             alt={issueInfo.name}
             objectFit='cover'
             objectPosition='center'
