@@ -6,6 +6,7 @@ const { getAllProjects, addProject, deleteProject, getProject, updateProject } =
 const { getUserIssues, getIssues, addIssue, updateIssue, removeIssue, removeComment } = require('../../controller/projectsIssueController')
 const { verifyAccessToken } = require('../../middleware/verifyAccessToken')
 const { verifyAuthorization } = require('../../middleware/verifyAuthorization')
+const multipartFormHandler = require('../../middleware/multipartFormHandler')
 const multer = require('multer')
 const fileFilter = require('../../config/fileFilter')
 const storage = require('../../config/storageOptions')
@@ -35,8 +36,8 @@ router.route('/:id')
     
 router.route('/:id/issues')
     .get(verifyAuthorization(roles.Lead, roles.Member), getIssues)
-    .post(verifyAuthorization(roles.Lead, roles.Member), upload.single('image'), addIssue)
-    .put(verifyAuthorization(roles.Lead, roles.Member), upload.single('image'), updateIssue)
+    .post(verifyAuthorization(roles.Lead, roles.Member), upload.single('image'), multipartFormHandler, addIssue)
+    .put(verifyAuthorization(roles.Lead, roles.Member), upload.single('image'), multipartFormHandler, updateIssue)
 
 router.route('/:id/issues/:issueId')
     .delete(verifyAuthorization(roles.Lead), removeIssue)

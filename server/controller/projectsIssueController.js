@@ -73,16 +73,12 @@ const addIssue = async (req, res, next) => {
     const name = req?.body?.name
     const label = req?.body?.label
     const priority = req?.body?.priority
+    req.body._id= uniqid() 
     if(!projectId || !name || !label || !priority){
         return res.status(400).send({
             'error' : 'one or more required fields are missing'
         })
     }  
-    req.body.members = JSON.parse(req.body?.members)
-    req.body.comments = JSON.parse(req.body?.comments)
-    req.body.image = req.file?.filename
-    req.body.author = req.username
-    req.body._id= uniqid() 
     try{
         const updatedProject = await Project.findOneAndUpdate( {_id: projectId}, 
             {
@@ -103,26 +99,24 @@ const addIssue = async (req, res, next) => {
         next(error)
     }
 }
+
 const updateIssue = async (req, res, next) => {
     const _id = req.params?.id
     const updateIssueId = req.body?._id
-    req.body.members = typeof(req.body.members) === 'string' ? JSON.parse(req.body?.members) : req.body.members
-    req.body.comments = typeof(req.body.comments) === 'string' ? JSON.parse(req.body?.comments) : req.body.comments
-    if(req.file?.filename){
-        req.body.image = req.file?.filename
-        const foundProject = await Project.findOne(
-            {
-            _id,
-            'issues': {$elemMatch:  {_id: updateIssueId}}
-            }, 'issues.$'
-        ).lean().exec()
-        const storedImagePath = foundProject?.issues[0]?.image
-        if(storedImagePath && storedImagePath !== '' ){
-            fs.rmSync(path.join(__dirname, '..', 'uploads', storedImagePath), {force: true})
-        }
-    }
     if(!_id || !updateIssueId) return res.status(400).send({'error' : 'one or more required fields are missing'})
-    try{
+    try{   
+        if(req?.body?.filename){
+            const foundProject = await Project.findOne(
+                {
+                _id,
+                'issues': {$elemMatch:  {_id: updateIssueId}}
+                }, 'issues.$'
+            ).lean().exec()
+            const storedImagePath = foundProject?.issues[0]?.image
+            if(storedImagePath && storedImagePath !== '' ){
+                fs.rmSync(path.join(__dirname, '..', 'uploads', storedImagePath), {force: true})
+            }
+        }
         const updatedProject = await Project.findOneAndUpdate({
             _id,
             'issues._id': updateIssueId
@@ -142,6 +136,7 @@ const updateIssue = async (req, res, next) => {
         next(error)
     }
 }
+
 const removeIssue = async (req, res, next) => {
     const _id = req.params?.id
     const deleteIssueId = req.params?.issueId
@@ -167,6 +162,7 @@ const removeIssue = async (req, res, next) => {
         next(error)
     }
 }
+
 const removeComment = async (req, res, next) => {
     const _id = req.params?.id
     const issueId = req.params?.issueId
