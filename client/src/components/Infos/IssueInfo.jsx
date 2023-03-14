@@ -7,7 +7,7 @@ import useDeleteData from "../../hooks/useDeleteData"
 import { Label } from "../Alerts/Label"
 import BasicModal from "../Modals/BasicModal"
 import { initialIssueFormValues } from "../../utils/initializeForm"
-import { REGX_DATETIME } from "../../utils/regex"
+import { REGX_DATE } from "../../utils/regex"
 import  {nanoid} from 'nanoid'
 import format from "date-fns/format"
 const imagePlaceholder = lazy (() => import("../../assets/imagePlaceholder.png"))
@@ -109,11 +109,11 @@ export const IssueInfo = ({projectId, setProject, issueInfo, setIssueInfo}) => {
                 </Box>
                 <Box>
                     <Text fontWeight='bold' textTransform='uppercase'>Opening Date</Text>  
-                    {issueInfo.openingDate ? issueInfo.openingDate.replace(REGX_DATETIME, '$3-$2-$1') : ' Not Defined'}
+                    {issueInfo.openingDate ? issueInfo.openingDate.replace(REGX_DATE, '$3/$2/$1') : ' Not Defined'}
                 </Box>
                 <Box> 
                     <Text fontWeight='bold' textTransform='uppercase'>Closing date </Text>
-                    {issueInfo.closingDate ? issueInfo.closingDate.replace(REGX_DATETIME, '$3-$2-$1') : ' Not Defined' }
+                    {issueInfo.closingDate ? issueInfo.closingDate.replace(REGX_DATE, '$3/$2/$1') : ' Not Defined' }
                 </Box>
             </Flex>
         </Box>

@@ -3,6 +3,7 @@ import { Box, Flex, Spacer, Heading, Button } from "@chakra-ui/react"
 import { Link } from 'react-router-dom'
 import {Label} from '../Alerts/Label'
 import { BasicTable } from "./BasicTable"
+import { REGX_DATE } from '../../utils/regex'
 
 export const ProjectTable = (
     {   projects,
@@ -43,6 +44,21 @@ export const ProjectTable = (
                 {
                     Header: "DeadLine",
                     accessor: "endDate",
+                    Cell: (props) => {
+                        const closingDate = props.value
+                        const closingDateFormat = closingDate.replace(REGX_DATE, "$3/$2/$1")
+                        const currentDate =  new Date().toJSON()
+                        const isNotClosed = props?.row?.values?.status !== 'Closed' || props?.row?.values?.status !== 'Paused'
+                        const isPastDeadline = closingDate <= currentDate && isNotClosed
+                        return (
+                            <Box fontSize='12px'
+                                color={isPastDeadline && 'red.400'}
+                                fontWeight={isPastDeadline && 'bold'}
+                            >   
+                                {closingDateFormat}
+                            </Box>
+                        )
+                    }
                 },
                 {
                     Header: "Status",

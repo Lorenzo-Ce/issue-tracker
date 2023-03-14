@@ -3,7 +3,7 @@ import { useEffect, useMemo } from "react"
 import {Label} from '../Alerts/Label'
 import useDeleteData from "../../hooks/useDeleteData"
 import { BasicTable } from "./BasicTable"
-import { REGX_DATETIME } from "../../utils/regex"
+import { REGX_DATE } from "../../utils/regex"
 
 export const IssueTable = ({
         projectId, 
@@ -68,9 +68,9 @@ export const IssueTable = ({
                     accessor: "closingDate",
                     Cell: (props) =>{
                         const closingDate = props.value
-                        const closingDateFormat = closingDate.replace(REGX_DATETIME, "$3/$2/$1")
+                        const closingDateFormat = closingDate.replace(REGX_DATE, "$3/$2/$1")
                         const currentDate =  new Date().toJSON()
-                        const isNotClosed = props.row.values.status !== 'Closed'
+                        const isNotClosed = props?.row?.values?.status !== 'Closed' || props?.row?.values?.status !== 'Paused'
                         const isPastDeadline = closingDate <= currentDate && isNotClosed
                         return (
                             <Box fontSize='12px'

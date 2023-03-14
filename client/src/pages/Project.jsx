@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Spinner, Grid, GridItem, useDisclosure} from '@chakra-ui/react'
 import { useParams } from 'react-router-dom'
 import { ProjectInfo } from '../components/Infos/ProjectInfo'
@@ -14,7 +14,7 @@ const Project = () => {
     const { responseData : project, setResponseData: setProject, apiError, setApiError, isLoading } = useGetData(`/projects/${projectId}`)
     const { isOpen: isNewIssueOpen, onOpen: openNewIssueModal, onClose : closeNewIssueModal } = useDisclosure()
     const { isOpen: isEditIssueOpen, onOpen: openEditIssueModal, onClose : closeEditIssue } = useDisclosure()
-    const [ issueInfo, setIssueInfo ] = useState({ 'name': '', description: '',image: {}, status: 'Open',label: 'Todo',priority: 'Critical', members: [],openingDate: '',closingDate: '',comments: [] })
+    const [ issueInfo, setIssueInfo ] = useState({ 'name': '', description: '', image: {}, status: 'Open', label: 'Todo', priority: 'Critical', members: [], openingDate: '', closingDate: '', comments: [] })
 
     //Find and format issue information based on id for preview and edit
     const handleIssueInformation = (issueId, issueList) => {
@@ -23,7 +23,7 @@ const Project = () => {
             setIssueInfo(issueInfo)
         }
     }
-   
+    
     return( 
         isLoading ?
             <Grid 

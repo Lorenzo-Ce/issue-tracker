@@ -16,12 +16,10 @@ const Project = lazy(() => import('./pages/Project'))
 function App() {
   const { authorization } = useAuthorization()
   const SuspenseLogin = load(Login)
-  const SuspensePersistLogin = load(PersistLogin)
   const SuspenseIssues = load(Issues)
   const SuspenseDashboard = load(Dashboard)
   const SuspenseDesk = load(Desk)
   const SuspenseProject = load(Project)
-
 
   return (
     <Box as='section' height='100vh' display={'grid'} >
