@@ -140,7 +140,7 @@ const issueModal = ({setProject, isOpen, onClose, formValues = initialIssueFormV
                 colorScheme='blue'
                 loadingText='Submitting'
                 isLoading={isLoadingSubmit} 
-                isDisabled={!isFormValid}
+                isDisabled={!isFormValid || authorization.username === 'GuestAccount'}
             >
                 Submit Issue
             </Button>

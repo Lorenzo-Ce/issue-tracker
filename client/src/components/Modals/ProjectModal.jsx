@@ -107,7 +107,7 @@ const ProjectModal = ({ setProjects, isOpen, onClose, formValues = initialFormVa
                 colorScheme='blue'
                 loadingText='Submitting'
                 isLoading={isLoadingSubmit} 
-                isDisabled={!isFormValid}
+                isDisabled={!isFormValid || authorization.username === 'GuestAccount'}
             >
                 Submit Project
             </Button>

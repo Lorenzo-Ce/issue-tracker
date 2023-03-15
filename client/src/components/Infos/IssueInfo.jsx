@@ -155,6 +155,7 @@ export const IssueInfo = ({projectId, setProject, issueInfo, setIssueInfo}) => {
                                 color='red.300'
                                 transition='color 0.25s'
                                 _hover={{color:'red.500'}}
+                                isDisabled={authorization.username === 'GuestAccount'}
                                 onClick={async () => {
                                     await deleteComment(_id)
                                 }}
@@ -187,6 +188,7 @@ export const IssueInfo = ({projectId, setProject, issueInfo, setIssueInfo}) => {
                     h='1.75rem' 
                     size='sm'
                     isLoading={isLoadingComment} 
+                    isDisabled={authorization.username === 'GuestAccount'}
                     onClick={() => {setIsPosting(true)}}
                 >
                     Comment

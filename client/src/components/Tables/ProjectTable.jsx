@@ -1,7 +1,9 @@
 import { useMemo } from "react"
 import { Box, Flex, Spacer, Heading, Button } from "@chakra-ui/react"
-import { Link } from 'react-router-dom'
-import {Label} from '../Alerts/Label'
+import { NavLink } from 'react-router-dom'
+import useAuthorization from "../../hooks/useAuthorization"
+import { Label } from '../Alerts/Label'
+import { Warning } from "../Alerts/Warning"
 import { BasicTable } from "./BasicTable"
 import { REGX_DATE } from '../../utils/regex'
 
@@ -14,6 +16,8 @@ export const ProjectTable = (
         isDeleting,
     }) => {
 
+    const { authorization } = useAuthorization()
+    
     const columns = useMemo(() => [
         {
             Header: "Projects",
@@ -25,15 +29,11 @@ export const ProjectTable = (
                         const tableRowId = props.row.id 
                         const projectId = props.data[tableRowId]._id
                         return(
-                            <Box
-                                cursor='pointer'
-                                fontSize='sm'
-                                fontWeight='700'
-                                _hover={{color:'blue.200'}}
-                                transition='color 0.2s' 
-                            >
-                                <Link to={projectId}>{props.value}</Link>  
-                            </Box>
+                                <NavLink to={projectId}
+                                    className='routerLink'
+                                >
+                                    {props.value}
+                                </NavLink>  
                         )
                     }
                 },
@@ -42,20 +42,29 @@ export const ProjectTable = (
                     accessor: "members",
                 },
                 {
+                    Header: "Start Date",
+                    accessor: "startDate",
+                    Cell: (props) => {
+                        const startDate = props.value
+                        const startDateFormat = startDate.replace(REGX_DATE, "$3/$2/$1")
+                        return <>{startDateFormat}</>
+                    }
+                },
+                {
                     Header: "DeadLine",
                     accessor: "endDate",
                     Cell: (props) => {
-                        const closingDate = props.value
-                        const closingDateFormat = closingDate.replace(REGX_DATE, "$3/$2/$1")
+                        const endDate = props.value
+                        const endDateFormat = endDate.replace(REGX_DATE, "$3/$2/$1")
                         const currentDate =  new Date().toJSON()
-                        const isNotClosed = props?.row?.values?.status !== 'Closed' || props?.row?.values?.status !== 'Paused'
-                        const isPastDeadline = closingDate <= currentDate && isNotClosed
+                        const isNotClosed = props?.row?.values?.status !== 'Closed' && props?.row?.values?.status !== 'Paused'
+                        const isPastDeadline = endDate <= currentDate && isNotClosed
                         return (
                             <Box fontSize='12px'
                                 color={isPastDeadline && 'red.400'}
                                 fontWeight={isPastDeadline && 'bold'}
                             >   
-                                {closingDateFormat}
+                                {endDateFormat}
                             </Box>
                         )
                     }
@@ -92,6 +101,7 @@ export const ProjectTable = (
                         cursor 
                         colorScheme='red'
                         isLoading={ isDeleting }
+                        isDisabled={authorization.username === 'GuestAccount'}
                         onClick={async () => {
                             const tableRowId = props.row.id
                             const projectId = props.data[tableRowId]._id
@@ -112,7 +122,11 @@ const tableData = useMemo(() =>
 
     return(     
     <>
-        <Flex mb='0.5em'>
+        {
+            authorization.username === 'GuestAccount' &&
+            <Warning  message="As Guest Account you can't add, delete, or edit Issues or Projects."/>
+        }
+        <Flex m='0.5em 0'>
             <Heading as='h3' color='blue.800' fontSize='1rem' textTransform='uppercase'>
                     Projects
             </Heading>

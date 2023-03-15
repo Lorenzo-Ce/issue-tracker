@@ -1,11 +1,12 @@
 import { Box, Text, Image, Button, Spacer, Flex } from '@chakra-ui/react'
 import { CloseIcon } from '@chakra-ui/icons'
 import { useEffect, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 import axios from '../utils/axios'
 import useAuthorization from '../hooks/useAuthorization'
 import userIcon from '/userIcon.svg'
 import issueIcon from '/issueIcon.svg'
+import issueFavicon from '/issueFavicon.svg'
 import projectIcon from '/projectIcon.svg'
 
 export const Sidebar = ({handleSidebar}) => {
@@ -30,7 +31,7 @@ export const Sidebar = ({handleSidebar}) => {
     const handleLogout = async () => {
         try{
             setIsLoading(true)
-            const response = await axios.post('/logout')
+            await axios.post('/logout')
             setAuthorization({})
             navigate('/login', {replace: true})
         } catch (e) {
@@ -40,11 +41,11 @@ export const Sidebar = ({handleSidebar}) => {
         }
     }
     return(
-    <Flex flexDirection='column' as='aside' textAlign='left' padding='0.8em 0.4em' width='200px' h='100vh' bg='white' color='blue.800' boxShadow='rgba(0, 0, 0, 0.1) 0px 4px 12px'
+    <Flex flexDirection='column' as='aside' textAlign='left' padding='0.8em 0.6em' width={ ['220px','250px', '300px'] } h='100vh' bg='#FFF' color='blue.800' boxShadow='rgba(0, 0, 0, 0.1) 0px 4px 12px'
         position={isIconVisible ? 'sticky' : 'fixed'} top='0' zIndex='10'
     >    
         {!isIconVisible && 
-            <Box as='section' mb='0.5em'  display='flex' justifyContent='flex-end'>
+            <Box as='section' mb='0.5em' display='flex' justifyContent='flex-end'>
                 <CloseIcon
                     id='closeIcon' 
                     boxSize='16px' mr='0.5em' 
@@ -63,43 +64,58 @@ export const Sidebar = ({handleSidebar}) => {
                 />
             </Box>
         }
-        <Box 
-            as='section' 
-            display='flex' 
-            pb='1em' 
-            borderBottom='2px solid lightgray'
-        >
-            <Image src={userIcon} boxSize='24px' alt='userIcon' float='left' mr='0.4em'/>
-            <Text fontSize='lg'>Hello, {authorization.username}</Text>
-        </Box>
-        <h2>
         <Flex 
-            justifyContent='space-between' 
-            alignItems='center' 
+            flexDirection='column' 
             p='0.5em 0.7em'
-            borderBottom='1px solid lightgray'
+            letterSpacing='1.5px'
         >
-            <Link to='/dashboard'>
-                Dashboard
-            </Link>
-            <Image src={projectIcon} boxSize='20px' alt='teamIcon' mr='0.4em'/>
+            <Flex 
+                as='section' 
+                pb='2em' 
+            >
+                <Image src={issueFavicon} boxSize='24px' alt='userIcon' float='left' mr='0.4em'/>
+                <Text fontSize='lg' fontWeight='bold' color='blue.700'>
+                    Issue Tracker
+                </Text>
+            </Flex>
+            <Flex 
+                as='section' 
+                pb='1em' 
+                borderBottom='2px solid lightgray'
+            >
+                <Image src={userIcon} boxSize='24px' alt='userIcon' float='left' mr='0.4em'/>
+                <Text fontSize='md'>{authorization.username}</Text>
+            </Flex>
+            <Flex
+                justifyContent='space-between'
+                alignItems='center'
+                borderBottom='1px solid lightgray'
+                p='0.2em 0'
+            >
+                <NavLink to='/dashboard'
+                    className='routerLink'
+                >
+                    Dashboard
+                </NavLink>
+                <Image src={projectIcon} boxSize='20px' alt='teamIcon' mr='0.4em'/>
+            </Flex>
+            <Flex
+                justifyContent='space-between'
+                alignItems='center'
+                p='0.2em 0'
+            >
+                <NavLink to='/issues'
+                    className='routerLink'
+                >
+                    My Issues
+                </NavLink>
+                <Image src={issueIcon} boxSize='20px' alt='teamIcon' mr='0.4em'/>
+            </Flex>
         </Flex>
-        </h2>
-        <h2>
-        <Flex 
-            justifyContent='space-between' 
-            alignItems='center' 
-            p='0.5em 0.7em'
-        >
-            <Link to='/issues'>
-                My Issues
-            </Link>
-            <Image src={issueIcon} boxSize='20px' alt='teamIcon' mr='0.4em'/>
-        </Flex>
-        </h2>
-    <Spacer/>
-        <Button     
-            mb='5px' 
+        <Spacer/>
+        <Button
+            m='0 0.65em'     
+            mb='1em' 
             colorScheme='red'
             loadingText='Logging out'
             isLoading={isLoading} 

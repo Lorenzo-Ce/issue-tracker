@@ -17,7 +17,6 @@ const Login = () => {
         event.preventDefault()
         setErrorMessage('')
         setIsLoading(true)
-
         try{
             const response = await axios.post('/login', JSON.stringify(form))   
             setAuthorization(prevAuth => (
@@ -95,7 +94,7 @@ const Login = () => {
         </VStack>
         <VStack p='1em' gap='1em' >
             <Text as='sub'>
-                Login as&nbsp;
+                Log in as&nbsp;
                 <Box 
                     cursor='pointer'
                     display='inline-block'
@@ -116,7 +115,15 @@ const Login = () => {
                 </Box>
             </Text>
             <Text as='sub'>
-                Need an account? <Link to='/signup'>Register Now</Link>
+                Need an account? <Link to='/signup'>
+                    <Box as='span'
+                        display='inline'
+                        fontWeight='600'
+                        fontSize='sm'
+                    >
+                        Register Now
+                    </Box>
+                    </Link>
             </Text>
         </VStack>        
  

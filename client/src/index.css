@@ -28,9 +28,19 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh !important;
-  background-image: url('squares.png') !important;
+  background-image: url('/squares.png') !important;
   background-color: rgba(203, 238, 249, 0.682);
   background-repeat: repeat !important;
   background-position: top left !important;
   background-size: 200px !important;
+}
+
+.routerLink {
+  cursor: pointer;
+  transition: color 0.2s ease-in-out;
+  font-weight: 700;
+}
+
+.routerLink:hover {
+  color: #63b3ed;
 }

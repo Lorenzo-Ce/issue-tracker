@@ -10,6 +10,7 @@ export function Dashboard() {
         <Box 
             display='flex'
             color='blue.700'
+            maxWidth='1500px'
         >
             {
                 isSidebarVisible ? 

@@ -3,7 +3,7 @@ import { useMemo } from "react"
 import { BasicTable } from "./BasicTable"
 import { Label } from '../Alerts/Label'
 import { REGX_DATETIME } from "../../utils/regex"
-import { Link } from "react-router-dom"
+import { NavLink } from "react-router-dom"
 
 export const IssueUserTable = ({issues}) => {
 
@@ -15,15 +15,11 @@ export const IssueUserTable = ({issues}) => {
                     Header: "Title",
                     accessor: "name",
                     Cell: (props) => (
-                        <Box
-                            cursor='pointer'
-                            fontSize='14px'
-                            fontWeight='700'
-                            _hover={{color:'blue.200'}}
-                            transition='color 0.2s' 
+                        <NavLink to={`/dashboard/${props.data[props.row.id].projectId}`}
+                            className='routerLink'
                         >
-                            <Link to={`/dashboard/${props.data[props.row.id].projectId}`}>{props.value}</Link> 
-                        </Box>
+                            {props.value}
+                        </NavLink> 
                     )
                 },
                 {
@@ -40,6 +36,19 @@ export const IssueUserTable = ({issues}) => {
                     Header: "Priority",
                     accessor: "priority",
                     Cell: (props) => (<Label>{props.value}</Label>)
+                },
+                {
+                    Header: "Assigned To",
+                    accessor: "members",
+                    Cell: (props) => (
+                        <>{
+                            props?.value?.length > 0 ?
+                            <Box maxHeight='30px' overflowX='auto' overflowY='scroll'>
+                                {props?.value?.map(member => (<Box key={member}>{member}</Box>))}
+                            </Box> : 
+                            "Not assigned"
+                        }</>
+                    )
                 },
                 {
                     Header: "Target Date",

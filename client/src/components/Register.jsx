@@ -111,13 +111,19 @@ export default function Register (){
                     Register
                 </Button>
         </VStack>
-        <VStack  p='1em' gap='1em' >
-                <Text as='sub'>
-                    Already have an account? <Link to='/login'>Login Now</Link>
-                </Text>
-                <Text as='sub'>
-                    Login as <Link to='/login'>GUEST ACCOUNT</Link>
-                </Text>
+        <VStack  p='1em'>
+            <Text as='sub'>
+                Have an account or want to login as Guest?
+            </Text>
+            <Link to='/login'>
+                <Box as='span'
+                    display='block'
+                    fontWeight='600'
+                    fontSize='sm'
+                >
+                    Log In Now
+                </Box>    
+            </Link>
         </VStack>        
         </Box>
     )

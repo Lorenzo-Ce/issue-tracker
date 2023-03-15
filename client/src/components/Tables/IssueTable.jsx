@@ -1,7 +1,9 @@
 import { Box, Heading, Button, Flex, Spacer } from "@chakra-ui/react"
 import { useEffect, useMemo } from "react"
-import {Label} from '../Alerts/Label'
+import { Label } from '../Alerts/Label'
+import { Warning } from "../Alerts/Warning"
 import useDeleteData from "../../hooks/useDeleteData"
+import useAuthorization from "../../hooks/useAuthorization"
 import { BasicTable } from "./BasicTable"
 import { REGX_DATE } from "../../utils/regex"
 
@@ -13,6 +15,8 @@ export const IssueTable = ({
         handleIssueInfo, 
         setProject
     }) => {
+    const { authorization } = useAuthorization()
+    const { username } = authorization
     const {handleDelete, isDeleting, remainingData} = useDeleteData(`/projects/${projectId}/issues/`)
     
     useEffect(()=> {
@@ -22,8 +26,7 @@ export const IssueTable = ({
             issues: remainingData?.length > 0 ? remainingData : []
             }
         )) 
-    }
-    }, [remainingData])
+    }}, [remainingData])
 
     const columns = useMemo(() => [
         {
@@ -34,11 +37,7 @@ export const IssueTable = ({
                     accessor: "name",
                     Cell: (props) => (
                         <Box
-                            cursor='pointer'
-                            fontSize='14px'
-                            fontWeight='700'
-                            _hover={{color:'blue.200'}}
-                            transition='color 0.2s' 
+                            className="routerLink"
                             onClick={() => { 
                                 const tableRowId = props.row.id 
                                 return handleIssueInfo(props.data[tableRowId]._id, props.data)
@@ -73,7 +72,7 @@ export const IssueTable = ({
                         const isNotClosed = props?.row?.values?.status !== 'Closed' || props?.row?.values?.status !== 'Paused'
                         const isPastDeadline = closingDate <= currentDate && isNotClosed
                         return (
-                            <Box fontSize='12px'
+                            <Box fontSize='sm'
                                 color={isPastDeadline && 'red.400'}
                                 fontWeight={isPastDeadline && 'bold'}
                             >   
@@ -107,6 +106,7 @@ export const IssueTable = ({
                         cursor 
                         colorScheme='red'
                         isLoading={ isDeleting }
+                        isDisabled={username === 'GuestAccount'}
                         onClick={async () => {
                             const tableRowId = props.row.id
                             const issueId = props.data[tableRowId]._id
@@ -128,12 +128,17 @@ export const IssueTable = ({
 
     return(
     <>
-        <Flex mb='0.5em'>
+        {
+            authorization.username === 'GuestAccount' &&
+            <Warning  message="As Guest Account you can't add, delete, or edit Issues or Projects."/>
+        }
+        <Flex mb='0.5em 0'>
             <Heading fontSize='xl' fontWeight='bold'>ISSUES</Heading>
             <Spacer />
             <Button     
                 size='sm' 
                 colorScheme='blue'
+                isDisabled={username === 'GuestAccount'}
                 onClick={openNewIssueModal}
             >
                 Add Issue

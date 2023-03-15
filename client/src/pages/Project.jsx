@@ -40,7 +40,7 @@ const Project = () => {
             </Grid> : 
             project &&
         <>
-        <Grid templateColumns={['repeat(auto-fit, minmax(200px, 1fr))']} gap='1em'>
+        <Grid templateColumns={['repeat(auto-fit, minmax(250px, 1fr))']} gap='1em'>
             <GridItem as='section' bg='#FFF' borderRadius='10px' p='1em' boxShadow='rgba(0, 0, 0, 0.1) 0px 4px 12px'>     
                 <TeamTable 
                     roles={project?.roles}
