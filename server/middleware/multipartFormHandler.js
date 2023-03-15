@@ -1,6 +1,5 @@
 const multipartFormHandler = (req, res, next) => {
     try{
-        req.body.author = req.username
         req.body.members = typeof(req.body.members) === 'string' ? JSON.parse(req.body?.members) : req.body.members
         req.body.comments = typeof(req.body.comments) === 'string' ? JSON.parse(req.body?.comments) : req.body.comments
         if(req.file?.filename) { 

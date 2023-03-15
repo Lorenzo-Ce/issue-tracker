@@ -12,7 +12,7 @@ const corsOptions = require('./config/corsOption')
 const setControlCredentials = require('./middleware/setControlCredential')
 require('dotenv').config({path: path.resolve(__dirname,'..', '.env')})
 
-mongoose.connect(process.env.DB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(process.env.DB_URI)
         .catch((error) => console.error(error))
 
 app.disable('x-powered-by');

@@ -74,6 +74,7 @@ const addIssue = async (req, res, next) => {
     const label = req?.body?.label
     const priority = req?.body?.priority
     req.body._id= uniqid() 
+    req.body.author = req.username
     if(!projectId || !name || !label || !priority){
         return res.status(400).send({
             'error' : 'one or more required fields are missing'

@@ -4,7 +4,8 @@ const UserSchema = new Schema({
     email: {
         type: String,
         unique: true,
-        required: true
+        required: true,
+        set: (value) => value.toLowerCase()
     },
     password: {
         type: String,

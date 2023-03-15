@@ -12,7 +12,8 @@ const loginUser = async (req, res, next) => {
         })
     }
     try{
-        const matchedUser = await User.findOne({email : email}).exec()
+        const emailToFind = email.toLowerCase()
+        const matchedUser = await User.findOne({email : emailToFind}).exec()
         if(!matchedUser) return res.status(400).send({'error' : 'You have entered an invalid email or password'})
         
         const result = await bcrypt.compare(password, matchedUser.password)
