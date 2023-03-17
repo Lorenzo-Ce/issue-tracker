@@ -1,26 +1,32 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Spinner, Grid, GridItem, useDisclosure} from '@chakra-ui/react'
 import { useParams } from 'react-router-dom'
+import useGetData from '../hooks/useGetData'
 import { ProjectInfo } from '../components/Infos/ProjectInfo'
 import { TeamTable } from '../components/Tables/TeamTable'
 import { IssueTable } from '../components/Tables/IssueTable'
 import { IssueTypeChart } from '../components/Charts/IssueTypeChart'
 import IssueModal from '../components/Modals/IssueModal'
-import useGetData from '../hooks/useGetData'
 import { IssueInfo } from '../components/Infos/IssueInfo'
 
 const Project = () => {
+
+    const emptyIssueFields = { 'name': '', author: '', description: '', image: '', imageToAdd: {}, status: 'Open', label: 'Todo', priority: 'Critical', members: [], openingDate: '', closingDate: '', comments: [] }
     const {projectId} = useParams()
-    const { responseData : project, setResponseData: setProject, apiError, setApiError, isLoading } = useGetData(`/projects/${projectId}`)
+    const { responseData : project, setResponseData: setProject, apiError, isLoading } = useGetData(`/projects/${projectId}`)
     const { isOpen: isNewIssueOpen, onOpen: openNewIssueModal, onClose : closeNewIssueModal } = useDisclosure()
     const { isOpen: isEditIssueOpen, onOpen: openEditIssueModal, onClose : closeEditIssue } = useDisclosure()
-    const [ issueInfo, setIssueInfo ] = useState({ 'name': '', description: '', image: {}, status: 'Open', label: 'Todo', priority: 'Critical', members: [], openingDate: '', closingDate: '', comments: [] })
-
+    const [issueInfo, setIssueInfo ] = useState(emptyIssueFields)
+    
     //Find and format issue information based on id for preview and edit
-    const handleIssueInformation = (issueId, issueList) => {
-        const issueInfo = issueList?.find(issue => issue._id === issueId)
-        if(issueInfo){
-            setIssueInfo(issueInfo)
+    const handleIssueInformation = (issueId, issueList, openEdit = false) => {
+        const foundIssue = issueList?.find(issue => issue._id === issueId)
+        console.log(foundIssue)
+        if(foundIssue){
+            setIssueInfo((() => ({
+                ...foundIssue,
+                imageToAdd: {}
+            })))
         }
     }
     
@@ -84,14 +90,17 @@ const Project = () => {
 
         </Grid>
         <IssueModal
+            projectMembers={project?.members}
             setProject={setProject}    
             isOpen={isNewIssueOpen}
             onClose={closeNewIssueModal}
             method='post'
             route={`projects/${projectId}/issues`}
         />
-        <IssueModal 
+        <IssueModal
+            projectMembers={project?.members}
             setProject={setProject}
+            handleIssueInformation={handleIssueInformation}
             isEdit
             isOpen={isEditIssueOpen}
             onClose={closeEditIssue}

@@ -104,7 +104,7 @@ export const Sidebar = ({handleSidebar}) => {
                 alignItems='center'
                 p='0.2em 0'
             >
-                <NavLink to='/issues'
+                <NavLink to='myissues'
                     className='routerLink'
                 >
                     My Issues

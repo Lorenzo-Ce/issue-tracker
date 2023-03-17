@@ -1,7 +1,6 @@
 import {FormControl, FormErrorMessage, Input, Checkbox, Button, VStack } from '@chakra-ui/react'
 import { useEffect } from 'react'
 import useAuthorization from '../../hooks/useAuthorization'
-import useGetData from '../../hooks/useGetData'
 import useSubmitData from '../../hooks/useSubmitData'
 import { useForm } from '../../hooks/useForm'
 import BasicModal from './BasicModal'
@@ -15,42 +14,46 @@ import { DateField } from './components/DateField'
 import { RolesField } from './components/RolesField'
 
 
-const issueModal = ({setProject, isOpen, onClose, formValues = initialIssueFormValues, isEdit = false, route = '/projects', method}) => {
+const issueModal = ({projectMembers, setProject, isOpen, onClose, formValues = initialIssueFormValues, isEdit = false, route = '/projects', method, handleIssueInformation}) => {
+    const fieldsToValidate = ['name', 'description', 'imageToAdd', 'openingDate', 'closingDate']
     const {authorization} = useAuthorization()
-    const {responseData: usersList } = useGetData('/users')
-    const {handleSubmit, payload: newIssues, resetMessage, successMessage, submitError, isLoadingSubmit } = useSubmitData(route, method, true)
-    const {formValidation, isFormValid, handleValidation, handleFormChange, Form, setForm } = useForm(formValues)
+    const {handleSubmit, payload: updatedIssues, resetMessage, successMessage: successSubmitMessage, submitError, isLoadingSubmit } = useSubmitData(route, method, true)
+    const {formValidation, isFormValid, handleValidation, handleFormChange, Form, setForm, setFormValidation } = useForm(formValues, fieldsToValidate)
 
     useEffect(()=>{
-        setForm(formValues)
+        setForm(() => ({...formValues, author: authorization.username}))
     },[formValues])
 
     useEffect(() => {
-        if(successMessage !== ""){
-            setProject(prevProject => ({...prevProject, issues: newIssues }))
+        if(successSubmitMessage !== ""){
+            setProject(prevProject => ({...prevProject, issues: updatedIssues }))
+            isEdit && handleIssueInformation( Form._id, updatedIssues)
         }
-    }, [successMessage])
+    }, [successSubmitMessage])
     
-    const members = usersList?.length > 0 && usersList.flatMap(({_id, username}) => 
-        username !== authorization.username ? 
-        [
-            <Checkbox key={_id} value={username} checked={Form?.members?.includes(username)}>
-                {username}
-            </Checkbox>
-        ] : 
+    const projectMembersList = projectMembers?.length > 0 ? 
+        projectMembers?.flatMap( username => 
+            username !== authorization.username ? 
+            [
+                <Checkbox key={username} value={username} checked={Form?.members?.includes(username)}>
+                    {username}
+                </Checkbox>
+            ] : 
+            []
+        ) : 
         []
-    )
 
     return (
         <BasicModal title={`${isEdit ? 'Edit' : 'Add'} Issue`}
         isOpen={isOpen} 
         onClose={() => {
             resetMessage()
+            setFormValidation((prevVal) => ({...prevVal, imageToAdd: false}))
             onClose()
         }} 
         >
         {submitError !== '' && <Error message={submitError} /> }
-        {successMessage !== '' && <Success message={successMessage} /> }
+        {successSubmitMessage !== '' && <Success message={successSubmitMessage} /> }
         <VStack 
             as='form'   
             encType="multipart/form-data"
@@ -73,15 +76,15 @@ const issueModal = ({setProject, isOpen, onClose, formValues = initialIssueFormV
         >
 
             <FormControl 
-                id='image' 
-                isInvalid={formValidation.image}
+                id='imageToAdd' 
+                isInvalid={formValidation.imageToAdd}
             >
                 <Input type='file'  
-                    name='image'
+                    name='imageToAdd'
                     accept='image/*'
                     onChange={handleFormChange}
                 />             
-                <FormErrorMessage>Image must be 0.5MB and JPG file format</FormErrorMessage>
+                <FormErrorMessage>Image must be &lt;0.5MB and JPG file format</FormErrorMessage>
             </FormControl>
             <NameField 
                 validateName={formValidation.name}
@@ -117,10 +120,10 @@ const issueModal = ({setProject, isOpen, onClose, formValues = initialIssueFormV
                 handleFormChange={handleFormChange}        
             />
             <RolesField 
-                members={members}
+                members={projectMembersList}
                 formMembers={Form.members}
                 setForm={setForm}
-                title='Assign Member to issue?'
+                title='Assign Dev to issue?'
             /> 
             <DateField 
                 title='Opening'

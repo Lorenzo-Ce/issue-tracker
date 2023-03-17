@@ -40,6 +40,19 @@ export const ProjectTable = (
                 {
                     Header: "Team Members",
                     accessor: "members",
+                    Cell: (props) => (
+                        <>{
+                            props?.value?.length > 0 ?
+                            <Box maxHeight='30px' overflow='auto'>
+                                {props?.value?.map(member => (
+                                    <Box key={member}>
+                                        {member}
+                                    </Box>
+                                ))}
+                            </Box> : 
+                            "Not assigned"
+                        }</>
+                    )
                 },
                 {
                     Header: "Start Date",

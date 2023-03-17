@@ -1,10 +1,9 @@
-// @ fields: object {'field1' : value, 'field2' : value }
+// @ fields: array ['field1', 'field2', ...]
 // @ value: key value
-//@ return: { [field]: key, ...}
+//@ return: { 'field1': value, ...}
 
-const initializeForm = (fields, value) => {
-    const keys = Object.keys(fields)
-    const initialForm = keys.reduce((form, currentField) =>(
+const initializeFormValidation = (fields, value) => {
+    const initialForm = fields.reduce((form, currentField) =>(
         {...form, [currentField]: value}
     ), {})
     
@@ -22,8 +21,9 @@ const initialFormValues = {
 
 const initialIssueFormValues = {
     'name': '', 
+    author: '',
     description: '',
-    image: {}, 
+    imageToAdd: {}, 
     status: 'Open',
     label: 'Todo',
     priority: 'Critical', 
@@ -33,4 +33,4 @@ const initialIssueFormValues = {
     comments: [],
 }
 
-export {initializeForm, initialFormValues, initialIssueFormValues}
+export {initializeFormValidation, initialFormValues, initialIssueFormValues}

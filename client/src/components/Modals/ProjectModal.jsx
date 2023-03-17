@@ -15,10 +15,11 @@ import { DateField } from './components/DateField'
 import { RolesField } from './components/RolesField'
 
 const ProjectModal = ({ setProjects, isOpen, onClose, formValues = initialFormValues, isEdit = false, route = '/projects', method}) => {
+    const fieldsToValidate = ['name', 'description', 'imageToAdd', 'startDate', 'endDate']
     const {authorization} = useAuthorization()
     const {responseData: usersList } = useGetData('/users')
     const {handleSubmit, payload, resetMessage, successMessage, submitError, isLoadingSubmit } = useSubmitData(route, method)
-    const {formValidation, isFormValid, handleValidation, handleFormChange, Form, setForm } = useForm(formValues)
+    const {formValidation, isFormValid, handleValidation, handleFormChange, Form, setForm } = useForm(formValues, fieldsToValidate)
     
     useEffect(()=>{
         setForm(formValues)

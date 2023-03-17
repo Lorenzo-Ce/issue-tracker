@@ -1,16 +1,16 @@
-import { Heading, Text, Box, Image, Flex, Input, InputGroup, InputRightElement, Button, useDisclosure } from "@chakra-ui/react"
+import { Heading, Text, Box, Image, Flex, Input, InputGroup, InputRightElement, Button, useDisclosure } from '@chakra-ui/react'
 import { CloseIcon, DeleteIcon, TimeIcon } from '@chakra-ui/icons'
-import { useState,useEffect, lazy } from "react"
-import useAuthorization from "../../hooks/useAuthorization"
-import useSubmitData from "../../hooks/useSubmitData"
-import useDeleteData from "../../hooks/useDeleteData"
-import { Label } from "../Alerts/Label"
-import BasicModal from "../Modals/BasicModal"
-import { initialIssueFormValues } from "../../utils/initializeForm"
-import { REGX_DATE } from "../../utils/regex"
+import { useState,useEffect, lazy } from 'react'
+import useAuthorization from '../../hooks/useAuthorization'
+import useSubmitData from '../../hooks/useSubmitData'
+import useDeleteData from '../../hooks/useDeleteData'
+import { Label } from '../Alerts/Label'
+import BasicModal from '../Modals/BasicModal'
+import { initialIssueFormValues } from '../../utils/initializeForm'
+import { REGX_DATE } from '../../utils/regex'
 import  {nanoid} from 'nanoid'
-import format from "date-fns/format"
-const imagePlaceholder = lazy (() => import("../../assets/imagePlaceholder.png"))
+import format from 'date-fns/format'
+const imagePlaceholder = lazy (() => import('../../assets/imagePlaceholder.png'))
 
 export const IssueInfo = ({projectId, setProject, issueInfo, setIssueInfo}) => {
     const {authorization} = useAuthorization()
@@ -86,7 +86,7 @@ export const IssueInfo = ({projectId, setProject, issueInfo, setIssueInfo}) => {
         justifyContent='space-between'
     >
         <Image 
-            src={issueInfo.image !== '' ?`http://127.0.0.1:3500/images/${issueInfo.image}` : '' } 
+            src={issueInfo?.image === '' ? '/imagePlaceholder.png' : `http://127.0.0.1:3500/images/${issueInfo.image}`} 
             loading='lazy'
             alt={issueInfo.name}
             objectFit='cover'
@@ -98,11 +98,14 @@ export const IssueInfo = ({projectId, setProject, issueInfo, setIssueInfo}) => {
         />    
         <Box
             width={{sm: '49%', md: '59%'}}
+            overflowY='auto'
+            fontSize='sm'
         >
-            <Box as='p'>
+            <Box as='p'
+            >
                     {issueInfo.description} 
             </Box>
-            <Flex gap='1em' flexWrap='wrap' mt='0.5em' fontSize='12px'>
+            <Flex gap='1em' flexWrap='wrap' mt='0.5em' >
                 <Box>
                     <Text fontWeight='bold' textTransform='uppercase'>Status</Text> 
                     <Label padding='0.1em 0.5em'>{issueInfo.status}</Label>
@@ -115,6 +118,10 @@ export const IssueInfo = ({projectId, setProject, issueInfo, setIssueInfo}) => {
                     <Text fontWeight='bold' textTransform='uppercase'>Closing date </Text>
                     {issueInfo.closingDate ? issueInfo.closingDate.replace(REGX_DATE, '$3/$2/$1') : ' Not Defined' }
                 </Box>
+            <Flex>
+                <Text fontWeight='bold' textTransform='uppercase'>Assigned to:&nbsp;</Text>
+                {issueInfo?.members?.length > 0 ? issueInfo.members.join(', ') : 'Not Assigned' }
+            </Flex>
             </Flex>
         </Box>
     </Flex>
@@ -125,7 +132,7 @@ export const IssueInfo = ({projectId, setProject, issueInfo, setIssueInfo}) => {
     {  
         issueInfo?.comments?.length > 0 &&
         issueInfo?.comments?.map(({_id, author, text, date}) => {        
-            const timezoneDate = format(new Date(date), "dd-MM-yyyy kk:mm")
+            const timezoneDate = format(new Date(date), 'dd-MM-yyyy kk:mm')
             return(
                 <Box 
                     key={_id}
@@ -147,7 +154,7 @@ export const IssueInfo = ({projectId, setProject, issueInfo, setIssueInfo}) => {
                                 boxSize='15px'
                                 cursor='pointer'
                                 color='red.300'
-                            /> :
+                            /> : authorization.username !== 'GuestAccount' &&
                             <DeleteIcon 
                                 float='right'
                                 boxSize='15px'
@@ -155,7 +162,6 @@ export const IssueInfo = ({projectId, setProject, issueInfo, setIssueInfo}) => {
                                 color='red.300'
                                 transition='color 0.25s'
                                 _hover={{color:'red.500'}}
-                                isDisabled={authorization.username === 'GuestAccount'}
                                 onClick={async () => {
                                     await deleteComment(_id)
                                 }}
@@ -174,7 +180,7 @@ export const IssueInfo = ({projectId, setProject, issueInfo, setIssueInfo}) => {
     }
         <InputGroup size='md'>
             <Input
-                name="comment"
+                name='comment'
                 pr='4.5rem'
                 type='text'
                 placeholder='Enter Comment'

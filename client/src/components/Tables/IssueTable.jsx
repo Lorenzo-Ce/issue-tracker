@@ -48,6 +48,10 @@ export const IssueTable = ({
                     )
                 },
                 {
+                    Header: "Created By",
+                    accessor: "author",
+                },
+                {
                     Header: "Type",
                     accessor: "label",
                 },
@@ -89,9 +93,9 @@ export const IssueTable = ({
                         fontSize='sm' 
                         cursor 
                         colorScheme='blue'
-                        onClick={() => {
+                        onClick={ () => {
                             const tableRowId = props.row.id 
-                            return handleIssueInfo(props.data[tableRowId]._id, props.data), 
+                            handleIssueInfo(props.data[tableRowId]._id, props.data), 
                             openEditIssueModal()}}
                     >
                         Edit

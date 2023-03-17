@@ -1,14 +1,15 @@
 import {Heading, Box, FormControl, FormLabel, FormErrorMessage, Input, Button, VStack, Text } from '@chakra-ui/react'
 import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 import { useForm } from '../hooks/useForm'
 import useAuthorization from '../hooks/useAuthorization'
 import { Error } from './Alerts/Error'
 import axios from '../utils/axios'
 
-const Login = () => {    
+const Login = () => {
+    const fieldsToValidate = ['email', 'password']
     const {formValidation,isFormValid, handleValidation, 
-        handleFormChange, Form, setForm, errorMessage, setErrorMessage} = useForm({email:'', password:''})
+        handleFormChange, Form, errorMessage, setErrorMessage} = useForm({email:'', password:''}, fieldsToValidate)
     const [isLoading, setIsLoading] = useState(false)
     const { setAuthorization} = useAuthorization()
     const navigate = useNavigate()
@@ -115,15 +116,12 @@ const Login = () => {
                 </Box>
             </Text>
             <Text as='sub'>
-                Need an account? <Link to='/signup'>
-                    <Box as='span'
-                        display='inline'
-                        fontWeight='600'
-                        fontSize='sm'
-                    >
-                        Register Now
-                    </Box>
-                    </Link>
+                Need an account?&nbsp; 
+                <NavLink to='/signup'
+                    className='routerLink'
+                >    
+                    Register Now
+                </NavLink>
             </Text>
         </VStack>        
  

@@ -1,4 +1,4 @@
-import {FormControl, FormHelperText, Accordion, AccordionItem, AccordionButton, AccordionIcon, AccordionPanel, CheckboxGroup, Stack } from '@chakra-ui/react'
+import {Box, FormControl, FormHelperText, Accordion, AccordionItem, AccordionButton, AccordionIcon, AccordionPanel, CheckboxGroup, Stack } from '@chakra-ui/react'
 
 export const RolesField = ({members=[], formMembers, setForm, title}) => {  
     return(
@@ -21,7 +21,8 @@ export const RolesField = ({members=[], formMembers, setForm, title}) => {
                             <Stack spacing='1' direction='column'>
                                 {members.length > 0 ? 
                                 members : 
-                                "There are no members to be added"}
+                                <Box>No members to be added. Add members to the project first.</Box>
+                                }
                             </Stack>
                         </CheckboxGroup>
                     </AccordionPanel>

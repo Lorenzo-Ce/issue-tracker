@@ -1,7 +1,7 @@
-import { Heading, Table, Thead, Tbody, Tr, Th, Td, TableContainer, Flex } from "@chakra-ui/react"
+import {Heading, Table, Thead, Tbody, Tr, Th, Td, TableContainer, Flex } from "@chakra-ui/react"
 
 export const TeamTable = ({roles}) => {
-    
+
     const teamMembers = roles && Object.entries(roles)
     const teamList = teamMembers && teamMembers.map(([role, members]) =>
         members.map(member => 
@@ -18,8 +18,10 @@ export const TeamTable = ({roles}) => {
             <Heading fontSize='xl' fontWeight='bold'>TEAM</Heading>
         </Flex>
 
-        <TableContainer>
-            <Table variant='striped' colorScheme='blue'>
+        <TableContainer  maxHeight='270px'
+            overflowY='auto'
+        >
+            <Table variant='striped' colorScheme='blue' overflow='auto'>
                 <Thead>
                 <Tr>
                     <Th>Member</Th>
@@ -28,7 +30,7 @@ export const TeamTable = ({roles}) => {
                 </Thead>
                 <Tbody>
                 {teamList}
-            </Tbody>
+                </Tbody>
             </Table>
         </TableContainer>
     </>

@@ -7,6 +7,7 @@ import useAuthorization from './hooks/useAuthorization'
 import load from './utils/load'
 import RequireAuthorization from './components/RequireAuthorization' 
 import PersistLogin from './components/PersistLogin' 
+import ErrorBoundary from './components/ErrorBoundaries'
 const Login = lazy(() => import('./components/Login'))
 const Issues = lazy(() => import('./pages/Issues')) 
 const Dashboard = lazy(() => import('./pages/Dashboard'))
@@ -23,6 +24,7 @@ function App() {
 
   return (
     <Box as='section' height='100vh' display={'grid'} >
+      <ErrorBoundary>
       <Routes>
           <Route path='/' element={<Navigate to='/signup' replace/>}/>
           {/*Free Routes*/}
@@ -31,14 +33,16 @@ function App() {
           {/*Protected Routes*/}
             <Route element={ <PersistLogin /> }>
               <Route element={ <RequireAuthorization {...authorization} />}>
-                  <Route path='issues' element={ <SuspenseIssues/> }/>
                   <Route path='dashboard' element={ <SuspenseDashboard/> }>
-                      <Route path='' element={ <SuspenseDesk/> }/>
-                      <Route path=':projectId'element={ <SuspenseProject /> }/>
+                    <Route path='myIssues' element={ <SuspenseIssues/> }/>
+                    <Route path='' element={ <SuspenseDesk/> }/>
+                    <Route path=':projectId'element={ <SuspenseProject /> }/>
                   </Route>                      
               </Route>
             </Route>
+            {/* <Route path="*" element={<NoMatch />} /> */}
       </Routes>
+      </ErrorBoundary>
     </Box>
 
   )

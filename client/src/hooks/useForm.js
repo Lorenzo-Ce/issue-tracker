@@ -1,13 +1,14 @@
-import { useState } from "react"
-import {initializeForm} from "../utils/initializeForm"
+import { useEffect, useState } from "react"
+import {initializeFormValidation} from "../utils/initializeForm"
 import {REGX_USERNAME, REGX_EMAIL, REGX_PSW} from '../utils/regex'
 
-export const useForm = (formFields) => {
-
+export const useForm = (formFields, requiredFields) => {
+    
     const [Form, setForm] = useState(() => formFields) 
-    const [formValidation, setFormValidation] = useState(() => initializeForm(formFields, false))
+    const [formValidation, setFormValidation] = useState(() => initializeFormValidation(requiredFields, false))
+    const [areRequiredFieldsEmpty, setAreRequiredFieldsEmpty] = useState(false)
     const [errorMessage, setErrorMessage] = useState('')
-    const isFormValid = Object.values(formValidation).every(field => field === false) && Object.values(Form).every(field => field !== '')
+    const isFormValid = !areRequiredFieldsEmpty && Object.values(formValidation).every(field => field === false) 
     
     const handleFormChange = event => {
         const {value, name, type, files} = event.target
@@ -33,14 +34,22 @@ export const useForm = (formFields) => {
          case 'confirmPassword': isInvalid = value !== Form.password; break;
          case 'endDate': isInvalid = value < Form.startDate; break;
          case 'closingDate': isInvalid = value < Form.openingDate; break;
-         case 'image' : isInvalid = file.type !=='image/jpeg' || file.size >= FILE_SIZE_LIMIT; break;
+         case 'imageToAdd' : isInvalid = file.type !=='image/jpeg' || file.size >= FILE_SIZE_LIMIT; break;
          default: isInvalid = false;
         }
         setFormValidation(prevForm => ({...prevForm, [name]: isInvalid}))
         return isInvalid
     }
+    useEffect(() =>{
+        setAreRequiredFieldsEmpty(false)
+        requiredFields.forEach(field => {
+            if(Form[field] === ""){ 
+                setAreRequiredFieldsEmpty(true)
+            }
+        })
+    } ,[Form])
 
     return {formValidation, 
             isFormValid, handleValidation, 
-            handleFormChange, Form, setForm, errorMessage, setErrorMessage }
+            handleFormChange, Form, setForm, errorMessage, setErrorMessage, setFormValidation }
 }
