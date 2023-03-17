@@ -30,7 +30,7 @@ const ProjectSchema = new Schema({
         type: Map,
         of: Array,
         default: {
-            enum: ['Lead', 'Member']
+            enum: ['Lead', 'Dev']
         }
     },
     issueIncrement: {type: Number, default : 0},
@@ -79,7 +79,8 @@ const ProjectSchema = new Schema({
             date: Date
         }],
         image:{
-            type: String
+            type: String,
+            default: ''
         }
     }]
   }, {

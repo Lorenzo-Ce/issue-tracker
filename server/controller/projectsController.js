@@ -13,7 +13,7 @@ const addProject = async (req, res, next) => {
     try{
         const roles = {
             'Lead': [username],
-            'Member': memberList}
+            'Dev': memberList}
         const members = [username, ...memberList]
         const project = {...req.body, roles, members}
         const [newProject, foundUser] = await Promise.all([
@@ -29,9 +29,9 @@ const addProject = async (req, res, next) => {
 
         const projectIdField = `projects.${newProject._id}`
         await User.updateMany({
-                username: {$in: roles['Member']}}, 
+                username: {$in: roles['Dev']}}, 
                 {
-                    $set: {[projectIdField] : 'Member'}
+                    $set: {[projectIdField] : 'Dev'}
                 }
         ).exec()
 
@@ -90,31 +90,33 @@ const updateProject = async (req, res, next) => {
     const status = req.body.status
     const startDate = req.body.startDate
     const endDate = req.body.endDate
-    const members = req.body.members
-    if(!name || !status || !startDate || !endDate || !members){
+    const newProjectMembers = req.body.members
+    if(!name || !status || !startDate || !endDate || !newProjectMembers){
         return res.status(400).send({
             'name' : `${name ? 'ok' : 'missing'}`,
             'status' : `${status ? 'ok' : 'missing'}`,
             'startDate' : `${startDate ? 'ok' : 'missing'}`,
             'endDate' : `${endDate ? 'ok' : 'missing'}`,
-            'members' : `${members ? 'ok' : 'missing'}`
+            'members' : `${newProjectMembers ? 'ok' : 'missing'}`
         })
     }
     try {
         const foundProject = await Project.findById({_id}).exec()
         if(!foundProject) return res.sendStatus(404)
-        const membersExcluded = foundProject.members.filter(member => !members.includes(member))
-        const membersAdded = members.filter(member => !foundProject.members.includes(member))
+        const devsExcluded = foundProject.members.filter(prevMembers => !newProjectMembers.includes(prevMembers))
+        const devsAdded = newProjectMembers.filter(newMember => !foundProject.members.includes(newMember))
+        const [Lead, ...Devs] = newProjectMembers
         foundProject.name = name
         foundProject.description = description
         foundProject.status = status
         foundProject.startDate = startDate
         foundProject.endDate = endDate
-        foundProject.members = members
+        foundProject.members = newProjectMembers
+        foundProject.roles.set('Dev', Devs)
         await foundProject.save()
         const projectIdField = `projects.${_id}`
-        await User.updateMany({username: {$in: membersExcluded}}, {$unset: {[projectIdField]: ""}}).exec()
-        await User.updateMany({username: {$in: membersAdded}}, {$set: {[projectIdField] : 'Member'}}).exec()
+        await User.updateMany({username: {$in: devsExcluded}}, {$unset: {[projectIdField]: ''}}).exec()
+        await User.updateMany({username: {$in: devsAdded}}, {$set: {[projectIdField] : 'Dev'}}).exec()
         res.status(200).send(foundProject)
     }catch(error){
         logErrorConsole(error.name, error.message)

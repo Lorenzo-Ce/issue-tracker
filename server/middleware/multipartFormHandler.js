@@ -5,7 +5,6 @@ const multipartFormHandler = (req, res, next) => {
         if(req.file?.filename) { 
             req.body.image = req.file?.filename 
         }
-        console.log(req.body.image)
         next()
     } catch (error){
         res.status(500).send(error.message)
