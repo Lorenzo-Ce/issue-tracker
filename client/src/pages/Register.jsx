@@ -1,39 +1,36 @@
 import {Heading, Box, FormControl, FormLabel, FormErrorMessage, Input, Button, VStack, Text } from '@chakra-ui/react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { useForm } from '../hooks/useForm'
-import useAuthorization from '../hooks/useAuthorization'
-import { Error } from './Alerts/Error'
+import { Error } from '../components/Alerts/Error'
 import axios from '../utils/axios'
 
-const Login = () => {
-    const fieldsToValidate = ['email', 'password']
+export default function Register (){
+    const fieldsToValidate = ['username','email', 'password', 'confirmPassword']
     const {formValidation,isFormValid, handleValidation, 
-        handleFormChange, Form, errorMessage, setErrorMessage} = useForm({email:'', password:''}, fieldsToValidate)
+        handleFormChange, Form, errorMessage, setErrorMessage} = useForm({email:'', username:'', password:'', confirmPassword:''}, fieldsToValidate)
     const [isLoading, setIsLoading] = useState(false)
-    const { setAuthorization} = useAuthorization()
-    const navigate = useNavigate()
+    let navigate = useNavigate()
+    useEffect(() => {
+        if(Form.confirmPassword !== ''){
+            handleValidation({name: 'confirmPassword', value: Form.confirmPassword})
+        }
+    }, [Form.password])
 
-    const handleSubmit = async (event, form) => {
+    const handleSubmit = async (event) => {
         event.preventDefault()
         setErrorMessage('')
         setIsLoading(true)
+        
         try{
-            const response = await axios.post('/login', JSON.stringify(form))   
-            setAuthorization(prevAuth => (
-                {...prevAuth, 
-                    accessToken: response?.data?.accessToken,
-                    username: response?.data?.username
-                }))
-            
-            navigate('/dashboard', {replace: true})
-            
+            const response = await axios.post('/register', JSON.stringify(Form))
+            navigate('/login', {replace: true})
         } catch (err){
             if(err?.response && err?.response?.status !== 0){
                 setErrorMessage(`Error ${err?.response?.status}: ${err?.response?.data?.error}.`)
             }
             else if(err?.request){
-                setErrorMessage('Network Error. Login failed, try again later.')                
+                setErrorMessage('Network Error. Registration failed, try again later.')                
             }
             else{
                 setErrorMessage('Error something went wrong with your request. Try again later.')
@@ -41,25 +38,35 @@ const Login = () => {
         } finally {
             setIsLoading(false)
         }
+        
     }
 
     return(
         <Box as='form' 
-            onSubmit={(e) => handleSubmit(e, Form)} 
+            onSubmit={handleSubmit} 
             color='blue.800' 
             w={['90%', '400px']} 
-            bgColor='#FFF'
             padding='1em' 
             borderRadius='10px' 
-            boxShadow='rgba(0, 0, 0, 0.1) 0px 4px 12px' 
-            placeSelf='center'
+            boxShadow='rgba(0, 0, 0, 0.1) 0px 4px 12px'
+            bgColor='#FFF' placeSelf='center'
             onChange={(e) => handleValidation(e.target)}
         >
-            <VStack 
-                spacing='10px'
-            >
-                <Heading>Login</Heading>
+            <VStack spacing={'10px'}>
+                <Heading>Registration</Heading>
                 {errorMessage !== '' && <Error message={errorMessage} /> }
+                <FormControl isRequired 
+                    id='username' 
+                    isInvalid={formValidation.username}
+                >
+                    <FormLabel>Username</FormLabel>
+                    <Input type='text' 
+                        name='username'
+                        value={Form.username}
+                        onChange={handleFormChange}
+                    />
+                    <FormErrorMessage>Your username must be alphanumeric, longer than 4 and shorter than 20 characters.</FormErrorMessage>
+                </FormControl>
                 <FormControl isRequired 
                     id='email' 
                     isInvalid={formValidation.email}
@@ -84,49 +91,36 @@ const Login = () => {
                     />
                     <FormErrorMessage>Your password must be at least 8 characters long, contain at least one number, one uppercase, one lowercase character and one special character (#?!@$%^&*-).</FormErrorMessage>
                 </FormControl>
+                <FormControl isRequired 
+                    id='confirmPassword' 
+                    isInvalid={formValidation.confirmPassword}
+                >
+                    <FormLabel>Confirm Password</FormLabel>
+                    <Input type='password'
+                        name='confirmPassword'
+                        value={Form.confirmPassword}
+                        onChange={handleFormChange}
+                    />
+                    <FormErrorMessage>Please make sure the password match.</FormErrorMessage>
+                </FormControl>
                 <Button type='submit' mb='5px' 
                     colorScheme='blue'
-                    loadingText='Logging in'
                     isLoading={isLoading} 
                     isDisabled={!isFormValid}
                 >
-                    Login
+                    Register
                 </Button>
         </VStack>
-        <VStack p='1em' gap='1em' >
+        <VStack  p='1em'>
             <Text as='sub'>
-                Log in as&nbsp;
-                <Box 
-                    cursor='pointer'
-                    display='inline-block'
-                    fontWeight='bold'
-                    color='blue.700'
-                    _hover={{
-                        color: 'blue.400'
-                    }}
-                    onClick={async (e) => {
-                        const guestCredentials = {
-                            email:'guestaccount@guest.com', 
-                            password:'GuestAccount@01'
-                        }
-                        await handleSubmit(e, guestCredentials)
-                    }}
-                >
-                    GUEST ACCOUNT
-                </Box>
+                Have an account or want to login as Guest?
             </Text>
-            <Text as='sub'>
-                Need an account?&nbsp; 
-                <NavLink to='/signup'
-                    className='routerLink'
-                >    
-                    Register Now
-                </NavLink>
-            </Text>
+            <NavLink to='/login'
+                className='routerLink'
+            >
+                    Log In Now
+            </NavLink>
         </VStack>        
- 
         </Box>
     )
 }
-
-export default Login

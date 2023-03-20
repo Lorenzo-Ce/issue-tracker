@@ -1,4 +1,4 @@
-import { Box, TableContainer, Table, Thead, Tbody, Tr, Th, Td, Flex, Tooltip, Select, NumberInput, NumberInputField, NumberInputStepper, NumberIncrementStepper, NumberDecrementStepper, IconButton, Text } from "@chakra-ui/react";
+import { TableContainer, Table, Thead, Tbody, Tr, Th, Td, Flex, Tooltip, Select, NumberInput, NumberInputField, NumberInputStepper, NumberIncrementStepper, NumberDecrementStepper, IconButton, Text } from "@chakra-ui/react";
 import { ChevronUpIcon, ChevronDownIcon, ArrowRightIcon, ArrowLeftIcon, ChevronRightIcon, ChevronLeftIcon } from "@chakra-ui/icons";
 import { useTable, useSortBy, usePagination } from "react-table";
 

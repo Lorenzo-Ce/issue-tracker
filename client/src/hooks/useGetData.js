@@ -1,5 +1,5 @@
 import useAxiosProtect from './useAxiosProtect'
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect } from "react"
 
 const useGetData = (url) => {
     
@@ -7,7 +7,6 @@ const useGetData = (url) => {
     const [apiError, setApiError] = useState('')
     const [isLoading, setIsLoading] = useState(false)
     const axiosProtect = useAxiosProtect()
-    const effectRun = useRef(false)
 
     useEffect(() => {
         let isMounted = true
@@ -36,12 +35,10 @@ const useGetData = (url) => {
                 isMounted && setIsLoading(false)
             }
         }
-        if(effectRun.current) { 
             handleData()      
-        }
+
            
         return () => {
-            effectRun.current = true
             isMounted = false
             controller.abort()
         }

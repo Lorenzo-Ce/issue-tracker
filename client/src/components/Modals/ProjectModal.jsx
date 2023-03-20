@@ -42,7 +42,7 @@ const ProjectModal = ({ setProjects, isOpen, onClose, formValues = initialFormVa
     }, [successMessage])
 
 
-    const members = usersList.flatMap( ({_id, username}) =>  username !== authorization.username ? 
+    const members = usersList && usersList.flatMap( ({_id, username}) =>  username !== authorization.username ? 
         [
             <Checkbox key={_id} value={username} checked={Form.members.includes(username)}>
                 {username}

@@ -5,6 +5,7 @@ import { IssueUserTable } from '../components/Tables/IssueUserTable'
 import { IssueTypeChart } from '../components/Charts/IssueTypeChart'
 import { IssueStatusChart } from '../components/Charts/IssueStatusChart'
 import { IssuePriorityChart } from '../components/Charts/IssuePriorityChart'
+import { LoadingSpinner } from '../components/LoadingSpinner'
 
 export function Issues() {
     const {responseData: issueList, isLoading} = useGetData('/projects/issues')
@@ -23,36 +24,23 @@ export function Issues() {
             </Heading>
             {   
                 isLoading ?
-                <Grid 
-                    placeContent='center'
-                    height='80vh'
-                >
-                    <Spinner
-                        thickness='7px'
-                        speed='0.7s'
-                        emptyColor='gray.200'
-                        color='blue.500'
-                        size='xl'
-                    />
-                </Grid>  :
-                (   
-                    <Box>
-                        <Grid templateColumns={['repeat(auto-fit, minmax(250px, 1fr))']} gap='0.5em' mb='1em'>
-                        <GridItem as='section' bg='#FFF' borderRadius='10px' p='1em' boxShadow='rgba(0, 0, 0, 0.1) 0px 4px 12px'>
-                            <IssueTypeChart issues={issuesFormat}/>
-                        </GridItem>                            
-                        <GridItem as='section' bg='#FFF' borderRadius='10px' p='1em' boxShadow='rgba(0, 0, 0, 0.1) 0px 4px 12px'>
-                            <IssueStatusChart issues={issuesFormat}/>
-                        </GridItem>                            
-                        <GridItem as='section' bg='#FFF' borderRadius='10px' p='1em' boxShadow='rgba(0, 0, 0, 0.1) 0px 4px 12px'>
-                            <IssuePriorityChart issues={issuesFormat}/>
-                        </GridItem>                            
-                        <GridItem as='section' gridColumn='-1/1' bg='#FFF' borderRadius='10px' p='1em' boxShadow='rgba(0, 0, 0, 0.1) 0px 4px 12px'>
-                            <IssueUserTable issues={issuesFormat} />
-                        </GridItem>                            
-                        </Grid>
-                    </Box>
-                )
+                <LoadingSpinner />  :
+                <Box>
+                    <Grid templateColumns={['repeat(auto-fit, minmax(250px, 1fr))']} gap='0.5em' mb='1em'>
+                    <GridItem as='section' bg='#FFF' borderRadius='10px' p='1em' boxShadow='rgba(0, 0, 0, 0.1) 0px 4px 12px'>
+                        <IssueTypeChart issues={issuesFormat}/>
+                    </GridItem>                            
+                    <GridItem as='section' bg='#FFF' borderRadius='10px' p='1em' boxShadow='rgba(0, 0, 0, 0.1) 0px 4px 12px'>
+                        <IssueStatusChart issues={issuesFormat}/>
+                    </GridItem>                            
+                    <GridItem as='section' bg='#FFF' borderRadius='10px' p='1em' boxShadow='rgba(0, 0, 0, 0.1) 0px 4px 12px'>
+                        <IssuePriorityChart issues={issuesFormat}/>
+                    </GridItem>                            
+                    <GridItem as='section' gridColumn='-1/1' bg='#FFF' borderRadius='10px' p='1em' boxShadow='rgba(0, 0, 0, 0.1) 0px 4px 12px'>
+                        <IssueUserTable issues={issuesFormat} />
+                    </GridItem>                            
+                    </Grid>
+                </Box>
             }
         </Box>
     )

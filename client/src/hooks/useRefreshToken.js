@@ -2,7 +2,7 @@ import axios from '../utils/axios'
 import useAuthorization from './useAuthorization'
 
 function useRefreshToken() {
-    const { authorization, setAuthorization } = useAuthorization()
+    const { setAuthorization } = useAuthorization()
     const refreshAccessToken = async () => { 
 
       try{

@@ -1,27 +1,29 @@
-import { Spinner, Grid, GridItem, useDisclosure } from '@chakra-ui/react'
+import { Grid, GridItem, useDisclosure } from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
 import useDeleteData from '../hooks/useDeleteData'
 import { Error } from '../components/Alerts/Error'
 import ProjectModal from '../components/Modals/ProjectModal'
 import { ProjectTable } from '../components/Tables/ProjectTable'
 import useGetData from '../hooks/useGetData'
+import { LoadingSpinner } from '../components/LoadingSpinner'
 
 const Desk = () => {
     const {responseData: projects, setResponseData: setProjects, apiError, setApiError, isLoading} = useGetData('/projects')
     const { isOpen: isNewProjectOpen, onOpen: onNewProjectOpen, onClose : onNewProjectClose } = useDisclosure()
     const { isOpen: isEditProjectOpen, onOpen: onEditOpen, onClose: onEditProjectClose } = useDisclosure()
-    const [projectEdit, setProjectEdit] = useState({id:'', name:'', description:'', status:'', members:[], startDate:'', endDate:''})
+    const [projectEdit, setProjectEdit] = useState({_id:'', name:'', description:'', status:'', members:[], startDate:'', endDate:''})
     const {handleDelete, remainingData, deleteMessage, isDeleting} = useDeleteData('/projects/')
 
-    const handleOpenModal = (id = '', projectsList = []) => {
-        const foundProject = projectsList && projectsList.find(project => project._id === id)
+    const handleOpenModal = (selectedProjectId = '', projectsList = []) => {
+        const foundProject = projectsList && projectsList.find(project => project._id === selectedProjectId)
         if(foundProject){         
             const {_id, name, description, status, members, startDate, endDate} = foundProject
-            setProjectEdit({id: _id, name, description, status, members, startDate, endDate})
+            setProjectEdit({_id, name, description, status, members, startDate, endDate})
         }
     }
 
     useEffect(() => {
+        setApiError('')
         if(deleteMessage !== ''){
             if(deleteMessage === 'Data deleted'){
                 setProjects(remainingData)
@@ -33,19 +35,9 @@ const Desk = () => {
 
     return(
         <>
-        { isLoading ? 
-            <Grid 
-                placeContent='center'
-                height='80vh'
-            >
-                <Spinner
-                    thickness='7px'
-                    speed='0.7s'
-                    emptyColor='gray.200'
-                    color='blue.500'
-                    size='xl'
-                />
-            </Grid>  : 
+        { 
+            isLoading ? 
+            <LoadingSpinner />  : 
             <Grid gap='1em' >
                 <GridItem
                     overflowX='auto' 
@@ -81,7 +73,7 @@ const Desk = () => {
                 onClose={onEditProjectClose} 
                 formValues={projectEdit}
                 method='put' 
-                route={`projects/${projectEdit.id}`}
+                route={`projects/${projectEdit._id}`}
                 isEdit
             />
     </>    
