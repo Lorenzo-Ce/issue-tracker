@@ -9,7 +9,7 @@
   ],
   "scripts": {
     "build": "cd server && npm install && cd ../client && npm install && npm run build",
-    "start": "cd server && npm run start"
+    "start": "node server.js"
   },
   "repository": {
     "type": "git",
