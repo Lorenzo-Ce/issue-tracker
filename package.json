@@ -8,9 +8,9 @@
     "server"
   ],
   "scripts": {
-    "workspaceClientBuild": "cd client && npm build",
-    "workspaceClientStart": "cd client && npm dev",
-    "workspaceServerStart": "cd server && npm start",
+    "workspaceClientBuild": "cd client && npm run build",
+    "workspaceClientStart": "cd client && npm run dev",
+    "workspaceServerStart": "cd server && npm run start",
     "build": "npm run workspaceClientBuild",
     "start": "npm run workspaceServerStart"
   },
