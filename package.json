@@ -4,12 +4,15 @@
   "description": "An issue tracker app",
   "private": true,
   "workspaces": [
-      "client",
-      "server"
+    "client",
+    "server"
   ],
   "scripts": {
-    "start": "echo \"Error: no test specified\" && exit 1",
-    "build": "echo \"Error: no test specified\" && exit 1"
+    "workspaceClientBuild": "cd client && npm build",
+    "workspaceClientStart": "cd client && npm start",
+    "workspaceServerStart": "cd server && npm start",
+    "build": "concurrently \\npm run workspaceClientBuild\\",
+    "start": "concurrently \\npm run workspaceClientStart && npm run workspaceServerStart\\"
   },
   "repository": {
     "type": "git",
@@ -20,5 +23,8 @@
   "bugs": {
     "url": "https://github.com/Lorenzo-Ce/issue-tracker/issues"
   },
-  "homepage": "https://github.com/Lorenzo-Ce/issue-tracker#readme"
+  "homepage": "https://github.com/Lorenzo-Ce/issue-tracker#readme",
+  "dependencies": {
+    "concurrently": "^7.6.0"
+  }
 }
