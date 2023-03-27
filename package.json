@@ -8,11 +8,9 @@
     "server"
   ],
   "scripts": {
-    "workspaceClientBuild": "cd client && npm run build",
-    "workspaceClientStart": "cd client && npm run dev",
-    "workspaceServerStart": "cd server && npm run start",
-    "build": "npm run workspaceClientBuild",
-    "start": "concurrently \"npm run workspaceClientStart\" \"npm run workspaceServerStart\""
+    "buildClient": "cd client && npm run build",
+    "startClient": "cd client && npm run dev",
+    "startServer": "cd server && npm run start"
   },
   "repository": {
     "type": "git",
