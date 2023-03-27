@@ -12,7 +12,7 @@
     "workspaceClientStart": "cd client && npm run dev",
     "workspaceServerStart": "cd server && npm run start",
     "build": "npm run workspaceClientBuild",
-    "start": "npm run workspaceServerStart"
+    "start": "concurrently \"npm run workspaceClientStart\" \"npm run workspaceServerStart\""
   },
   "repository": {
     "type": "git",
