@@ -8,9 +8,8 @@
     "server"
   ],
   "scripts": {
-    "buildClient": "cd client && npm run build",
-    "startClient": "cd client && npm run dev",
-    "startServer": "cd server && npm run start"
+    "build": "cd server && npm install && cd ../client && npm install && npm run build",
+    "start": "cd server && npm run start"
   },
   "repository": {
     "type": "git",
