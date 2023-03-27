@@ -9,10 +9,10 @@
   ],
   "scripts": {
     "workspaceClientBuild": "cd client && npm build",
-    "workspaceClientStart": "cd client && npm start",
+    "workspaceClientStart": "cd client && npm dev",
     "workspaceServerStart": "cd server && npm start",
-    "build": "concurrently \\npm run workspaceClientBuild\\",
-    "start": "concurrently \\npm run workspaceClientStart && npm run workspaceServerStart\\"
+    "build": "npm run workspaceClientBuild",
+    "start": "npm run workspaceServerStart"
   },
   "repository": {
     "type": "git",
