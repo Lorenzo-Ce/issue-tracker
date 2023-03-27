@@ -1,15 +1,12 @@
 {
-  "name": "issuetracker",
+  "name": "server",
   "version": "1.0.0",
-  "description": "An issue tracking app",
+  "description": "server-side issue tracking app",
   "main": "server.js",
   "scripts": {
-    "test": "jest --watchAll",
     "start": "node server",
     "dev": "nodemon server"
   },
-  "keywords": [],
-  "author": "",
   "license": "ISC",
   "devDependencies": {
     "jest": "^28.1.3",
