@@ -8,8 +8,10 @@
     "server"
   ],
   "scripts": {
-    "build": "cd server && npm install && cd ../client && npm install && npm run build",
-    "start": "node server/server.js"
+    "installPackage": "concurrently \"cd server && npm install\" && \"cd client && npm install && cd ..\"",
+    "dev": "concurrently \"cd server && npm run dev\" \"cd client && npm run dev\"",
+    "build": "concurrently \"cd server && npm install\" \"cd client && npm install && npm run build\"",
+    "startPrev": "concurrently \"node server/server.js\" \"cd ../client && npm run preview\""
   },
   "repository": {
     "type": "git",
