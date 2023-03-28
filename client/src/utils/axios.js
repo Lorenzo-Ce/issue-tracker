@@ -1,6 +1,6 @@
 import axios  from 'axios';
 
-const BASE_URL = 'http://localhost:3500'
+export const BASE_URL = import.meta.env.PROD ? 'https://issue-tracker-server-kmux.onrender.com' :'http://localhost:3500'
 
 export default axios.create({
     baseURL: BASE_URL,

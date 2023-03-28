@@ -10,7 +10,9 @@ import { initialIssueFormValues } from '../../utils/initializeForm'
 import { REGX_DATE } from '../../utils/regex'
 import  {nanoid} from 'nanoid'
 import format from 'date-fns/format'
+import { BASE_URL } from '../../utils/axios'
 const imagePlaceholder = lazy (() => import('../../assets/imagePlaceholder.png'))
+
 
 export const IssueInfo = ({projectId, setProject, issueInfo, setIssueInfo}) => {
     const {authorization} = useAuthorization()
@@ -86,7 +88,7 @@ export const IssueInfo = ({projectId, setProject, issueInfo, setIssueInfo}) => {
             justifyContent='space-between'
         >
             <Image 
-                src={issueInfo?.image === '' ? '/imagePlaceholder.png' : `http://127.0.0.1:3500/images/${issueInfo.image}`} 
+                src={issueInfo?.image === '' ? '/imagePlaceholder.png' : `${BASE_URL}/images/${issueInfo.image}`} 
                 loading='lazy'
                 alt={issueInfo.name}
                 objectFit='cover'
