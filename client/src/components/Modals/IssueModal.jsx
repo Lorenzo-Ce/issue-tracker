@@ -6,6 +6,7 @@ import { useForm } from '../../hooks/useForm'
 import BasicModal from './BasicModal'
 import { Error } from '../Alerts/Error'
 import { Success } from '../Alerts/Success'
+import { Warning } from '../Alerts/Warning'
 import { initialIssueFormValues } from '../../utils/initializeForm'
 import { NameField } from './components/NameField'
 import { DescriptionField } from './components/DescriptionField'
@@ -54,6 +55,14 @@ const issueModal = ({projectMembers, setProject, isOpen, onClose, formValues = i
         >
         {submitError !== '' && <Error message={submitError} /> }
         {successSubmitMessage !== '' && <Success message={successSubmitMessage} /> }
+        {
+            import.meta.env.PROD && 
+            <Warning 
+                message='
+                    The free instance of render site does not allow to upload files on disk. 
+                    If you try it will respond with error 500.'
+            />
+        }
         <VStack 
             as='form'   
             encType="multipart/form-data"
@@ -68,7 +77,6 @@ const issueModal = ({projectMembers, setProject, isOpen, onClose, formValues = i
                         value
                     )
                 })
-                console.log(formData)
                 handleSubmit(e, formData)
             }}
             onChange={(e) => handleValidation(e.target)} 
