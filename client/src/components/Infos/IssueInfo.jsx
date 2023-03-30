@@ -103,7 +103,8 @@ export const IssueInfo = ({projectId, setProject, issueInfo, setIssueInfo}) => {
                 overflowY='auto'
                 fontSize='sm'
             >
-                <Box as='p'
+                <Box 
+                    as='p'
                 >
                         {issueInfo.description} 
                 </Box>
@@ -120,20 +121,25 @@ export const IssueInfo = ({projectId, setProject, issueInfo, setIssueInfo}) => {
                         <Text fontWeight='bold' textTransform='uppercase'>Closing date </Text>
                         {issueInfo.closingDate ? issueInfo.closingDate.replace(REGX_DATE, '$3/$2/$1') : ' Not Defined' }
                     </Box>
-                <Flex>
+                    <Box>
                     <Text fontWeight='bold' textTransform='uppercase'>Assigned to:&nbsp;</Text>
                     {issueInfo?.members?.length > 0 ? issueInfo.members.join(', ') : 'Not Assigned' }
-                </Flex>
+                    </Box>
                 </Flex>
             </Box>
         </Flex>
-        <Box mt='1em'>
+        <Box 
+            mt='1em'
+            display='flex'
+            flexDirection='column'
+            
+        >
             <Heading fontSize='md' fontWeight='bold' mb='0.2em'>
                 Comments
             </Heading>
             {  
             issueInfo?.comments?.length > 0 &&
-            issueInfo?.comments?.map(({_id, author, text, date}) => {        
+            issueInfo?.comments?.map(({_id, author, text, date}, index) => {        
                 const timezoneDate = format(new Date(date), 'dd-MM-yyyy kk:mm')
                 return(
                     <Box 
@@ -142,6 +148,7 @@ export const IssueInfo = ({projectId, setProject, issueInfo, setIssueInfo}) => {
                         borderRadius='5px' 
                         boxShadow='rgba(0, 0, 0, 0.1) 0px 3px 10px'
                         mb='0.7em'
+                        width={['100%','100%','85%']}
                     >
                         <Box
                             p='1em' 
@@ -156,11 +163,12 @@ export const IssueInfo = ({projectId, setProject, issueInfo, setIssueInfo}) => {
                                     boxSize='15px'
                                     cursor='pointer'
                                     color='red.300'
-                                /> : authorization.username !== 'GuestAccount' &&
+                                /> : authorization.username === author &&
                                 <DeleteIcon 
                                     float='right'
                                     boxSize='15px'
                                     cursor='pointer'
+                                    
                                     color='red.300'
                                     transition='color 0.25s'
                                     _hover={{color:'red.500'}}

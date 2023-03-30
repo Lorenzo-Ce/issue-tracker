@@ -136,7 +136,7 @@ export const IssueTable = ({
             authorization.username === 'GuestAccount' &&
             <Warning  message="As Guest Account you can't add, delete, or edit Issues or Projects."/>
         }
-        <Flex mb='0.5em 0'>
+        <Flex m='0.5em 0'>
             <Heading fontSize='xl' fontWeight='bold'>ISSUES</Heading>
             <Spacer />
             <Button     

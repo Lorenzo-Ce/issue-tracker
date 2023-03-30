@@ -7,7 +7,10 @@ Additionally, this app allows users to create, delete, and update issues/tickets
 
 ## Usage
 
-You can create an account and log in to start creating projects or log in as a Guest user to take a peek. You can find it at https://issue-tracker-client.onrender.com. However, as a Guest Account, you can't add, delete, or edit Issues or Projects.
+You can create an account and log in to start creating projects or log in as a Guest user to take a peek. 
+As Guest Account, you can't add, delete, or edit Projects or Issues.
+Please note that considering the free instance of hosting site it might take some time to log in.
+You can find it at https://issue-tracker-client.onrender.com. 
 
 ## Technologies
 
@@ -72,9 +75,9 @@ You will also need a cloud database like MongoDB Atlas.
     ```
 
 3.Inside the repository install the necessary for server and client packages by running the following command in your terminal:
-    ```sh
-    npm install
-    ```
+  ```sh
+  npm install
+  ```
 * 3.1 After installing the necessary packages, you can run the app in development mode with:
   ```sh
   npm run dev

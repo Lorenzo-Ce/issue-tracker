@@ -43,7 +43,7 @@ export const ProjectTable = (
                     Cell: (props) => (
                         <>{
                             props?.value?.length > 0 ?
-                            <Box maxHeight='30px' overflow='auto'>
+                            <Box maxHeight='30px' overflowY='scroll'>
                                 {props?.value?.map(member => (
                                     <Box key={member}>
                                         {member}
@@ -152,10 +152,24 @@ const tableData = useMemo(() =>
                 Add Project
             </Button>
         </Flex> 
-        <BasicTable 
-            columns={columns} 
-            tableData={tableData}
-        />    
+        { projects?.length > 0 ?
+            <BasicTable 
+                columns={columns} 
+                tableData={tableData}
+            /> :
+            <Box
+                textAlign='center'
+                p='1em'
+            >
+               <Box
+                fontWeight='900'
+                letterSpacing='1px'
+               >
+                    NO PROJECTS FOUND :&#40;
+                </Box>
+               Press Add Project if want to start a new one!
+            </Box>
+        }    
     </>
     )
 }
